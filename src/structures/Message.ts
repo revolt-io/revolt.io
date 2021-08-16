@@ -45,6 +45,10 @@ export class Message extends Base {
 
         if (typeof data.content === 'object') {
             this.type = MessageTypes[data.content.type.toUpperCase() as keyof typeof MessageTypes] ?? 'UNKNOWN'
+        } else if (typeof data.content === 'string') {
+            this.content = data.content
+        } else {
+            this.content = ''
         }
 
         if (data.edited) {
