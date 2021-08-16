@@ -1,6 +1,10 @@
 import { Client } from '../client/Client'
 
 export abstract class Base {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    constructor(public client: Client, _data: unknown) {}
+    constructor(public client: Client) {}
+    abstract _update(data: unknown): this
+    abstract _patch(data: unknown): this
+    _clone(): this {
+        return Object.assign(Object.create(this), this)
+    }
 }

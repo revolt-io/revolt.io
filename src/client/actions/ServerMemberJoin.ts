@@ -10,8 +10,10 @@ export class ServerMemberJoin extends Action {
             this.client.emit(Events.SERVER_CREATE, server)
         }
 
-        // Emit Member Join event
+        const member = await server.members.fetch(data.user)
 
-        return {}
+        this.client.emit(Events.SERVER_MEMBER_JOIN, member)
+
+        return { member }
     }
 }

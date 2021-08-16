@@ -9,8 +9,13 @@ export enum Events {
     CHANNEL_CREATE = 'channelCreate',
     CHANNEL_DELETE = 'channelDelete',
     SERVER_DELETE = 'serverDelete',
+    SERVER_UPDATE = 'serverUpdate',
     SERVER_CREATE = 'serverCreate',
-    MESSAGE_DELETE = 'messageDelete'
+    MESSAGE_DELETE = 'messageDelete',
+    MESSAGE_UPDATE = 'messageUpdate',
+    USER_UPDATE = 'userUpdate',
+    SERVER_MEMBER_JOIN = 'serverMemberJoin',
+    CHANNEL_UPDATE = 'channelUpdate'
 }
 
 export enum WSEvents {

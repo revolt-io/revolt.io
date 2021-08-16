@@ -10,6 +10,6 @@ export class VoiceChannel extends ServerChannel {
     }
 
     async ack(): Promise<void> {
-        throw new TypeError('cannot ack voice channel')
+        throw new TypeError('Cannot ack voice channel')
     }
 }

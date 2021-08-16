@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RevoltConfiguration } from 'revolt-api/types/Core'
 import { ChannelManager, ServerManager, UserManager } from '../managers'
-import { User } from '../structures'
+import { ClientUser } from '../structures/ClientUser'
 import { Events } from '../util/Constants'
 import { ActionManager } from './actions/ActionManager'
 import { BaseClient } from './BaseClient'
@@ -25,7 +25,7 @@ export class Client extends BaseClient {
     public configuration?: RevoltConfiguration
     public readyAt: Date | null = null
     public readonly servers = new ServerManager(this)
-    public user: User | null = null
+    public user: ClientUser | null = null
     public readonly users = new UserManager(this)
 
     get readyTimestamp(): number | null {

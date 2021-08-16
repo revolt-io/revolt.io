@@ -2,6 +2,7 @@ import { Session } from 'revolt-api/types/Auth'
 import { default as Socket } from 'ws'
 import { Client } from './Client'
 import { Events, WSEvents } from '../util/Constants'
+import { ClientUser } from '../structures/ClientUser'
 
 export class WebSocket {
     heartbeatInterval?: NodeJS.Timeout
@@ -28,7 +29,7 @@ export class WebSocket {
         const now = Date.now()
         this.debug(`[${type}] Sending a heartbeat.`)
         this.send({ type, time: now })
-        this.lastPingTimestamp = Date.now()
+        this.lastPingTimestamp = now
     }
 
     send(data: unknown): void {
@@ -95,8 +96,8 @@ export class WebSocket {
                 for (const user of packet.users) {
                     this.client.users._add(user)
                     if (user.relationship === 'User' && !this.client.user) {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        this.client.user = this.client.users.cache.get(user._id)!
+                        const clientUser = (this.client.user = new ClientUser(this.client, user))
+                        this.client.users.cache.set(clientUser.id, clientUser)
                     }
                 }
 
@@ -113,7 +114,9 @@ export class WebSocket {
                 }
 
                 this.setHeartbeatTimer(1e3)
+
                 this.ready = true
+
                 this.client.emit(Events.READY, this.client)
                 break
             default:
@@ -128,6 +131,10 @@ export class WebSocket {
 
     connect(): Promise<this> {
         return new Promise(resolve => {
+            if (this.socket?.readyState === Socket.OPEN && this.ready) {
+                return resolve(this)
+            }
+
             if (typeof this.client.configuration === 'undefined') {
                 throw new Error('Attempted to open WebSocket without syncing configuration from server.')
             }

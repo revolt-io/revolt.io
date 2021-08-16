@@ -4,18 +4,24 @@ import { Session } from 'revolt-api/types/Auth'
 import { Client, DEFUALT_OPTIONS, Message, Server } from '..'
 import { REST } from '../rest/REST'
 import { HeadersInit } from 'node-fetch'
+import { Channel, ServerMember, User } from '../structures'
 
 export type Awaited<T> = T | Promise<T>
 
 export interface ClientEvents {
     message: [Message]
     messageDelete: [Message]
+    messageUpdate: [Message, Message]
     ready: [Client]
     serverCreate: [Server]
     serverDelete: [Server]
+    serverUpdate: [Server, Server]
     debug: [unknown]
     error: [unknown]
     raw: [unknown]
+    userUpdate: [User, User]
+    serverMemberJoin: [ServerMember]
+    channelUpdate: [Channel, Channel]
 }
 
 export declare interface BaseClient {

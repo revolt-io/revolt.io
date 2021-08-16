@@ -49,7 +49,7 @@ export class ServerManager extends BaseManager<string, Server, RawServer> {
     async fetch(_server: ServerResolvable, { force = true } = {}): Promise<Server> {
         const serverId = this.resolveId(_server)
 
-        if (!force) {
+        if (!force && serverId) {
             const server = this.cache.get(serverId)
             if (server) return server
         }

@@ -3,28 +3,53 @@ import { Client, RoleManager } from '..'
 import { ServerChannelManager, ServerMemberManager } from '../managers'
 import { User, Base } from '.'
 
-export class Server implements Base {
-    name: string
-    id: string
-    description: string | null
-    ownerId: string
-    _channels: string[] = []
-    _roles: string[] = []
+export class Server extends Base {
+    name!: string
+    id!: string
+    description!: string | null
+    ownerId!: string
     channels: ServerChannelManager
     members: ServerMemberManager
     roles: RoleManager
     deleted = false
-    constructor(public client: Client, raw: RawServer) {
-        this.id = raw._id
-        this.ownerId = raw.owner
-        this.name = raw.name
-        this.description = raw.description ?? null
-
-        if (Array.isArray(raw.channels)) this._channels = raw.channels
-
+    _channels: string[] = []
+    _roles: string[] = []
+    constructor(client: Client, data: RawServer) {
+        super(client)
+        this._patch(data)
         this.channels = new ServerChannelManager(this)
         this.roles = new RoleManager(this)
         this.members = new ServerMemberManager(this)
+    }
+
+    _patch(data: RawServer): this {
+        if (data._id) {
+            this.id = data._id
+        }
+
+        if (data.owner) {
+            this.ownerId = data.owner
+        }
+
+        if (data.name) {
+            this.name = data.name
+        }
+
+        if ('description' in data) {
+            this.description = data.description ?? null
+        }
+
+        if (Array.isArray(data.channels)) {
+            this._channels = data.channels
+        }
+
+        return this
+    }
+
+    _update(data: RawServer): this {
+        const clone = this._clone()
+        clone._patch(data)
+        return clone
     }
 
     get owner(): User | null {

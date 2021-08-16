@@ -1,18 +1,18 @@
 import { Channel as RawChannel } from 'revolt-api/types/Channels'
-import { ServerChannel, VoiceChannel } from '.'
+import { Base, DMChannel, GroupChannel, NotesChannel, ServerChannel, TextChannel, VoiceChannel } from '.'
 import { Client } from '..'
 import { ChannelTypes } from '../util/Constants'
 import { UUID } from '../util/UUID'
-import { Base } from './Base'
 import { TextBasedChannel } from './interfaces/TextBasedChannel'
 
-export class Channel implements Base {
+export abstract class Channel extends Base {
     id: string
     type: ChannelTypes | 'UNKNOWN'
     deleted = false
-    constructor(public client: Client, raw: RawChannel) {
+    constructor(client: Client, raw: RawChannel) {
+        super(client)
         this.id = raw._id
-        this.type = ChannelTypes[raw.channel_type] ?? 'UNKNOWN'
+        this.type = ChannelTypes[raw.channel_type as keyof typeof ChannelTypes] ?? 'UNKNOWN'
     }
 
     get createdTimestamp(): number {
@@ -28,11 +28,11 @@ export class Channel implements Base {
     }
 
     isVoice(): this is VoiceChannel {
-        return this instanceof VoiceChannel
+        return this.type === ChannelTypes.VOICE
     }
 
     inServer(): this is ServerChannel {
-        return this instanceof ServerChannel
+        return 'serverId' in this
     }
 
     async ack(): Promise<void> {
@@ -43,7 +43,39 @@ export class Channel implements Base {
         await this.client.api.delete(`/channels/${this.id}`)
     }
 
+    // fetch(): this {
+    //     return this.client.channels.fetch
+    // }
+
     toString(): string {
         return `<#${this.id}>`
+    }
+
+    static create(client: Client, raw: RawChannel): Channel {
+        let channel: Channel
+
+        switch (raw.channel_type) {
+            case 'TextChannel':
+                channel = new TextChannel(client, raw)
+                break
+            case 'VoiceChannel':
+                channel = new VoiceChannel(client, raw)
+                break
+            case 'DirectMessage':
+                channel = new DMChannel(client, raw)
+                break
+            case 'Group':
+                channel = new GroupChannel(client, raw)
+                break
+            case 'SavedMessages':
+                channel = new NotesChannel(client, raw)
+                break
+        }
+
+        return channel
+    }
+
+    fetch(force = true): Promise<Channel> {
+        return this.client.channels.fetch(this, { force })
     }
 }

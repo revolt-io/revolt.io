@@ -2,15 +2,33 @@ import { Member as RawMember } from 'revolt-api/types/Servers'
 import { Client, User, Server } from '..'
 import { Base } from './Base'
 
-export class ServerMember implements Base {
-    id: string
-    serverId: string
-    nickname: string | null
+export class ServerMember extends Base {
+    id!: string
+    serverId!: string
+    nickname: string | null = null
 
-    constructor(public client: Client, raw: RawMember) {
-        this.id = raw._id.user
-        this.serverId = raw._id.server
-        this.nickname = raw.nickname ?? null
+    constructor(client: Client, data: RawMember) {
+        super(client)
+        this._patch(data)
+    }
+
+    _patch(data: RawMember): this {
+        if ('nickname' in data) {
+            this.nickname = data.nickname ?? null
+        }
+
+        if (data._id) {
+            this.serverId = data._id.server
+            this.id = data._id.user
+        }
+
+        return this
+    }
+
+    _update(data: RawMember): ServerMember {
+        const clone = this._clone()
+        clone._patch(data)
+        return clone
     }
 
     get user(): User | null {

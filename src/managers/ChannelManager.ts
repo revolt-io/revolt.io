@@ -1,37 +1,19 @@
 import { Channel as RawChannel } from 'revolt-api/types/Channels'
 import { Client } from '..'
-import { Channel, DMChannel, GroupChannel, TextChannel, VoiceChannel } from '../structures'
+import { Channel } from '../structures'
 import { BaseManager } from './BaseManager'
 
 export type ChannelResolvable = Channel | RawChannel | string
 
 export class ChannelManager extends BaseManager<string, Channel, RawChannel> {
-    holds = Channel
+    holds = null
 
     constructor(public client: Client) {
         super()
     }
 
     _add(raw: RawChannel): Channel {
-        let channel: Channel
-
-        switch (raw.channel_type) {
-            case 'TextChannel':
-                channel = new TextChannel(this.client, raw)
-                break
-            case 'VoiceChannel':
-                channel = new VoiceChannel(this.client, raw)
-                break
-            case 'DirectMessage':
-                channel = new DMChannel(this.client, raw)
-                break
-            case 'Group':
-                channel = new GroupChannel(this.client, raw)
-                break
-            case 'SavedMessages':
-                channel = new Channel(this.client, raw)
-                break
-        }
+        const channel = Channel.create(this.client, raw)
 
         this.cache.set(channel.id, channel)
 
@@ -46,5 +28,28 @@ export class ChannelManager extends BaseManager<string, Channel, RawChannel> {
         }
 
         super._remove(id)
+    }
+
+    resolve(channel: ChannelResolvable): Channel | null {
+        if (channel instanceof Channel) return channel
+        return super.resolve(channel)
+    }
+
+    resolveId(channel: ChannelResolvable): string | null {
+        if (channel instanceof Channel) return channel.id
+        return super.resolveId(channel)
+    }
+
+    async fetch(_channel: ChannelResolvable, { force = true } = {}): Promise<Channel> {
+        const channelId = this.resolveId(_channel)
+
+        if (!force && channelId) {
+            const channel = this.cache.get(channelId)
+            if (channel) return channel
+        }
+
+        const data = await this.client.api.get(`/channels/${channelId}`)
+
+        return this._add(data)
     }
 }

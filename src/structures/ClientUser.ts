@@ -1,9 +1,7 @@
 import { User } from '.'
 
-const SelfError = (x: string) => new TypeError(`You cannot "${x}" yourself`)
-
 export class ClientUser extends User {
-    async setUsername(username: string, password: string): Promise<void> {
+    async setUsername(username: string, password?: string): Promise<void> {
         await this.client.api.patch(`/users/${this.id}/username`, {
             body: {
                 username,
@@ -12,11 +10,9 @@ export class ClientUser extends User {
         })
     }
 
-    async block(): Promise<void> {
-        throw SelfError('block')
-    }
-
-    async unblock(): Promise<void> {
-        throw SelfError('unblock')
+    async setStatus(status: { text?: string; presence?: 'Online' | 'Idle' | 'Busy' | 'Invisible' }): Promise<void> {
+        await this.client.api.patch('/users/id', {
+            body: { status }
+        })
     }
 }

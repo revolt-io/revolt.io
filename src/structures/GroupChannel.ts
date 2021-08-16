@@ -4,16 +4,35 @@ import { ChannelTypes } from '../util/Constants'
 import { TextBasedChannel } from './interfaces/TextBasedChannel'
 
 export class GroupChannel extends TextBasedChannel {
-    name: string
-    description: string | null
-    ownerId: string
-
-    constructor(client: Client, raw: RawGroupChannel) {
-        super(client, raw)
+    name!: string
+    description: string | null = null
+    ownerId!: string
+    constructor(client: Client, data: RawGroupChannel) {
+        super(client, data)
         this.type = ChannelTypes.GROUP
-        this.name = raw.name
-        this.description = raw.description ?? null
-        this.ownerId = raw.owner
+        this._patch(data)
+    }
+
+    _patch(data: RawGroupChannel): this {
+        if ('description' in data) {
+            this.description = data.description ?? null
+        }
+
+        if (data.owner) {
+            this.ownerId = data.owner
+        }
+
+        if (data.name) {
+            this.name = data.name
+        }
+
+        return this
+    }
+
+    _update(data: RawGroupChannel): this {
+        const clone = this._clone()
+        this._patch(data)
+        return clone
     }
 
     get owner(): User | null {

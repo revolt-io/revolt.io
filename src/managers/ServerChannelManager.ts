@@ -58,7 +58,7 @@ export class ServerChannelManager extends BaseManager<string, ServerChannel> {
     async fetch(_channel: ServerChannelResolvable, { force = true } = {}): Promise<ServerChannel> {
         const channelId = this.resolveId(_channel)
 
-        if (!force) {
+        if (!force && channelId) {
             const channel = this.cache.get(channelId)
             if (channel) return channel
         }

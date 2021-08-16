@@ -42,7 +42,7 @@ export class MessageEmbed {
         return this
     }
 
-    setIconURL(iconURL: string): this {
+    setIcon(iconURL: string): this {
         this.icon_url = iconURL
         return this
     }

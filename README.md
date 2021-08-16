@@ -1,12 +1,12 @@
 # Status: BETA
 
 ### In Progress...
-1. Patch/Update methods
-2. Ratelimit handler
-3. Cache handler
-4. More events
-5. More methods
-6. Add errors
+- [X] Patch/Update methods
+- [ ] Ratelimit handler
+- [ ] Cache handler
+- [ ] More events
+- [ ] More methods
+- [ ] Add errors
 
 ### Example Usage
 ```typescript

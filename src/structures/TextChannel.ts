@@ -1,11 +1,20 @@
 import { TextChannel as RawTextChannel } from 'revolt-api/types/Channels'
-import { Client } from '..'
+import { Client, Message, MessageManager, MessageOptions } from '..'
 import { ChannelTypes } from '../util/Constants'
-import { ServerTextBasedChannel } from './interfaces/ServerTextBasedChannel'
+import { TextBasedChannel } from './interfaces/TextBasedChannel'
+import { ServerChannel } from './ServerChannel'
 
-export class TextChannel extends ServerTextBasedChannel {
+export class TextChannel extends ServerChannel implements TextBasedChannel {
+    lastMessageId: string | null = null
+    messages = new MessageManager(this)
+
     constructor(client: Client, raw: RawTextChannel) {
         super(client, raw)
         this.type = ChannelTypes.TEXT
+        this.lastMessageId = raw.last_message ?? null
+    }
+
+    send(options: MessageOptions | string): Promise<Message> {
+        return this.messages.send(options)
     }
 }

@@ -6,26 +6,52 @@ import { MessageTypes } from '../util/Constants'
 import { UUID } from '../util/UUID'
 import { ServerMember } from './ServerMember'
 
-export class Message implements Base {
-    content: string
-    id: string
-    channelId: string
-    authorId: string
+export class Message extends Base {
+    content!: string
+    id!: string
+    channelId!: string
+    authorId!: string
     embeds: Embed[] = []
     deleted = false
     type: MessageTypes | 'UNKNOWN' = MessageTypes.TEXT
-    constructor(public client: Client, raw: RawMessage) {
-        this.id = raw._id
+    editedAt: Date | null = null
+    constructor(client: Client, data: RawMessage) {
+        super(client)
+        this._patch(data)
+    }
 
-        this.content = typeof raw.content === 'string' ? raw.content : ''
+    _update(data: RawMessage): this {
+        const clone = this._clone()
+        clone._patch(data)
+        return clone
+    }
 
-        if (typeof raw.content === 'object') {
-            this.type = MessageTypes[raw.content.type.toUpperCase() as keyof typeof MessageTypes] ?? 'UNKNOWN'
+    _patch(data: RawMessage): this {
+        if (data._id) {
+            this.id = data._id
         }
 
-        this.embeds = Array.isArray(raw.embeds) ? raw.embeds : []
-        this.channelId = raw.channel
-        this.authorId = raw.author
+        if (Array.isArray(data.embeds)) {
+            this.embeds = data.embeds
+        }
+
+        if (data.author) {
+            this.authorId = data.author
+        }
+
+        if (data.channel) {
+            this.channelId = data.channel
+        }
+
+        if (typeof data.content === 'object') {
+            this.type = MessageTypes[data.content.type.toUpperCase() as keyof typeof MessageTypes] ?? 'UNKNOWN'
+        }
+
+        if (data.edited) {
+            this.editedAt = new Date(data.edited.$date)
+        }
+
+        return this
     }
 
     get createdAt(): Date {
@@ -34,6 +60,10 @@ export class Message implements Base {
 
     get createdTimestamp(): number {
         return this.createdAt.getTime()
+    }
+
+    get editedTimestamp(): number | null {
+        return this.editedAt?.getTime() ?? null
     }
 
     async ack(): Promise<void> {
@@ -57,7 +87,8 @@ export class Message implements Base {
                 ]
             }
         })
-        return new Message(this.client, raw)
+
+        return this.channel.messages._add(raw)
     }
 
     fetch(): Promise<Message> {

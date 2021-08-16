@@ -1,15 +1,18 @@
-import { Collection } from '../util/Collection'
 import { Client } from '../client/Client'
+import { Collection } from '../util/Collection'
 
 export abstract class BaseManager<K, Holds, R extends unknown = unknown> {
     readonly cache = new Collection<K, Holds>()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    abstract readonly holds: new (...args: any[]) => Holds & { id: K }
+    abstract readonly holds: (new (...args: any[]) => Holds) | null
     abstract readonly client: Client
 
     _add(raw: R): Holds {
+        if (!this.holds) {
+            throw new Error('No "holds" exists.')
+        }
         const obj = new this.holds(this.client, raw)
-        this.cache.set(obj.id, obj)
+        this.cache.set((obj as Holds & { id: K }).id, obj)
         return obj
     }
 
@@ -17,11 +20,11 @@ export abstract class BaseManager<K, Holds, R extends unknown = unknown> {
         this.cache.delete(id)
     }
 
-    resolve(resolvable: Holds): Holds
+    resolve(resolvable: Holds): Holds | null
     resolve(resolvable: K | R): Holds | null
     resolve(resolvable: K | R | Holds): Holds | null
     resolve(resolvable: K | R | Holds): Holds | null {
-        if (resolvable instanceof this.holds) return resolvable
+        if (this.holds && resolvable instanceof this.holds) return resolvable
         const raw = resolvable as unknown as { _id: K }
         if ('_id' in raw) return this.cache.get(raw._id) ?? null
         if (typeof resolvable === 'string') return this.cache.get(resolvable as K) ?? null
@@ -29,8 +32,8 @@ export abstract class BaseManager<K, Holds, R extends unknown = unknown> {
     }
 
     resolveId(resolvable: K | Holds | R): K | null {
-        if (resolvable instanceof this.holds) return resolvable.id
         if (typeof resolvable === 'string') return resolvable as K
+        if (this.holds && resolvable instanceof this.holds) return (resolvable as Holds & { id: K }).id
         const raw = resolvable as unknown as { _id: K }
         if ('_id' in raw) raw._id ?? null
         return null
