@@ -19,6 +19,9 @@
     "bot",
     "node"
   ],
+  "bugs": {
+		"url": "https://github.com/TheMaestro0/better-revolt.js/issues"
+	},
   "dependencies": {
     "@discordjs/collection": "^0.2.1",
     "node-fetch": "^2.6.1",
@@ -38,6 +41,9 @@
     "ts-node": "^10.2.0",
     "typescript": "^4.3.5"
   },
+  "files": [
+    "dist/*"
+  ],
   "engines": {
     "node": ">=16.6.0",
     "npm": ">=7.0.0"
