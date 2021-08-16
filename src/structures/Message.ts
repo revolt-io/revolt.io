@@ -7,7 +7,7 @@ import { UUID } from '../util/UUID'
 import { ServerMember } from './ServerMember'
 
 export class Message extends Base {
-    content!: string
+    content = ''
     id!: string
     channelId!: string
     authorId!: string
@@ -47,8 +47,6 @@ export class Message extends Base {
             this.type = MessageTypes[data.content.type.toUpperCase() as keyof typeof MessageTypes] ?? 'UNKNOWN'
         } else if (typeof data.content === 'string') {
             this.content = data.content
-        } else {
-            this.content = ''
         }
 
         if (data.edited) {
