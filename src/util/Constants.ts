@@ -15,7 +15,8 @@ export enum Events {
     MESSAGE_UPDATE = 'messageUpdate',
     USER_UPDATE = 'userUpdate',
     SERVER_MEMBER_JOIN = 'serverMemberJoin',
-    CHANNEL_UPDATE = 'channelUpdate'
+    CHANNEL_UPDATE = 'channelUpdate',
+    SERVER_MEMBER_LEAVE = 'serverMemberLeave'
 }
 
 export enum WSEvents {

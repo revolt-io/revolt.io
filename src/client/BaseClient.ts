@@ -22,6 +22,7 @@ export interface ClientEvents {
     userUpdate: [User, User]
     serverMemberJoin: [ServerMember]
     channelUpdate: [Channel, Channel]
+    serverMemberLeave: [ServerMember]
 }
 
 export declare interface BaseClient {

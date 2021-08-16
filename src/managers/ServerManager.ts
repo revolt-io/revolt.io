@@ -18,6 +18,16 @@ export class ServerManager extends BaseManager<string, Server, RawServer> {
         super()
     }
 
+    _remove(id: string): void {
+        const server = this.cache.get(id)
+
+        for (const channelId of server?._channels ?? []) {
+            this.client.channels._remove(channelId)
+        }
+
+        return super._remove(id)
+    }
+
     async create(name: string): Promise<Server> {
         const data = await this.client.api.post('/servers/create', {
             body: {

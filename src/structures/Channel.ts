@@ -43,10 +43,6 @@ export abstract class Channel extends Base {
         await this.client.api.delete(`/channels/${this.id}`)
     }
 
-    // fetch(): this {
-    //     return this.client.channels.fetch
-    // }
-
     toString(): string {
         return `<#${this.id}>`
     }

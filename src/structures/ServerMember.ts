@@ -25,7 +25,7 @@ export class ServerMember extends Base {
         return this
     }
 
-    _update(data: RawMember): ServerMember {
+    _update(data: RawMember): this {
         const clone = this._clone()
         clone._patch(data)
         return clone

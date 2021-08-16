@@ -8,13 +8,7 @@ export class ServerDeleteAction extends Action {
 
         if (server) {
             server.deleted = true
-
             this.client.servers._remove(server.id)
-
-            for (const channelId of server._channels) {
-                this.client.channels._remove(channelId)
-            }
-
             this.client.emit(Events.SERVER_DELETE, server)
         }
 

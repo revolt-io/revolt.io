@@ -12,6 +12,8 @@ export class ServerMemberJoin extends Action {
 
         const member = await server.members.fetch(data.user)
 
+        server.members.cache.set(member.id, member)
+
         this.client.emit(Events.SERVER_MEMBER_JOIN, member)
 
         return { member }
