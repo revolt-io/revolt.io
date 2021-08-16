@@ -1,13 +1,13 @@
-import { Base } from './Base'
-import { Client } from '..'
+import { Attachment } from 'revolt-api/types/Autumn'
 import { User as RawUser } from 'revolt-api/types/Users'
+import { Base, DMChannel } from '.'
+import { Client, UUID } from '..'
 import { Presence } from '../util/Constants'
-import { DMChannel } from './DMChannel'
 
 export class User extends Base {
     username!: string
     id!: string
-    avatar: string | null = null
+    avatar: Attachment | null = null
     status = {
         text: null,
         presence: Presence.Invisible
@@ -20,6 +20,25 @@ export class User extends Base {
         this._patch(data)
     }
 
+    get createdAt(): Date {
+        return UUID.extrectTime(this.id)
+    }
+
+    get createdTimestamp(): number {
+        return this.createdAt.getTime()
+    }
+
+    avatarURL(options?: { size: number }): string | null {
+        if (this.avatar) {
+            return this.client.endpoints.avatar(this.avatar._id, this.avatar.filename, options?.size)
+        }
+        return null
+    }
+
+    displayAvatarURL(options?: { size: number }): string {
+        return this.avatarURL(options) ?? `${this.client.options.http.api}/users/${this.id}/default_avatar`
+    }
+
     _patch(data: RawUser): this {
         if (data._id) {
             this.id = data._id
@@ -30,7 +49,7 @@ export class User extends Base {
         }
 
         if ('avatar' in data) {
-            this.avatar = data.avatar?._id ?? null
+            this.avatar = data.avatar ?? null
         }
 
         if ('status' in data) {
@@ -64,10 +83,6 @@ export class User extends Base {
     fetch(force = true): Promise<User> {
         return this.client.users.fetch(this, { force })
     }
-
-    // async deleteDM(): Promise<void> {
-    //     await this.
-    // }
 
     toString(): string {
         return `<@${this.id}>`

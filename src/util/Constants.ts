@@ -1,5 +1,3 @@
-import { RESTOptions } from '../rest/REST'
-
 export enum Events {
     DEBUG = 'debug',
     ERROR = 'error',
@@ -77,17 +75,14 @@ export enum MessageTypes {
 }
 
 export const DEFUALT_OPTIONS = {
-    api: 'https://api.revolt.chat',
-    retryLimit: 4,
-    restRequestTimeout: 15000
+    http: {
+        api: 'https://api.revolt.chat',
+        cdn: 'https://autumn.revolt.chat',
+        invite: 'https://app.revolt.chat',
+        timeout: 15_000,
+        retries: 3,
+        offset: 50
+    }
 } as const
-
-export const DEFUALT_REST_OPTIONS: Required<RESTOptions> = {
-    api: 'https://api.revolt.chat',
-    cdn: '',
-    offset: 50,
-    retries: 3,
-    timeout: 15_000
-}
 
 export const SYSTEM_USER_ID = '0'.repeat(26)

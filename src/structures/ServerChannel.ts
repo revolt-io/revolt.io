@@ -1,15 +1,23 @@
 import { ServerChannel as RawServerChannel } from 'revolt-api/types/Channels'
-import { Channel } from './Channel'
-import { Client } from '../client/Client'
 import { Server } from '.'
+import { Client } from '../client/Client'
+import { Channel } from './Channel'
 
 export class ServerChannel extends Channel {
     name!: string
     serverId!: string
     description: string | null = null
+    icon: string | null = null
     constructor(client: Client, data: RawServerChannel) {
         super(client, Object.create(data))
         this._patch(data)
+    }
+
+    iconURL(options?: { size: number }): string | null {
+        if (this.icon) {
+            return this.client.endpoints.icon(this.icon, options?.size)
+        }
+        return null
     }
 
     _patch(data: RawServerChannel): this {
@@ -23,6 +31,10 @@ export class ServerChannel extends Channel {
 
         if ('description' in data) {
             this.description = data.description ?? null
+        }
+
+        if ('icon' in data) {
+            this.icon = data.icon?._id ?? null
         }
 
         return this
@@ -40,6 +52,6 @@ export class ServerChannel extends Channel {
 
     async createInvite(): Promise<string> {
         const { code } = await this.client.api.post(`/channels/${this.id}/invites`)
-        return `https://app.revolt.chat/invite/${code}`
+        return this.client.endpoints.invite(code)
     }
 }

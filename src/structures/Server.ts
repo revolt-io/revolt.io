@@ -1,25 +1,34 @@
 import { Server as RawServer } from 'revolt-api/types/Servers'
-import { Client, RoleManager } from '..'
+import { Client, RoleManager, UUID } from '..'
 import { ServerChannelManager, ServerMemberManager } from '../managers'
 import { User, Base } from '.'
+import { Role as RawRole } from 'revolt-api/types/Servers'
 
 export class Server extends Base {
     name!: string
     id!: string
     description!: string | null
     ownerId!: string
+    members = new ServerMemberManager(this)
     channels: ServerChannelManager
-    members: ServerMemberManager
     roles: RoleManager
-    deleted = false
     _channels: string[] = []
-    _roles: string[] = []
+    _roles: Record<string, RawRole> = {}
+    deleted = false
+
     constructor(client: Client, data: RawServer) {
         super(client)
         this._patch(data)
         this.channels = new ServerChannelManager(this)
         this.roles = new RoleManager(this)
-        this.members = new ServerMemberManager(this)
+    }
+
+    get createdAt(): Date {
+        return UUID.extrectTime(this.id)
+    }
+
+    get createdTimestamp(): number {
+        return this.createdAt.getTime()
     }
 
     _patch(data: RawServer): this {
@@ -41,6 +50,10 @@ export class Server extends Base {
 
         if (Array.isArray(data.channels)) {
             this._channels = data.channels
+        }
+
+        if (typeof data.roles === 'object') {
+            this._roles = data.roles
         }
 
         return this

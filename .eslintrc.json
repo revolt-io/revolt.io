@@ -8,6 +8,7 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended"
     ],
+    "ignorePatterns": ["**/dist/*"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2021,

@@ -12,6 +12,10 @@ export class APIRequest {
     public retries = 0
     constructor(public path: string) {}
 
+    get info(): string {
+        return [`Method: ${this.method}`, `Retries: ${this.retries}`, `Body: ${JSON.stringify(this.body, null, 2)}`].join('\n')
+    }
+
     setMethod(method: RequestMethod): this {
         this.method = method
         return this

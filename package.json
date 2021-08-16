@@ -1,10 +1,24 @@
 {
   "name": "better-revolt-js",
-  "version": "0.0.2-alpha",
+  "description": "Discord.js-like revolt library",
+  "version": "0.0.3-alpha",
   "scripts": {
     "start-debug": "ts-node -T test.ts",
-    "tsc": "tsc"
+    "build": "tsc",
+    "tsc": "tsc",
+    "lint:fix": "eslint src --fix",
+    "prettier": "prettier --write src/**/*.ts"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheMaestro0/better-revolt.js"
+  },
+  "keywords": [
+    "revolt",
+    "api",
+    "bot",
+    "node"
+  ],
   "dependencies": {
     "@discordjs/collection": "^0.2.1",
     "node-fetch": "^2.6.1",

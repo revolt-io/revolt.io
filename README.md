@@ -1,4 +1,4 @@
-# Status: BETA
+# Status: ALPHA
 
 ### In Progress...
 - [X] Patch/Update methods
@@ -8,6 +8,7 @@
 - [ ] More methods
 - [ ] Add errors
 - [ ] Voice Support
+- [ ] Permissions
 
 ### Example Usage
 ```typescript

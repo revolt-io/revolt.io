@@ -4,6 +4,7 @@ import { Base, DMChannel, GroupChannel, Server, TextChannel, User } from '.'
 import { Client } from '..'
 import { MessageTypes } from '../util/Constants'
 import { UUID } from '../util/UUID'
+import { Mentions } from './Mentions'
 import { ServerMember } from './ServerMember'
 
 export class Message extends Base {
@@ -13,6 +14,7 @@ export class Message extends Base {
     authorId!: string
     embeds: Embed[] = []
     deleted = false
+    mentions = new Mentions(this.client, [])
     type: MessageTypes | 'UNKNOWN' = MessageTypes.TEXT
     editedAt: Date | null = null
     constructor(client: Client, data: RawMessage) {
@@ -33,6 +35,10 @@ export class Message extends Base {
 
         if (Array.isArray(data.embeds)) {
             this.embeds = data.embeds
+        }
+
+        if (Array.isArray(data.mentions)) {
+            this.mentions._patch(data.mentions)
         }
 
         if (data.author) {

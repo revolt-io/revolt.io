@@ -2,9 +2,10 @@
 import EventEmitter from 'events'
 import { Session } from 'revolt-api/types/Auth'
 import { Client, DEFUALT_OPTIONS, Message, Server } from '..'
-import { REST } from '../rest/REST'
+import { REST, RESTOptions } from '../rest/REST'
 import { HeadersInit } from 'node-fetch'
 import { Channel, ServerMember, User } from '../structures'
+import { Endpoints } from '../rest/Endpoints'
 
 export type Awaited<T> = T | Promise<T>
 
@@ -38,24 +39,31 @@ export declare interface BaseClient {
     removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof ClientEvents>): this
 }
 
+type DeepPartial<T> = {
+    [P in keyof T]?: DeepPartial<T[P]>
+}
+
 export interface ClientOptions {
-    api: string
-    retryLimit: number
-    restRequestTimeout: number
+    http: RESTOptions
 }
 
 export class BaseClient extends EventEmitter {
-    private readonly rest = new REST(this)
+    private readonly rest: REST
     public session: Session | string | null = null
-    public options: ClientOptions
-
-    constructor(options: Partial<ClientOptions> = {}) {
+    public options: ClientOptions = { ...DEFUALT_OPTIONS }
+    constructor(options: DeepPartial<ClientOptions> = {}) {
         super()
-        this.options = { ...DEFUALT_OPTIONS, ...options }
+        Object.assign(this.options, options)
+        this.rest = new REST(this, { ...this.options.http })
     }
 
     get api(): REST {
         return this.rest
+    }
+
+    get endpoints(): Endpoints {
+        const { api, cdn, invite } = this.options.http
+        return new Endpoints({ api, cdn, invite })
     }
 
     get headers(): HeadersInit {

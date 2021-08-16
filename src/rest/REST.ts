@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events'
 import { Response } from 'node-fetch'
 import { BaseClient } from '../client/BaseClient'
-import { DEFUALT_REST_OPTIONS, Events } from '../util/Constants'
+import { Events } from '../util/Constants'
 import { APIRequest } from './APIRequest'
 import { HTTPError } from './HTTPError'
 import { parseResponse } from './utils/utils'
@@ -30,19 +30,15 @@ export interface InternalRequest extends RequestData {
 export interface RESTOptions {
     api: string
     cdn: string
+    invite: string
     offset: number
     retries: number
     timeout: number
 }
 
 export class REST extends EventEmitter {
-    private options: RESTOptions
-    private queue: APIRequest[] = []
-    private wait: Promise<void> | null = null
-
-    constructor(private client: BaseClient, options: Partial<RESTOptions> = {}) {
+    constructor(private client: BaseClient, private options: RESTOptions) {
         super()
-        this.options = { ...DEFUALT_REST_OPTIONS, ...options }
     }
 
     get(route: RouteLike, options: RequestData = {}) {
@@ -79,9 +75,9 @@ export class REST extends EventEmitter {
         let res: Response
 
         try {
-            res = await request.execute({ timeout: this.client.options.restRequestTimeout })
+            res = await request.execute({ timeout: this.options.timeout })
         } catch (error) {
-            if (request.retries === this.client.options.retryLimit) {
+            if (request.retries === this.options.retries) {
                 throw new HTTPError(error.statusText, error.constructor.name, error.status, request)
             }
 
@@ -99,15 +95,15 @@ export class REST extends EventEmitter {
             this.client.emit(
                 Events.DEBUG,
                 `Hit a 429 while executing a request.
-          Method  : ${request.method}
-          Path    : ${request.path}
-          Limit   : ${this.client.options.retryLimit}
-          Timeout : ${this.client.options.restRequestTimeout}ms`
+          Method: ${request.method}
+          Path: ${request.path}
+          Limit: ${this.options.retries}
+          Timeout: ${this.options.timeout}ms`
             )
         }
 
         if (res.status >= 500 && res.status < 600) {
-            if (request.retries === this.client.options.retryLimit) {
+            if (request.retries === this.options.retries) {
                 throw new HTTPError(res.statusText, res.constructor.name, res.status, request)
             }
 
