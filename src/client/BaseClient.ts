@@ -3,6 +3,7 @@ import EventEmitter from 'events'
 import { Session } from 'revolt-api/types/Auth'
 import { Client, DEFUALT_OPTIONS, Message, Server } from '..'
 import { REST } from '../rest/REST'
+import { HeadersInit } from 'node-fetch'
 
 export type Awaited<T> = T | Promise<T>
 
@@ -31,7 +32,9 @@ export declare interface BaseClient {
 }
 
 export interface ClientOptions {
-    api?: string
+    api: string
+    retryLimit: number
+    restRequestTimeout: number
 }
 
 export class BaseClient extends EventEmitter {
@@ -39,7 +42,7 @@ export class BaseClient extends EventEmitter {
     public session: Session | string | null = null
     public options: ClientOptions
 
-    constructor(options: ClientOptions = {}) {
+    constructor(options: Partial<ClientOptions> = {}) {
         super()
         this.options = { ...DEFUALT_OPTIONS, ...options }
     }
@@ -48,15 +51,16 @@ export class BaseClient extends EventEmitter {
         return this.rest
     }
 
-    get headers(): unknown {
+    get headers(): HeadersInit {
         if (typeof this.session === 'string') {
             return {
                 'x-bot-token': this.session
             }
         } else {
+            if (!this.session) return {}
             return {
-                'x-user-id': this.session?.user_id,
-                'x-session-token': this.session?.session_token
+                'x-user-id': this.session.user_id,
+                'x-session-token': this.session.session_token
             }
         }
     }

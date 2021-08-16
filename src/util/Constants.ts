@@ -71,7 +71,9 @@ export enum MessageTypes {
 }
 
 export const DEFUALT_OPTIONS = {
-    api: 'https://api.revolt.chat'
+    api: 'https://api.revolt.chat',
+    retryLimit: 4,
+    restRequestTimeout: 15000
 } as const
 
 export const DEFUALT_REST_OPTIONS: Required<RESTOptions> = {
