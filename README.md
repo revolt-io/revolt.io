@@ -7,6 +7,7 @@
 - [ ] More events
 - [ ] More methods
 - [ ] Add errors
+- [ ] Voice Support
 
 ### Example Usage
 ```typescript
