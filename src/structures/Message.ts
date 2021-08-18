@@ -121,6 +121,6 @@ export class Message extends Base {
     }
 
     get url(): string {
-        return `https://app.revolt.chat/${this.serverId ? `server/${this.serverId}` : ''}channel/${this.channelId}/${this.id}`
+        return `https://app.revolt.chat/${this.serverId ? `server/${this.serverId}` : ''}/channel/${this.channelId}/${this.id}`
     }
 }
