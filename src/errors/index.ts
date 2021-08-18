@@ -3,7 +3,8 @@ import { Messages } from './Messages'
 const createCustomError = (Base: ErrorConstructor) => {
     return class RevoltError<K extends keyof typeof Messages = keyof typeof Messages> extends Base {
         constructor(key: K, ...args: Parameters<typeof Messages[K]>) {
-            super(Messages[key].call(null, ...args))
+            const msg = Messages[key] as (...args: unknown[]) => string
+            super(msg(...args))
             Base.captureStackTrace(this, RevoltError)
         }
     }
