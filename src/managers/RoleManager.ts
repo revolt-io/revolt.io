@@ -21,6 +21,11 @@ export class RoleManager extends BaseManager<string, Role, RawRole & { id: strin
         return role
     }
 
+    _remove(id: string): void {
+        delete this.server._roles[id]
+        return super._remove(id)
+    }
+
     async create(name: string): Promise<Role> {
         const data = await this.client.api.post(`/servers/${this.server.id}/roles`, {
             body: { name }

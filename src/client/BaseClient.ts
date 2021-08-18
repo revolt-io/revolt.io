@@ -4,7 +4,7 @@ import { Session } from 'revolt-api/types/Auth'
 import { Client, DEFUALT_OPTIONS, Message, Server } from '..'
 import { REST, RESTOptions } from '../rest/REST'
 import { HeadersInit } from 'node-fetch'
-import { Channel, ServerMember, User } from '../structures'
+import { Channel, Role, ServerMember, User } from '../structures'
 import { Endpoints } from '../rest/Endpoints'
 
 export type Awaited<T> = T | Promise<T>
@@ -25,6 +25,7 @@ export interface ClientEvents {
     channelUpdate: [Channel, Channel]
     serverMemberLeave: [ServerMember]
     serverMemberUpdate: [ServerMember, ServerMember]
+    roleDelete: [Role]
 }
 
 export declare interface BaseClient {
@@ -46,6 +47,7 @@ type DeepPartial<T> = {
 
 export interface ClientOptions {
     http: RESTOptions
+    heartbeat: number
 }
 
 export class BaseClient extends EventEmitter {

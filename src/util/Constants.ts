@@ -15,7 +15,9 @@ export enum Events {
     SERVER_MEMBER_JOIN = 'serverMemberJoin',
     CHANNEL_UPDATE = 'channelUpdate',
     SERVER_MEMBER_LEAVE = 'serverMemberLeave',
-    SERVER_MEMBER_UPDATE = 'serverMemberUpdate'
+    SERVER_MEMBER_UPDATE = 'serverMemberUpdate',
+    ROLE_CREATE = 'roleCreate',
+    ROLE_DELETE = 'roleDelete'
 }
 
 export enum WSEvents {
@@ -83,7 +85,8 @@ export const DEFUALT_OPTIONS = {
         timeout: 15_000,
         retries: 3,
         offset: 50
-    }
+    },
+    heartbeat: 3_000
 } as const
 
 export const SYSTEM_USER_ID = '0'.repeat(26)
