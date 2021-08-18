@@ -1,5 +1,5 @@
 import { Member as RawMember } from 'revolt-api/types/Servers'
-import { Client } from '..'
+import { TypeError } from '../errors'
 import { Server, ServerMember, User } from '../structures'
 import { Collection } from '../util/Collection'
 import { BaseManager } from './BaseManager'
@@ -14,11 +14,9 @@ export interface EditServerMemberOptions {
 
 export class ServerMemberManager extends BaseManager<string, ServerMember, RawMember> {
     holds = ServerMember
-    client: Client
-
+    client = this.server.client
     constructor(public server: Server) {
         super()
-        this.client = server.client
     }
 
     resolveId(member: ServerMemberResolvable): string | null {
@@ -30,17 +28,38 @@ export class ServerMemberManager extends BaseManager<string, ServerMember, RawMe
 
     async edit(member: ServerMemberResolvable, options: EditServerMemberOptions): Promise<void> {
         const memberId = this.resolveId(member)
+        if (!memberId) throw new TypeError('INVALID_TYPE', 'member', 'ServerMemberResolvable')
         await this.client.api.patch(`/servers/${this.server.id}/members/${memberId}`, {
             body: { ...options }
         })
     }
 
+    async ban(member: ServerMemberResolvable, reason?: string): Promise<void> {
+        const memberId = this.resolveId(member)
+        if (!memberId) throw new TypeError('INVALID_TYPE', 'member', 'ServerMemberResolvable')
+        await this.client.api.put(`/servers/${this.server.id}/bans/${memberId}`, {
+            body: { reason }
+        })
+    }
+
+    async kick(member: ServerMemberResolvable): Promise<void> {
+        const memberId = this.resolveId(member)
+        if (!memberId) throw new TypeError('INVALID_TYPE', 'member', 'ServerMemberResolvable')
+        await this.client.api.delete(`/servers/${this.server.id}/members/${memberId}`)
+    }
+
+    async unban(member: ServerMemberResolvable): Promise<void> {
+        const memberId = this.resolveId(member)
+        if (!memberId) throw new TypeError('INVALID_TYPE', 'member', 'ServerMemberResolvable')
+        await this.client.api.delete(`/servers/${this.server.id}/bans/${memberId}`)
+    }
+
     fetch(member: ServerMemberResolvable): Promise<ServerMember>
     fetch(): Promise<Collection<string, ServerMember>>
     async fetch(member?: ServerMemberResolvable): Promise<ServerMember | Collection<string, ServerMember>> {
-        const memberId = typeof member !== 'undefined' ? this.resolveId(member) : null
-
-        if (memberId) {
+        if (typeof member !== 'undefined') {
+            const memberId = this.resolveId(member)
+            if (!memberId) throw new TypeError('INVALID_TYPE', 'member', 'ServerMemberResolvable')
             const data = await this.client.api.get(`/servers/${this.server.id}/members/${memberId}`)
             return this._add(data)
         }

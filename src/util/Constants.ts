@@ -14,7 +14,8 @@ export enum Events {
     USER_UPDATE = 'userUpdate',
     SERVER_MEMBER_JOIN = 'serverMemberJoin',
     CHANNEL_UPDATE = 'channelUpdate',
-    SERVER_MEMBER_LEAVE = 'serverMemberLeave'
+    SERVER_MEMBER_LEAVE = 'serverMemberLeave',
+    SERVER_MEMBER_UPDATE = 'serverMemberUpdate'
 }
 
 export enum WSEvents {
@@ -58,7 +59,7 @@ export enum ChannelTypes {
     GROUP = 'GROUP',
     TEXT = 'TEXT',
     VOICE = 'VOICE',
-    SAVED = 'SAVED'
+    NOTES = 'NOTES'
 }
 
 export enum MessageTypes {

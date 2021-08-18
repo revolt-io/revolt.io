@@ -1,10 +1,10 @@
 import { Message as RawMessage } from 'revolt-api/types/Channels'
-import { Client } from '../client/Client'
-import { Message, Channel, User } from '../structures'
-import { BaseManager } from './BaseManager'
+import { User as RawUser } from 'revolt-api/types/Users'
+import { TypeError } from '../errors'
+import { Channel, Message, User } from '../structures'
 import { Collection } from '../util/Collection'
 import { UUID } from '../util/UUID'
-import { User as RawUser } from 'revolt-api/types/Users'
+import { BaseManager } from './BaseManager'
 
 export type MessageResolvable = Message | RawMessage | string
 
@@ -27,14 +27,11 @@ export interface SerachMessageQuery {
     include_users?: boolean
 }
 
-// export interface FetchMessagesOptions {}
-
 export class MessageManager extends BaseManager<string, Message, RawMessage> {
-    client: Client
     holds = Message
+    client = this.channel.client
     constructor(public channel: Channel) {
         super()
-        this.client = channel.client
     }
 
     async send(_options: MessageOptions | string): Promise<Message> {
@@ -59,16 +56,19 @@ export class MessageManager extends BaseManager<string, Message, RawMessage> {
 
     async ack(message: MessageResolvable): Promise<void> {
         const messageId = this.resolveId(message)
+        if (!messageId) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable')
         await this.client.api.put(`/channels/${this.channel.id}/ack/${messageId}`)
     }
 
     async delete(message: MessageResolvable): Promise<void> {
         const messageId = this.resolveId(message)
+        if (!messageId) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable')
         await this.client.api.delete(`/channels/${this.channel.id}/messages/${messageId}`)
     }
 
     async edit(message: MessageResolvable, options: EditMessageOptions): Promise<void> {
         const messageId = this.resolveId(message)
+        if (!messageId) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable')
         await this.client.api.patch(`/channels/${this.channel.id}/messages/${messageId}`, {
             body: options
         })

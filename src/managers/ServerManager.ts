@@ -3,6 +3,7 @@ import { Server } from '../structures'
 import { BaseManager } from './BaseManager'
 import { Server as RawServer } from 'revolt-api/types/Servers'
 import { UUID } from '../util/UUID'
+import { TypeError } from '../errors'
 
 export type ServerResolvable = Server | RawServer | string
 
@@ -35,12 +36,12 @@ export class ServerManager extends BaseManager<string, Server, RawServer> {
                 nonce: UUID.generate()
             }
         })
-
         return this._add(data)
     }
 
     async edit(server: ServerResolvable, options: EditServerOptions): Promise<void> {
         const serverId = super.resolveId(server)
+        if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
         await this.client.api.patch(`/servers/${serverId}`, {
             body: options
         })
@@ -48,18 +49,22 @@ export class ServerManager extends BaseManager<string, Server, RawServer> {
 
     async ack(server: ServerResolvable): Promise<void> {
         const serverId = super.resolveId(server)
+        if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
         await this.client.api.put(`/servers/${serverId}/ack`)
     }
 
     async delete(server: ServerResolvable): Promise<void> {
         const serverId = super.resolveId(server)
+        if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
         await this.client.api.delete(`/servers/${serverId}`)
     }
 
-    async fetch(_server: ServerResolvable, { force = true } = {}): Promise<Server> {
-        const serverId = this.resolveId(_server)
+    async fetch(server: ServerResolvable, { force = true } = {}): Promise<Server> {
+        const serverId = this.resolveId(server)
 
-        if (!force && serverId) {
+        if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
+
+        if (!force) {
             const server = this.cache.get(serverId)
             if (server) return server
         }

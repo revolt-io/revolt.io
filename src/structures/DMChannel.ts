@@ -5,9 +5,9 @@ import { TextBasedChannel } from './interfaces/TextBasedChannel'
 
 export class DMChannel extends TextBasedChannel {
     active!: boolean
+    readonly type = ChannelTypes.DM
     constructor(client: Client, data: RawDMChannel) {
         super(client, data)
-        this.type = ChannelTypes.DM
         this._patch(data)
     }
 

@@ -7,10 +7,9 @@ import { ServerChannel } from './ServerChannel'
 export class TextChannel extends ServerChannel implements TextBasedChannel {
     lastMessageId: string | null = null
     messages = new MessageManager(this)
-
+    readonly type = ChannelTypes.TEXT
     constructor(client: Client, raw: RawTextChannel) {
         super(client, raw)
-        this.type = ChannelTypes.TEXT
         this.lastMessageId = raw.last_message ?? null
     }
 

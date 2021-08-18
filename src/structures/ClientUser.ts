@@ -1,6 +1,9 @@
 import { User } from '.'
+import { NotesChannel } from './NotesChannel'
 
 export class ClientUser extends User {
+    notes: NotesChannel | null = null
+
     async setUsername(username: string, password?: string): Promise<void> {
         await this.client.api.patch(`/users/${this.id}/username`, {
             body: {

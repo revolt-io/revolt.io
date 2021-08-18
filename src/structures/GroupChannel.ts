@@ -7,9 +7,9 @@ export class GroupChannel extends TextBasedChannel {
     name!: string
     description: string | null = null
     ownerId!: string
+    readonly type = ChannelTypes.GROUP
     constructor(client: Client, data: RawGroupChannel) {
         super(client, data)
-        this.type = ChannelTypes.GROUP
         this._patch(data)
     }
 

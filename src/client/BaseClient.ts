@@ -24,6 +24,7 @@ export interface ClientEvents {
     serverMemberJoin: [ServerMember]
     channelUpdate: [Channel, Channel]
     serverMemberLeave: [ServerMember]
+    serverMemberUpdate: [ServerMember, ServerMember]
 }
 
 export declare interface BaseClient {
@@ -48,17 +49,14 @@ export interface ClientOptions {
 }
 
 export class BaseClient extends EventEmitter {
-    private readonly rest: REST
+    public readonly api: REST
     public session: Session | string | null = null
     public options: ClientOptions = { ...DEFUALT_OPTIONS }
+
     constructor(options: DeepPartial<ClientOptions> = {}) {
         super()
         Object.assign(this.options, options)
-        this.rest = new REST(this, { ...this.options.http })
-    }
-
-    get api(): REST {
-        return this.rest
+        this.api = new REST(this, { ...this.options.http })
     }
 
     get endpoints(): Endpoints {
@@ -67,12 +65,13 @@ export class BaseClient extends EventEmitter {
     }
 
     get headers(): HeadersInit {
-        if (typeof this.session === 'string') {
+        if (!this.session) {
+            return {}
+        } else if (typeof this.session === 'string') {
             return {
                 'x-bot-token': this.session
             }
         } else {
-            if (!this.session) return {}
             return {
                 'x-user-id': this.session.user_id,
                 'x-session-token': this.session.session_token

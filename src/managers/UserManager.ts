@@ -1,5 +1,6 @@
 import { User as RawUser } from 'revolt-api/types/Users'
 import { Client } from '../client/Client'
+import { TypeError } from '../errors'
 import { Message, User } from '../structures'
 import { BaseManager } from './BaseManager'
 
@@ -26,7 +27,9 @@ export class UserManager extends BaseManager<string, User, RawUser> {
     async fetch(user: UserResolvable, { force = true } = {}): Promise<User> {
         const userId = this.resolveId(user)
 
-        if (!force && userId) {
+        if (!userId) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable')
+
+        if (!force) {
             const user = this.cache.get(userId)
             if (user) return user
         }

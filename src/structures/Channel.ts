@@ -7,12 +7,11 @@ import { TextBasedChannel } from './interfaces/TextBasedChannel'
 
 export abstract class Channel extends Base {
     id: string
-    type: ChannelTypes | 'UNKNOWN'
+    type: ChannelTypes | 'UNKNOWN' = 'UNKNOWN'
     deleted = false
     constructor(client: Client, raw: RawChannel) {
         super(client)
         this.id = raw._id
-        this.type = ChannelTypes[raw.channel_type as keyof typeof ChannelTypes] ?? 'UNKNOWN'
     }
 
     get createdTimestamp(): number {
@@ -36,11 +35,11 @@ export abstract class Channel extends Base {
     }
 
     async ack(): Promise<void> {
-        await this.client.api.put(`/channels/${this.id}/ack`)
+        await this.client.channels.ack(this)
     }
 
     async delete(): Promise<void> {
-        await this.client.api.delete(`/channels/${this.id}`)
+        await this.client.channels.delete(this)
     }
 
     toString(): string {

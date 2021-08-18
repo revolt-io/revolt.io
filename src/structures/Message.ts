@@ -29,6 +29,8 @@ export class Message extends Base {
     }
 
     _patch(data: RawMessage): this {
+        if (!data) return this
+
         if (data._id) {
             this.id = data._id
         }
@@ -83,20 +85,10 @@ export class Message extends Base {
     }
 
     async reply(content: string, mention = true): Promise<unknown> {
-        const raw = await this.client.api.post(`/channels/${this.channelId}/messages`, {
-            body: {
-                content,
-                nonce: UUID.generate(),
-                replies: [
-                    {
-                        id: this.id,
-                        mention
-                    }
-                ]
-            }
+        return this.channel.messages.send({
+            content,
+            replies: [{ id: this.id, mention }]
         })
-
-        return this.channel.messages._add(raw)
     }
 
     fetch(): Promise<Message> {
@@ -113,8 +105,7 @@ export class Message extends Base {
     }
 
     get channel(): TextChannel | DMChannel | GroupChannel {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return this.client.channels.cache.get(this.channelId)! as TextChannel
+        return this.client.channels.cache.get(this.channelId) as TextChannel
     }
 
     get serverId(): string | null {

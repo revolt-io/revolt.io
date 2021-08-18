@@ -19,7 +19,7 @@ export type LoginDetails =
     | string
 
 export class Client extends BaseClient {
-    private readonly ws = new WebSocket(this)
+    private readonly ws: WebSocket = new WebSocket(this)
     public readonly actions = new ActionManager(this)
     public readonly channels = new ChannelManager(this)
     public configuration?: RevoltConfiguration

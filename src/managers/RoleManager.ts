@@ -1,5 +1,5 @@
 import { Role as RawRole } from 'revolt-api/types/Servers'
-import { Client } from '../client/Client'
+import { TypeError } from '../errors'
 import { Role, Server } from '../structures'
 import { BaseManager } from './BaseManager'
 
@@ -7,12 +7,11 @@ export type RoleResolvable = Role | string
 
 export class RoleManager extends BaseManager<string, Role, RawRole & { id: string }> {
     holds = Role
-    client: Client
+    client = this.server.client
     constructor(public server: Server) {
         super()
-        this.client = server.client
         for (const [id, role] of Object.entries(server._roles)) {
-            this._add(Object.assign(role, { id: id }))
+            this._add(Object.assign(role, { id }))
         }
     }
 
@@ -31,6 +30,7 @@ export class RoleManager extends BaseManager<string, Role, RawRole & { id: strin
 
     async delete(role: RoleResolvable): Promise<void> {
         const roleId = this.resolveId(role)
+        if (!roleId) throw new TypeError('INVALID_TYPE', 'role', 'RoleResolvable')
         await this.client.api.post(`/servers/${this.server.id}/roles/${roleId}`)
     }
 }

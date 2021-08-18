@@ -3,7 +3,7 @@ import { Server, ServerChannel, TextChannel, VoiceChannel } from '../structures'
 import { UUID } from '../util/UUID'
 import { BaseManager } from './BaseManager'
 import { Channel as RawChannel, ServerChannel as RawServerChannel } from 'revolt-api/types/Channels'
-
+import { TypeError } from '../errors'
 export type ServerChannelResolvable = ServerChannel | RawServerChannel | string
 
 export interface CreateChannelOptions {
@@ -43,22 +43,24 @@ export class ServerChannelManager extends BaseManager<string, ServerChannel> {
         return channel
     }
 
-    async create(options: CreateChannelOptions): Promise<ServerChannel> {
+    async create({ name, type = 'Text', description }: CreateChannelOptions): Promise<ServerChannel> {
         const data = await this.client.api.post(`/servers/${this.server.id}/channels`, {
             body: {
-                name: options.name,
-                type: options.type ?? 'Text',
-                description: options.description,
+                name,
+                type,
+                description,
                 nonce: UUID.generate()
             }
         })
         return this._add(data)
     }
 
-    async fetch(_channel: ServerChannelResolvable, { force = true } = {}): Promise<ServerChannel> {
-        const channelId = this.resolveId(_channel)
+    async fetch(channel: ServerChannelResolvable, { force = true } = {}): Promise<ServerChannel> {
+        const channelId = this.resolveId(channel)
 
-        if (!force && channelId) {
+        if (!channelId) throw new TypeError('INVALID_TYPE', 'channel', 'ServerChannelResolvable')
+
+        if (!force) {
             const channel = this.cache.get(channelId)
             if (channel) return channel
         }

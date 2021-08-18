@@ -13,6 +13,23 @@ export class ServerMember extends Base {
         this._patch(data)
     }
 
+    async setNickname(nickname?: string): Promise<this> {
+        await this.server.members.edit(this, { nickname })
+        return this
+    }
+
+    ban(reason?: string): Promise<void> {
+        return this.server.members.ban(this, reason)
+    }
+
+    kick(): Promise<void> {
+        return this.server.members.kick(this)
+    }
+
+    leave(): Promise<void> {
+        return this.client.servers.delete(this.serverId)
+    }
+
     displayAvatarURL(): string {
         return ''
     }
@@ -44,8 +61,8 @@ export class ServerMember extends Base {
         return this.client.users.cache.get(this.id) ?? null
     }
 
-    get server(): Server | null {
-        return this.client.servers.cache.get(this.serverId) ?? null
+    get server(): Server {
+        return this.client.servers.cache.get(this.serverId) as Server
     }
 
     toString(): string {
