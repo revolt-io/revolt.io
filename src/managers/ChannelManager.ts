@@ -17,7 +17,7 @@ export class ChannelManager extends BaseManager<string, Channel, RawChannel> {
     _add(raw: RawChannel): Channel {
         const channel = Channel.create(this.client, raw)
 
-        if (channel.type === ChannelTypes.NOTES && this.client.isReady()) {
+        if (channel.type === ChannelTypes.NOTES && this.client.user) {
             this.client.user.notes = channel as NotesChannel
         }
 
