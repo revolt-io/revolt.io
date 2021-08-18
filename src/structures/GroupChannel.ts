@@ -1,6 +1,7 @@
 import { GroupChannel as RawGroupChannel } from 'revolt-api/types/Channels'
 import { Client, User, UserResolvable } from '..'
 import { ChannelTypes } from '../util/Constants'
+import { ChannelPermissions } from '../util/Permissions'
 import { TextBasedChannel } from './interfaces/TextBasedChannel'
 
 export class GroupChannel extends TextBasedChannel {
@@ -8,6 +9,7 @@ export class GroupChannel extends TextBasedChannel {
     description: string | null = null
     ownerId!: string
     readonly type = ChannelTypes.GROUP
+    permissions!: Readonly<ChannelPermissions>
     constructor(client: Client, data: RawGroupChannel) {
         super(client, data)
         this._patch(data)
@@ -16,6 +18,10 @@ export class GroupChannel extends TextBasedChannel {
     _patch(data: RawGroupChannel): this {
         if ('description' in data) {
             this.description = data.description ?? null
+        }
+
+        if (typeof data.permissions === 'number') {
+            this.permissions = new ChannelPermissions(data.permissions).freeze()
         }
 
         if (data.owner) {

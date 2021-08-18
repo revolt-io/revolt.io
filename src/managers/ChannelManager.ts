@@ -58,8 +58,8 @@ export class ChannelManager extends BaseManager<string, Channel, RawChannel> {
         await this.client.api.put(`/channels/${channelId}/ack`)
     }
 
-    async fetch(_channel: ChannelResolvable, { force = true } = {}): Promise<Channel> {
-        const channelId = this.resolveId(_channel)
+    async fetch(channel: ChannelResolvable, { force = true } = {}): Promise<Channel> {
+        const channelId = this.resolveId(channel)
 
         if (!channelId) throw new TypeError('INVALID_TYPE', 'channel', 'ChannelResolvable')
 

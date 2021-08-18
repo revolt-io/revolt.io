@@ -1,13 +1,13 @@
 import { Base, User } from '.'
-import { Client } from '../client/Client'
 import { UserResolvable } from '../managers'
 import { Collection } from '../util/Collection'
+import { Message } from './Message'
+import { ServerMember } from './ServerMember'
 
 export class Mentions extends Base {
     private _users: string[] = []
-    constructor(client: Client, userIds: string[]) {
-        super(client)
-        this._patch(userIds)
+    constructor(public message: Message) {
+        super(message.client)
     }
 
     _patch(userIds: string[]): this {
@@ -25,6 +25,20 @@ export class Mentions extends Base {
     has(user: UserResolvable): boolean {
         const userId = this.client.users.resolveId(user)
         return !!userId && this._users.includes(userId)
+    }
+
+    get members(): Collection<string, ServerMember> {
+        const members = new Collection<string, ServerMember>()
+        const server = this.message.server
+
+        if (!server) return members
+
+        for (const userId of this._users) {
+            const member = server.members.cache.get(userId)
+            if (member) members.set(member.id, member)
+        }
+
+        return members
     }
 
     get users(): Collection<string, User> {

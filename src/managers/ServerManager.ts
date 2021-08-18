@@ -40,7 +40,7 @@ export class ServerManager extends BaseManager<string, Server, RawServer> {
     }
 
     async edit(server: ServerResolvable, options: EditServerOptions): Promise<void> {
-        const serverId = super.resolveId(server)
+        const serverId = this.resolveId(server)
         if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
         await this.client.api.patch(`/servers/${serverId}`, {
             body: options
@@ -48,13 +48,13 @@ export class ServerManager extends BaseManager<string, Server, RawServer> {
     }
 
     async ack(server: ServerResolvable): Promise<void> {
-        const serverId = super.resolveId(server)
+        const serverId = this.resolveId(server)
         if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
         await this.client.api.put(`/servers/${serverId}/ack`)
     }
 
     async delete(server: ServerResolvable): Promise<void> {
-        const serverId = super.resolveId(server)
+        const serverId = this.resolveId(server)
         if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
         await this.client.api.delete(`/servers/${serverId}`)
     }

@@ -14,7 +14,7 @@ export class Message extends Base {
     authorId!: string
     embeds: Embed[] = []
     deleted = false
-    mentions = new Mentions(this.client, [])
+    mentions = new Mentions(this)
     type: MessageTypes | 'UNKNOWN' = MessageTypes.TEXT
     editedAt: Date | null = null
     constructor(client: Client, data: RawMessage) {
@@ -95,7 +95,6 @@ export class Message extends Base {
         return this.channel.messages.fetch(this.id)
     }
 
-    // TODO: Return instance message
     async edit(content: string): Promise<void> {
         await this.channel.messages.edit(this, { content })
     }

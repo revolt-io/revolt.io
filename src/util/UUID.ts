@@ -2,8 +2,8 @@ import { randomBytes } from 'crypto'
 
 export class UUID extends null {
     static readonly ENCODING = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
-    static readonly ENCODING_LEN = UUID.ENCODING.length
-    static readonly RANDOM_LEN = 16
+    static readonly ENCODING_LENGTH = UUID.ENCODING.length
+    static readonly RANDOM_LENGTH = 16
     static readonly TIME_LEN = 10
     static readonly TIME_MAX = Math.pow(2, 48) - 1
     static get PROG(): number {
@@ -15,9 +15,9 @@ export class UUID extends null {
             result = ''
 
         for (let i = this.TIME_LEN; i > 0; i--) {
-            mod = now % this.ENCODING_LEN
+            mod = now % this.ENCODING_LENGTH
             result = this.ENCODING.charAt(mod) + result
-            now = (now - mod) / this.ENCODING_LEN
+            now = (now - mod) / this.ENCODING_LENGTH
         }
 
         return result
@@ -26,11 +26,11 @@ export class UUID extends null {
     private static hash(): string {
         let result = ''
 
-        for (let i = this.RANDOM_LEN; i > 0; i--) {
-            let random = Math.floor(this.PROG * this.ENCODING_LEN)
+        for (let i = this.RANDOM_LENGTH; i > 0; i--) {
+            let random = Math.floor(this.PROG * this.ENCODING_LENGTH)
 
-            if (random === this.ENCODING_LEN) {
-                random = this.ENCODING_LEN - 1
+            if (random === this.ENCODING_LENGTH) {
+                random = this.ENCODING_LENGTH - 1
             }
 
             result = this.ENCODING.charAt(random) + result
@@ -55,7 +55,7 @@ export class UUID extends null {
                     throw new Error('invalid character found: ' + char)
                 }
 
-                return (carry += encodingIndex * Math.pow(this.ENCODING_LEN, index))
+                return (carry += encodingIndex * Math.pow(this.ENCODING_LENGTH, index))
             }, 0)
 
         return new Date(timestamp)

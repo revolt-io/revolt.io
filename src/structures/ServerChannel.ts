@@ -1,25 +1,25 @@
 import { ServerChannel as RawServerChannel } from 'revolt-api/types/Channels'
-import { Server } from '.'
+import { Channel, Server } from '.'
 import { Client } from '../client/Client'
-import { Channel } from './Channel'
+import { Collection } from '../util/Collection'
+import { ChannelPermissions } from '../util/Permissions'
 
 export class ServerChannel extends Channel {
     name!: string
     serverId!: string
     description: string | null = null
     icon: string | null = null
+    overwrites = new Collection<string, ChannelPermissions>()
     constructor(client: Client, data: RawServerChannel) {
         super(client, Object.create(data))
         this._patch(data)
     }
 
     iconURL(options?: { size: number }): string | null {
-        if (this.icon) {
-            return this.client.endpoints.icon(this.icon, options?.size)
-        }
-        return null
+        return this.icon && this.client.endpoints.icon(this.icon, options?.size)
     }
 
+    // TODO: Add channel overwrites
     _patch(data: RawServerChannel): this {
         if (data.name) {
             this.name = data.name

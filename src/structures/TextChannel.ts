@@ -16,4 +16,9 @@ export class TextChannel extends ServerChannel implements TextBasedChannel {
     send(options: MessageOptions | string): Promise<Message> {
         return this.messages.send(options)
     }
+
+    get lastMessage(): Message | null {
+        if (!this.lastMessageId) return null
+        return this.messages.cache.get(this.lastMessageId) ?? null
+    }
 }

@@ -20,6 +20,7 @@ export class ServerMemberManager extends BaseManager<string, ServerMember, RawMe
     }
 
     resolveId(member: ServerMemberResolvable): string | null {
+        if (member == null) return null
         if (member instanceof ServerMember || member instanceof User) return member.id
         if (typeof member === 'string') return member
         if ('_id' in member) return member._id.user

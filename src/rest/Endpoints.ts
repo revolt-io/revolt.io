@@ -30,4 +30,8 @@ export class Endpoints {
     invite(code: string): string {
         return `${this.INVITE}/${code}`
     }
+
+    banner(hash: string, size = 1024): string {
+        return `${this.CDN}/banners/${hash}?max_side=${size}`
+    }
 }
