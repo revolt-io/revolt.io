@@ -113,11 +113,12 @@ export class WebSocket {
                     this.client.servers.cache.get(member._id.server)?.members._add(member)
                 }
 
-                this.setHeartbeatTimer(1e3)
+                this.setHeartbeatTimer(this.client.options.heartbeat)
 
                 this.ready = true
 
                 this.client.emit(Events.READY, this.client)
+
                 break
             default:
                 if (action) {
