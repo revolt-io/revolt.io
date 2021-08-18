@@ -1,9 +1,10 @@
-import { Client } from '../client/Client'
-import { Server, ServerChannel, TextChannel, VoiceChannel } from '../structures'
-import { UUID } from '../util/UUID'
-import { BaseManager } from './BaseManager'
 import { Channel as RawChannel, ServerChannel as RawServerChannel } from 'revolt-api/types/Channels'
+import { BaseManager } from '.'
+import { Client } from '..'
 import { TypeError } from '../errors'
+import { Server, ServerChannel, TextChannel, VoiceChannel } from '../structures'
+import { UUID } from '../util'
+
 export type ServerChannelResolvable = ServerChannel | RawServerChannel | string
 
 export interface CreateChannelOptions {

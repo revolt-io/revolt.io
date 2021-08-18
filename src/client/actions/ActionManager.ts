@@ -1,6 +1,6 @@
-import { Client } from '../Client'
-import { Action as BaseAction } from './Action'
 import * as Actions from '.'
+import { Action as BaseAction } from './Action'
+import { Client } from '../Client'
 
 export class ActionManager {
     private actions: Record<string, BaseAction> = {}

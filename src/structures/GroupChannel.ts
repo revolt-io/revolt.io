@@ -1,8 +1,7 @@
 import { GroupChannel as RawGroupChannel } from 'revolt-api/types/Channels'
-import { Client, User, UserResolvable } from '..'
-import { ChannelTypes } from '../util/Constants'
-import { ChannelPermissions } from '../util/Permissions'
 import { TextBasedChannel } from './interfaces/TextBasedChannel'
+import { Client, User, UserResolvable } from '..'
+import { ChannelPermissions, ChannelTypes } from '../util'
 
 export class GroupChannel extends TextBasedChannel {
     name!: string

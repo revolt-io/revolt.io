@@ -1,5 +1,5 @@
-import { Events } from '../../util/Constants'
 import { Action } from './Action'
+import { Events } from '../../util/Constants'
 
 export class ServerMemberJoin extends Action {
     async handle(data: { id: string; user: string }): Promise<unknown> {

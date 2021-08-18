@@ -1,5 +1,5 @@
-import { Action } from './Action'
 import { Member as RawMember } from 'revolt-api/types/Servers'
+import { Action } from './Action'
 import { Events } from '../../util/Constants'
 
 export class ServerMemberUpdateAction extends Action {

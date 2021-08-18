@@ -1,8 +1,8 @@
 import { SavedMessagesChannel as RawNotesChannel } from 'revolt-api/types/Channels'
 import { User } from '.'
-import { Client } from '../client/Client'
-import { ChannelTypes } from '../util/Constants'
 import { TextBasedChannel } from './interfaces/TextBasedChannel'
+import { Client } from '../client/Client'
+import { ChannelTypes } from '../util'
 
 export class NotesChannel extends TextBasedChannel {
     userId!: string

@@ -1,11 +1,8 @@
-import { Message as RawMessage } from 'revolt-api/types/Channels'
+import { Message as RawMessage, SystemMessage } from 'revolt-api/types/Channels'
 import { Embed } from 'revolt-api/types/January'
-import { Base, DMChannel, GroupChannel, Server, TextChannel, User } from '.'
+import { Base, DMChannel, GroupChannel, Mentions, Server, ServerMember, TextChannel, User } from '.'
 import { Client } from '..'
-import { MessageTypes } from '../util/Constants'
-import { UUID } from '../util/UUID'
-import { Mentions } from './Mentions'
-import { ServerMember } from './ServerMember'
+import { MessageTypes, UUID } from '../util'
 
 export class Message extends Base {
     content = ''
@@ -27,7 +24,6 @@ export class Message extends Base {
         clone._patch(data)
         return clone
     }
-
     _patch(data: RawMessage): this {
         if (!data) return this
 
@@ -52,7 +48,7 @@ export class Message extends Base {
         }
 
         if (typeof data.content === 'object') {
-            this.type = MessageTypes[data.content.type.toUpperCase() as keyof typeof MessageTypes] ?? 'UNKNOWN'
+            this.type = MessageTypes[data.content.type.toUpperCase() as Uppercase<SystemMessage['type']>] ?? 'UNKNOWN'
         } else if (typeof data.content === 'string') {
             this.content = data.content
         }
@@ -63,7 +59,6 @@ export class Message extends Base {
 
         return this
     }
-
     get createdAt(): Date {
         return UUID.extrectTime(this.id)
     }
@@ -79,30 +74,31 @@ export class Message extends Base {
     async ack(): Promise<void> {
         await this.channel.messages.ack(this)
     }
-
     async delete(): Promise<void> {
         await this.channel.messages.delete(this)
     }
-
     async reply(content: string, mention = true): Promise<unknown> {
         return this.channel.messages.send({
             content,
             replies: [{ id: this.id, mention }]
         })
     }
-
-    fetch(): Promise<Message> {
-        return this.channel.messages.fetch(this.id)
-    }
-
     async edit(content: string): Promise<void> {
         await this.channel.messages.edit(this, { content })
     }
+    fetch(): Promise<Message> {
+        return this.channel.messages.fetch(this.id)
+    }
+    get system(): boolean {
+        return this.type !== MessageTypes.TEXT
+    }
 
+    inServer(): this is this & { serverId: string; server: Server } {
+        return this.channel.inServer()
+    }
     get author(): User | null {
         return this.client.users.cache.get(this.authorId) ?? null
     }
-
     get channel(): TextChannel | DMChannel | GroupChannel {
         return this.client.channels.cache.get(this.channelId) as TextChannel
     }

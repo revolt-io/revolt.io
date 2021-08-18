@@ -1,6 +1,6 @@
 import { Channel as RawChannel } from 'revolt-api/types/Channels'
-import { Events } from '../../util/Constants'
 import { Action } from './Action'
+import { Events } from '../../util/Constants'
 
 export class ChannelCreateAction extends Action {
     async handle(data: RawChannel): Promise<unknown> {

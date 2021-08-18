@@ -1,8 +1,6 @@
-import { Base, User } from '.'
+import { Base, Message, ServerMember, User } from '.'
 import { UserResolvable } from '../managers'
-import { Collection } from '../util/Collection'
-import { Message } from './Message'
-import { ServerMember } from './ServerMember'
+import { Collection } from '../util'
 
 export class Mentions extends Base {
     private _users: string[] = []

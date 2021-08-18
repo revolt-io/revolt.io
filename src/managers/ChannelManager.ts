@@ -1,9 +1,9 @@
 import { Channel as RawChannel } from 'revolt-api/types/Channels'
+import { BaseManager } from '.'
 import { Client } from '..'
-import { Channel, NotesChannel } from '../structures'
-import { BaseManager } from './BaseManager'
 import { TypeError } from '../errors'
-import { ChannelTypes } from '../util/Constants'
+import { Channel, NotesChannel } from '../structures'
+import { ChannelTypes } from '../util'
 
 export type ChannelResolvable = Channel | RawChannel | string
 
@@ -36,16 +36,6 @@ export class ChannelManager extends BaseManager<string, Channel, RawChannel> {
         super._remove(id)
     }
 
-    resolve(channel: ChannelResolvable): Channel | null {
-        if (channel instanceof Channel) return channel
-        return super.resolve(channel)
-    }
-
-    resolveId(channel: ChannelResolvable): string | null {
-        if (channel instanceof Channel) return channel.id
-        return super.resolveId(channel)
-    }
-
     async delete(channel: ChannelResolvable): Promise<void> {
         const channelId = this.resolveId(channel)
         if (!channelId) throw new TypeError('INVALID_TYPE', 'channel', 'ChannelResolvable')
@@ -71,5 +61,15 @@ export class ChannelManager extends BaseManager<string, Channel, RawChannel> {
         const data = await this.client.api.get(`/channels/${channelId}`)
 
         return this._add(data)
+    }
+
+    resolve(channel: ChannelResolvable): Channel | null {
+        if (channel instanceof Channel) return channel
+        return super.resolve(channel)
+    }
+
+    resolveId(channel: ChannelResolvable): string | null {
+        if (channel instanceof Channel) return channel.id
+        return super.resolveId(channel)
     }
 }

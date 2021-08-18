@@ -1,4 +1,4 @@
-import { Client } from '../client/Client'
+import type { Client } from '..'
 
 export abstract class Base {
     constructor(public client: Client) {}

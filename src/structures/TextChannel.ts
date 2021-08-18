@@ -1,8 +1,9 @@
 import { TextChannel as RawTextChannel } from 'revolt-api/types/Channels'
-import { Client, Message, MessageManager, MessageOptions } from '..'
-import { ChannelTypes } from '../util/Constants'
+import { Message, ServerChannel } from '.'
 import { TextBasedChannel } from './interfaces/TextBasedChannel'
-import { ServerChannel } from './ServerChannel'
+import { Client } from '..'
+import { MessageManager, MessageOptions } from '../managers'
+import { ChannelTypes } from '../util'
 
 export class TextChannel extends ServerChannel implements TextBasedChannel {
     lastMessageId: string | null = null

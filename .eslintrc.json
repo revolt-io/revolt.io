@@ -8,7 +8,9 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended"
     ],
-    "ignorePatterns": ["**/dist/*"],
+    "ignorePatterns": [
+        "**/dist/*"
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2021,
@@ -16,7 +18,9 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "prettier"
+        "prettier",
+        "sort-class-members",
+        "import"
     ],
     "rules": {
         "prettier/prettier": [
@@ -30,6 +34,39 @@
                 "trailingComma": "none",
                 "endOfLine": "lf",
                 "arrowParens": "avoid"
+            }
+        ],
+        "import/order": [
+            "error",
+            {
+                "groups": [
+                    "builtin",
+                    "external",
+                    "internal",
+                    "index",
+                    "sibling",
+                    "parent"
+                ],
+                "alphabetize": {
+                    "order": "asc"
+                }
+            }
+        ],
+        "sort-class-members/sort-class-members": [
+            "error",
+            {
+                "order": [
+                    "[static-properties]",
+                    "[properties]",
+                    "[conventional-private-properties]",
+                    "constructor",
+                    "[conventional-private-methods]",
+                    "[getters]",
+                    "[async-methods]",
+                    "[methods]",
+                    "[static-methods]"
+                ],
+                "accessorPairPositioning": "getThenSet"
             }
         ],
         "strict": [

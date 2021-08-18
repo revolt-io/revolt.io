@@ -1,8 +1,8 @@
 import { Attachment } from 'revolt-api/types/Autumn'
 import { User as RawUser } from 'revolt-api/types/Users'
 import { Base, DMChannel } from '.'
-import { Client, UUID } from '..'
-import { Presence } from '../util/Constants'
+import { Client } from '..'
+import { Presence, UUID } from '../util'
 
 export class User extends Base {
     username!: string
@@ -18,25 +18,6 @@ export class User extends Base {
     constructor(client: Client, data: RawUser) {
         super(client)
         this._patch(data)
-    }
-
-    get createdAt(): Date {
-        return UUID.extrectTime(this.id)
-    }
-
-    get createdTimestamp(): number {
-        return this.createdAt.getTime()
-    }
-
-    avatarURL(options?: { size: number }): string | null {
-        if (this.avatar) {
-            return this.client.endpoints.avatar(this.avatar._id, this.avatar.filename, options?.size)
-        }
-        return null
-    }
-
-    displayAvatarURL(options?: { size: number }): string {
-        return this.avatarURL(options) ?? `${this.client.options.http.api}/users/${this.id}/default_avatar`
     }
 
     _patch(data: RawUser): this {
@@ -67,6 +48,14 @@ export class User extends Base {
         return clone
     }
 
+    get createdAt(): Date {
+        return UUID.extrectTime(this.id)
+    }
+
+    get createdTimestamp(): number {
+        return this.createdAt.getTime()
+    }
+
     async block(): Promise<void> {
         await this.client.api.put(`/users/${this.id}/block`)
     }
@@ -78,6 +67,17 @@ export class User extends Base {
     async createDM(): Promise<DMChannel> {
         const data = await this.client.api.get(`/users/${this.id}/dm`)
         return this.client.channels._add(data) as DMChannel
+    }
+
+    avatarURL(options?: { size: number }): string | null {
+        if (this.avatar) {
+            return this.client.endpoints.avatar(this.avatar._id, this.avatar.filename, options?.size)
+        }
+        return null
+    }
+
+    displayAvatarURL(options?: { size: number }): string {
+        return this.avatarURL(options) ?? `${this.client.options.http.api}/users/${this.id}/default_avatar`
     }
 
     fetch(force = true): Promise<User> {

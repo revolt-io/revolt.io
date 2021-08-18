@@ -1,8 +1,8 @@
 import { Session } from 'revolt-api/types/Auth'
 import { default as Socket } from 'ws'
 import { Client } from './Client'
-import { Events, WSEvents } from '../util/Constants'
-import { ClientUser } from '../structures/ClientUser'
+import { ClientUser } from '../structures'
+import { Events, WSEvents } from '../util'
 
 export class WebSocket {
     heartbeatInterval?: NodeJS.Timeout

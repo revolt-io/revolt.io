@@ -1,6 +1,6 @@
 import { Role as RawRole } from 'revolt-api/types/Servers'
 import { Base, Server } from '.'
-import { UUID } from '..'
+import { UUID } from '../util'
 
 export class Role extends Base {
     id!: string
@@ -9,14 +9,6 @@ export class Role extends Base {
     constructor(public server: Server, data: RawRole & { id: string }) {
         super(server.client)
         this._patch(data)
-    }
-
-    get createdAt(): Date {
-        return UUID.extrectTime(this.id)
-    }
-
-    get createdTimestamp(): number {
-        return this.createdAt.getTime()
     }
 
     _patch(data: RawRole & { id?: string }): this {
@@ -39,6 +31,14 @@ export class Role extends Base {
         const clone = this._clone()
         clone._patch(data)
         return clone
+    }
+
+    get createdAt(): Date {
+        return UUID.extrectTime(this.id)
+    }
+
+    get createdTimestamp(): number {
+        return this.createdAt.getTime()
     }
 
     async delete(): Promise<void> {

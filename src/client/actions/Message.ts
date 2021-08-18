@@ -1,7 +1,7 @@
 import { Message as RawMessage } from 'revolt-api/types/Channels'
+import { Action } from './Action'
 import { TextBasedChannel } from '../../structures/interfaces/TextBasedChannel'
 import { Events } from '../../util/Constants'
-import { Action } from './Action'
 
 export class MessageAction extends Action {
     handle(data: RawMessage): unknown {

@@ -4,7 +4,7 @@ export class UUID extends null {
     static readonly ENCODING = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
     static readonly ENCODING_LENGTH = UUID.ENCODING.length
     static readonly RANDOM_LENGTH = 16
-    static readonly TIME_LEN = 10
+    static readonly TIME_LENGTH = 10
     static readonly TIME_MAX = Math.pow(2, 48) - 1
     static get PROG(): number {
         return randomBytes(1).readUInt8() / 0xff
@@ -14,7 +14,7 @@ export class UUID extends null {
         let mod: number,
             result = ''
 
-        for (let i = this.TIME_LEN; i > 0; i--) {
+        for (let i = this.TIME_LENGTH; i > 0; i--) {
             mod = now % this.ENCODING_LENGTH
             result = this.ENCODING.charAt(mod) + result
             now = (now - mod) / this.ENCODING_LENGTH
@@ -45,7 +45,7 @@ export class UUID extends null {
 
     static extrectTime(id: string): Date {
         const timestamp = id
-            .substr(0, this.TIME_LEN)
+            .substr(0, this.TIME_LENGTH)
             .split('')
             .reverse()
             .reduce((carry, char, index) => {

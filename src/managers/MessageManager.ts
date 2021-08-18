@@ -1,10 +1,9 @@
 import { Message as RawMessage } from 'revolt-api/types/Channels'
 import { User as RawUser } from 'revolt-api/types/Users'
+import { BaseManager } from '.'
 import { TypeError } from '../errors'
 import { Channel, Message, User } from '../structures'
-import { Collection } from '../util/Collection'
-import { UUID } from '../util/UUID'
-import { BaseManager } from './BaseManager'
+import { Collection, UUID } from '../util'
 
 export type MessageResolvable = Message | RawMessage | string
 
@@ -32,6 +31,20 @@ export class MessageManager extends BaseManager<string, Message, RawMessage> {
     client = this.channel.client
     constructor(public channel: Channel) {
         super()
+    }
+
+    private async _fetchId(messageId: string) {
+        const data = await this.client.api.get(`/channels/${this.channel.id}/messages/${messageId}`)
+        return this._add(data)
+    }
+
+    private async _fetchMany(withUsers = true) {
+        const { messages } = await this.client.api.get(`/channels/${this.channel.id}/messages?include_users=${withUsers}`)
+        return (messages as RawMessage[]).reduce((coll, cur) => {
+            const msg = this._add(cur)
+            coll.set(msg.id, msg)
+            return coll
+        }, new Collection<string, Message>())
     }
 
     async send(_options: MessageOptions | string): Promise<Message> {
@@ -74,28 +87,11 @@ export class MessageManager extends BaseManager<string, Message, RawMessage> {
         })
     }
 
-    fetch(messageId: string): Promise<Message>
-    fetch(options: { includeUsers: true }): Promise<{
+    async search(query: SerachMessageQuery & { include_users: true }): Promise<{
         users: Collection<string, User>
         messages: Collection<string, Message>
     }>
-    fetch(options?: { includeUsers?: false }): Promise<Collection<string, Message>>
-    fetch(options?: string | { includeUsers?: boolean }): Promise<
-        | Collection<string, Message>
-        | {
-              users: Collection<string, User>
-              messages: Collection<string, Message>
-          }
-        | Message
-    > {
-        return typeof options === 'string' ? this._fetchId(options) : this._fetchMany(options?.['includeUsers'])
-    }
-
-    search(query: SerachMessageQuery & { include_users: true }): Promise<{
-        users: Collection<string, User>
-        messages: Collection<string, Message>
-    }>
-    search(query: SerachMessageQuery & { include_users?: false }): Promise<Collection<string, Message>>
+    async search(query: SerachMessageQuery & { include_users?: false }): Promise<Collection<string, Message>>
     async search(query: SerachMessageQuery): Promise<
         | Collection<string, Message>
         | {
@@ -133,17 +129,20 @@ export class MessageManager extends BaseManager<string, Message, RawMessage> {
         }
     }
 
-    private async _fetchId(messageId: string) {
-        const data = await this.client.api.get(`/channels/${this.channel.id}/messages/${messageId}`)
-        return this._add(data)
-    }
-
-    private async _fetchMany(withUsers = true) {
-        const { messages } = await this.client.api.get(`/channels/${this.channel.id}/messages?include_users=${withUsers}`)
-        return (messages as RawMessage[]).reduce((coll, cur) => {
-            const msg = this._add(cur)
-            coll.set(msg.id, msg)
-            return coll
-        }, new Collection<string, Message>())
+    fetch(messageId: string): Promise<Message>
+    fetch(options: { includeUsers: true }): Promise<{
+        users: Collection<string, User>
+        messages: Collection<string, Message>
+    }>
+    fetch(options?: { includeUsers?: false }): Promise<Collection<string, Message>>
+    fetch(options?: string | { includeUsers?: boolean }): Promise<
+        | Collection<string, Message>
+        | {
+              users: Collection<string, User>
+              messages: Collection<string, Message>
+          }
+        | Message
+    > {
+        return typeof options === 'string' ? this._fetchId(options) : this._fetchMany(options?.['includeUsers'])
     }
 }

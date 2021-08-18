@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RevoltConfiguration } from 'revolt-api/types/Core'
+import { BaseClient } from './BaseClient'
+import { WebSocket } from './WebSocket'
+import { ActionManager } from './actions/ActionManager'
 import { ChannelManager, ServerManager, UserManager } from '../managers'
 import { ClientUser } from '../structures/ClientUser'
 import { Events } from '../util/Constants'
-import { ActionManager } from './actions/ActionManager'
-import { BaseClient } from './BaseClient'
-import { WebSocket } from './WebSocket'
 
 export type LoginDetails =
     | {
@@ -36,10 +36,6 @@ export class Client extends BaseClient {
         return this.readyAt ? Date.now() - this.readyAt.getTime() : null
     }
 
-    private debug(message: unknown): void {
-        this.emit(Events.DEBUG, message)
-    }
-
     async login(details: LoginDetails): Promise<void> {
         this.configuration = await this.api.get('/')
 
@@ -67,10 +63,6 @@ export class Client extends BaseClient {
         this.readyAt = new Date()
     }
 
-    isReady(): boolean {
-        return this.readyAt != null
-    }
-
     async logout(): Promise<void> {
         await this.api.get('/auth/logout')
         await this.destroy()
@@ -81,5 +73,13 @@ export class Client extends BaseClient {
         this.user = null
         this.readyAt = null
         await this.ws.destroy()
+    }
+
+    private debug(message: unknown): void {
+        this.emit(Events.DEBUG, message)
+    }
+
+    isReady(): boolean {
+        return this.readyAt != null
     }
 }

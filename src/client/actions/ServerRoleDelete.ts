@@ -1,5 +1,5 @@
-import { Events } from '../../util/Constants'
 import { Action } from './Action'
+import { Events } from '../../util/Constants'
 
 export class ServerRoleDeleteAction extends Action {
     handle(data: { id: string; role_id: string }): unknown {

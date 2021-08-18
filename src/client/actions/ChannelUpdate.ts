@@ -1,5 +1,5 @@
-import { Action } from './Action'
 import { Channel as RawChannel } from 'revolt-api/types/Channels'
+import { Action } from './Action'
 import { Events } from '../../util/Constants'
 
 export class ChannelUpdateAction extends Action {

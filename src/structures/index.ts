@@ -1,5 +1,6 @@
 export * from './Base'
 export * from './Channel'
+export * from './ClientUser'
 export * from './DMChannel'
 export * from './GroupChannel'
 export * from './Mentions'

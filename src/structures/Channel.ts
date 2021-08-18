@@ -1,9 +1,8 @@
 import { Channel as RawChannel } from 'revolt-api/types/Channels'
 import { Base, DMChannel, GroupChannel, NotesChannel, ServerChannel, TextChannel, VoiceChannel } from '.'
-import { Client } from '..'
-import { ChannelTypes } from '../util/Constants'
-import { UUID } from '../util/UUID'
 import { TextBasedChannel } from './interfaces/TextBasedChannel'
+import { Client } from '..'
+import { ChannelTypes, UUID } from '../util'
 
 export abstract class Channel extends Base {
     id: string
@@ -22,6 +21,14 @@ export abstract class Channel extends Base {
         return UUID.extrectTime(this.id)
     }
 
+    async ack(): Promise<void> {
+        await this.client.channels.ack(this)
+    }
+
+    async delete(): Promise<void> {
+        await this.client.channels.delete(this)
+    }
+
     isText(): this is TextBasedChannel {
         return 'messages' in this
     }
@@ -34,16 +41,12 @@ export abstract class Channel extends Base {
         return 'serverId' in this
     }
 
-    async ack(): Promise<void> {
-        await this.client.channels.ack(this)
-    }
-
-    async delete(): Promise<void> {
-        await this.client.channels.delete(this)
-    }
-
     toString(): string {
         return `<#${this.id}>`
+    }
+
+    fetch(force = true): Promise<Channel> {
+        return this.client.channels.fetch(this, { force })
     }
 
     static create(client: Client, raw: RawChannel): Channel {
@@ -68,9 +71,5 @@ export abstract class Channel extends Base {
         }
 
         return channel
-    }
-
-    fetch(force = true): Promise<Channel> {
-        return this.client.channels.fetch(this, { force })
     }
 }

@@ -1,7 +1,7 @@
 import { Role as RawRole } from 'revolt-api/types/Servers'
+import { BaseManager } from '.'
 import { TypeError } from '../errors'
 import { Role, Server } from '../structures'
-import { BaseManager } from './BaseManager'
 
 export type RoleResolvable = Role | string
 

@@ -1,8 +1,8 @@
 import { Member as RawMember } from 'revolt-api/types/Servers'
+import { BaseManager } from '.'
 import { TypeError } from '../errors'
 import { Server, ServerMember, User } from '../structures'
-import { Collection } from '../util/Collection'
-import { BaseManager } from './BaseManager'
+import { Collection } from '../util'
 
 export type ServerMemberResolvable = ServerMember | User | RawMember | string
 
@@ -17,14 +17,6 @@ export class ServerMemberManager extends BaseManager<string, ServerMember, RawMe
     client = this.server.client
     constructor(public server: Server) {
         super()
-    }
-
-    resolveId(member: ServerMemberResolvable): string | null {
-        if (member == null) return null
-        if (member instanceof ServerMember || member instanceof User) return member.id
-        if (typeof member === 'string') return member
-        if ('_id' in member) return member._id.user
-        return null
     }
 
     async edit(member: ServerMemberResolvable, options: EditServerMemberOptions): Promise<void> {
@@ -55,8 +47,8 @@ export class ServerMemberManager extends BaseManager<string, ServerMember, RawMe
         await this.client.api.delete(`/servers/${this.server.id}/bans/${memberId}`)
     }
 
-    fetch(member: ServerMemberResolvable): Promise<ServerMember>
-    fetch(): Promise<Collection<string, ServerMember>>
+    async fetch(member: ServerMemberResolvable): Promise<ServerMember>
+    async fetch(): Promise<Collection<string, ServerMember>>
     async fetch(member?: ServerMemberResolvable): Promise<ServerMember | Collection<string, ServerMember>> {
         if (typeof member !== 'undefined') {
             const memberId = this.resolveId(member)
@@ -72,5 +64,13 @@ export class ServerMemberManager extends BaseManager<string, ServerMember, RawMe
             coll.set(member.id, member)
             return coll
         }, new Collection<string, ServerMember>())
+    }
+
+    resolveId(member: ServerMemberResolvable): string | null {
+        if (member == null) return null
+        if (member instanceof ServerMember || member instanceof User) return member.id
+        if (typeof member === 'string') return member
+        if ('_id' in member) return member._id.user
+        return null
     }
 }

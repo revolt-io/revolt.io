@@ -1,8 +1,7 @@
 import { DirectMessageChannel as RawDMChannel } from 'revolt-api/types/Channels'
-import { Client } from '..'
-import { ChannelTypes } from '../util/Constants'
-import { DEFAULT_PERMISSION_DM } from '../util/Permissions'
 import { TextBasedChannel } from './interfaces/TextBasedChannel'
+import { Client } from '..'
+import { ChannelTypes, DEFAULT_PERMISSION_DM } from '../util'
 
 export class DMChannel extends TextBasedChannel {
     active!: boolean

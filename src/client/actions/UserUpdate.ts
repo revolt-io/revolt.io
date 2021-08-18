@@ -1,5 +1,5 @@
-import { Action } from './Action'
 import { User as RawUser } from 'revolt-api/types/Users'
+import { Action } from './Action'
 import { Events } from '../../util/Constants'
 
 export class UserUpdateAction extends Action {

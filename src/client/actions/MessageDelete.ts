@@ -1,6 +1,6 @@
+import { Action } from './Action'
 import { TextBasedChannel } from '../../structures/interfaces/TextBasedChannel'
 import { Events } from '../../util/Constants'
-import { Action } from './Action'
 
 export class MessageDeleteAction extends Action {
     handle(data: { id: string; channel: string }): unknown {

@@ -1,8 +1,7 @@
 import { ServerChannel as RawServerChannel } from 'revolt-api/types/Channels'
 import { Channel, Server } from '.'
-import { Client } from '../client/Client'
-import { Collection } from '../util/Collection'
-import { ChannelPermissions } from '../util/Permissions'
+import { Client } from '..'
+import { ChannelPermissions, Collection } from '../util'
 
 export class ServerChannel extends Channel {
     name!: string
@@ -13,10 +12,6 @@ export class ServerChannel extends Channel {
     constructor(client: Client, data: RawServerChannel) {
         super(client, Object.create(data))
         this._patch(data)
-    }
-
-    iconURL(options?: { size: number }): string | null {
-        return this.icon && this.client.endpoints.icon(this.icon, options?.size)
     }
 
     // TODO: Add channel overwrites
@@ -46,12 +41,16 @@ export class ServerChannel extends Channel {
         return clone
     }
 
-    get server(): Server | null {
-        return this.client.servers.cache.get(this.serverId) ?? null
-    }
-
     async createInvite(): Promise<string> {
         const { code } = await this.client.api.post(`/channels/${this.id}/invites`)
         return this.client.endpoints.invite(code)
+    }
+
+    iconURL(options?: { size: number }): string | null {
+        return this.icon && this.client.endpoints.icon(this.icon, options?.size)
+    }
+
+    get server(): Server | null {
+        return this.client.servers.cache.get(this.serverId) ?? null
     }
 }

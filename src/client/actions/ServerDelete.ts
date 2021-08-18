@@ -1,6 +1,6 @@
 import { Server as RawServer } from 'revolt-api/types/Servers'
-import { Events } from '../../util/Constants'
 import { Action } from './Action'
+import { Events } from '../../util/Constants'
 
 export class ServerDeleteAction extends Action {
     handle(data: RawServer): unknown {

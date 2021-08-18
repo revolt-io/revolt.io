@@ -67,7 +67,7 @@ export enum ChannelTypes {
 export enum MessageTypes {
     TEXT = 'TEXT',
     USER_ADDED = 'USER_ADDED',
-    USER_REMOVED = 'USER_REMOVED',
+    USER_REMOVE = 'USER_REMOVE',
     USER_LEFT = 'USER_LEFT',
     USER_JOINED = 'USER_JOINED',
     USER_KICKED = 'USER_KICKED',

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { EventEmitter } from 'events'
 import { Response } from 'node-fetch'
-import { BaseClient } from '../client/BaseClient'
-import { Events } from '../util/Constants'
 import { APIRequest } from './APIRequest'
 import { HTTPError } from './HTTPError'
 import { parseResponse } from './utils/utils'
+import { BaseClient } from '../client/BaseClient'
+import { Events } from '../util'
 
 export enum RequestMethod {
     Delete = 'DELETE',
@@ -39,26 +39,6 @@ export interface RESTOptions {
 export class REST extends EventEmitter {
     constructor(private client: BaseClient, private options: RESTOptions) {
         super()
-    }
-
-    get(route: RouteLike, options: RequestData = {}) {
-        return this.request({ ...options, route, method: RequestMethod.Get })
-    }
-
-    delete(route: RouteLike, options: RequestData = {}) {
-        return this.request({ ...options, route, method: RequestMethod.Delete })
-    }
-
-    post(route: RouteLike, options: RequestData = {}) {
-        return this.request({ ...options, route, method: RequestMethod.Post })
-    }
-
-    put(route: RouteLike, options: RequestData = {}) {
-        return this.request({ ...options, route, method: RequestMethod.Put })
-    }
-
-    patch(route: RouteLike, options: RequestData = {}) {
-        return this.request({ ...options, route, method: RequestMethod.Patch })
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -113,5 +93,25 @@ export class REST extends EventEmitter {
         }
 
         return null
+    }
+
+    get(route: RouteLike, options: RequestData = {}) {
+        return this.request({ ...options, route, method: RequestMethod.Get })
+    }
+
+    delete(route: RouteLike, options: RequestData = {}) {
+        return this.request({ ...options, route, method: RequestMethod.Delete })
+    }
+
+    post(route: RouteLike, options: RequestData = {}) {
+        return this.request({ ...options, route, method: RequestMethod.Post })
+    }
+
+    put(route: RouteLike, options: RequestData = {}) {
+        return this.request({ ...options, route, method: RequestMethod.Put })
+    }
+
+    patch(route: RouteLike, options: RequestData = {}) {
+        return this.request({ ...options, route, method: RequestMethod.Patch })
     }
 }

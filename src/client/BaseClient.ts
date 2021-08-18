@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import EventEmitter from 'events'
+import { EventEmitter } from 'events'
+import { HeadersInit } from 'node-fetch'
 import { Session } from 'revolt-api/types/Auth'
 import { Client, DEFUALT_OPTIONS, Message, Server } from '..'
-import { REST, RESTOptions } from '../rest/REST'
-import { HeadersInit } from 'node-fetch'
-import { Channel, Role, ServerMember, User } from '../structures'
 import { Endpoints } from '../rest/Endpoints'
+import { REST, RESTOptions } from '../rest/REST'
+import { Channel, Role, ServerMember, User } from '../structures'
 
 export type Awaited<T> = T | Promise<T>
 
@@ -54,7 +54,6 @@ export class BaseClient extends EventEmitter {
     public readonly api: REST
     public session: Session | string | null = null
     public options: ClientOptions = { ...DEFUALT_OPTIONS }
-
     constructor(options: DeepPartial<ClientOptions> = {}) {
         super()
         Object.assign(this.options, options)

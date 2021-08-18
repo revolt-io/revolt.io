@@ -1,9 +1,9 @@
-import { Client } from '../client/Client'
-import { Server } from '../structures'
-import { BaseManager } from './BaseManager'
 import { Server as RawServer } from 'revolt-api/types/Servers'
-import { UUID } from '../util/UUID'
+import { BaseManager } from '.'
+import { Client } from '..'
 import { TypeError } from '../errors'
+import { Server } from '../structures'
+import { UUID } from '../util'
 
 export type ServerResolvable = Server | RawServer | string
 

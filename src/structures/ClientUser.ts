@@ -1,5 +1,5 @@
-import { User } from '.'
-import { NotesChannel } from './NotesChannel'
+import type { NotesChannel } from '.'
+import { User } from './User'
 
 export class ClientUser extends User {
     notes: NotesChannel | null = null
