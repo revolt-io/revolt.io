@@ -1,3 +1,4 @@
+export * from './Badges'
 export * from './BitField'
 export * from './Collection'
 export * from './Constants'

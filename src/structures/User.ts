@@ -2,7 +2,7 @@ import { Attachment } from 'revolt-api/types/Autumn'
 import { User as RawUser } from 'revolt-api/types/Users'
 import { Base, DMChannel } from '.'
 import { Client } from '..'
-import { Presence, UUID } from '../util'
+import { Badges, Presence, UUID } from '../util'
 
 export class User extends Base {
     username!: string
@@ -15,6 +15,7 @@ export class User extends Base {
         text: string | null
         presence: Presence
     }
+    badges!: Badges
     constructor(client: Client, data: RawUser) {
         super(client)
         this._patch(data)
@@ -27,6 +28,10 @@ export class User extends Base {
 
         if (data.username) {
             this.username = data.username
+        }
+
+        if (typeof data.badges === 'number') {
+            this.badges = new Badges(data.badges).freeze()
         }
 
         if ('avatar' in data) {

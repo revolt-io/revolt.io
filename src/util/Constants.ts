@@ -129,3 +129,12 @@ export const PermissionsFlags = {
         REMOVE_AVATARS: 1 << 15
     }
 } as const
+
+export const BadgesFlags = {
+    DEVELOPER: 1 << 0,
+    TRANSLATOR: 1 << 1,
+    SUPPORTER: 1 << 2,
+    RESPONSIBLE_DISCLOSURE: 1 << 3,
+    REVOLT_TEAM: 1 << 4,
+    EARLY_ADOPTER: 1 << 8
+} as const
