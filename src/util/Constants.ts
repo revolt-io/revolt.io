@@ -1,4 +1,5 @@
-import type { ClientOptions } from '../client/BaseClient'
+import { UUID } from './UUID'
+import { ClientOptions } from '../client/BaseClient'
 
 export enum Events {
     DEBUG = 'debug',
@@ -97,7 +98,7 @@ export const DEFUALT_OPTIONS: ClientOptions = {
     }
 } as const
 
-export const SYSTEM_USER_ID = '0'.repeat(26)
+export const SYSTEM_USER_ID = '0'.repeat(UUID.TIME_LENGTH + UUID.RANDOM_LENGTH)
 
 export const PermissionsFlags = {
     CHANNEL: {
