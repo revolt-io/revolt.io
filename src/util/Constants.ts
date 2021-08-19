@@ -19,7 +19,9 @@ export enum Events {
     SERVER_MEMBER_LEAVE = 'serverMemberLeave',
     SERVER_MEMBER_UPDATE = 'serverMemberUpdate',
     ROLE_CREATE = 'roleCreate',
-    ROLE_DELETE = 'roleDelete'
+    ROLE_DELETE = 'roleDelete',
+    TYPING_START = 'typingStart',
+    TYPING_STOP = 'typingStop'
 }
 
 export enum WSEvents {

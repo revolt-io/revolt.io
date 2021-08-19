@@ -7,6 +7,7 @@ import { Client, DEFUALT_OPTIONS, Message, Server } from '..'
 import { Endpoints } from '../rest/Endpoints'
 import { REST, RESTOptions } from '../rest/REST'
 import { Channel, Role, ServerMember, User } from '../structures'
+import { TextBasedChannel } from '../structures/interfaces/TextBasedChannel'
 
 export type Awaited<T> = T | Promise<T>
 
@@ -27,6 +28,8 @@ export interface ClientEvents {
     serverMemberLeave: [ServerMember]
     serverMemberUpdate: [ServerMember, ServerMember]
     roleDelete: [Role]
+    typingStart: [TextBasedChannel, User]
+    typingStop: [TextBasedChannel, User]
 }
 
 export declare interface BaseClient {

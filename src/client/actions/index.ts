@@ -1,5 +1,7 @@
 export * from './ChannelCreate'
 export * from './ChannelDelete'
+export * from './ChannelStartTyping'
+export * from './ChannelStopTyping'
 export * from './Message'
 export * from './MessageDelete'
 export * from './MessageUpdate'
