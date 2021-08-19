@@ -1,4 +1,5 @@
 import { Base, Message, ServerMember, User } from '.'
+import { TypeError } from '../errors'
 import { UserResolvable } from '../managers'
 import { Collection } from '../util'
 
@@ -22,14 +23,16 @@ export class Mentions extends Base {
 
     has(user: UserResolvable): boolean {
         const userId = this.client.users.resolveId(user)
-        return !!userId && this._users.includes(userId)
+        if (!userId) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable')
+        return this._users.includes(userId)
     }
 
-    get members(): Collection<string, ServerMember> {
-        const members = new Collection<string, ServerMember>()
+    get members(): Collection<string, ServerMember> | null {
         const server = this.message.server
 
-        if (!server) return members
+        if (!server) return null
+
+        const members = new Collection<string, ServerMember>()
 
         for (const userId of this._users) {
             const member = server.members.cache.get(userId)
