@@ -87,8 +87,6 @@ export class WebSocket {
             return
         }
 
-        const action = this.client.actions.get(packet.type)
-
         switch (packet.type) {
             case WSEvents.AUTHENTICATED:
                 this.connected = true
@@ -105,12 +103,12 @@ export class WebSocket {
                     }
                 }
 
-                for (const channel of packet.channels) {
-                    this.client.channels._add(channel)
-                }
-
                 for (const server of packet.servers) {
                     this.client.servers._add(server)
+                }
+
+                for (const channel of packet.channels) {
+                    this.client.channels._add(channel)
                 }
 
                 for (const member of packet.members) {
@@ -124,13 +122,17 @@ export class WebSocket {
                 this.client.emit(Events.READY, this.client)
 
                 break
-            default:
+            default: {
+                const action = this.client.actions.get(packet.type)
+
                 if (action) {
                     action.handle(packet)
                 } else {
                     this.debug(`Received unknown packet "${packet.type}"`)
                 }
+
                 break
+            }
         }
     }
 
