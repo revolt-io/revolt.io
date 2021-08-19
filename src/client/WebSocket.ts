@@ -9,7 +9,7 @@ export interface WSOptions {
 }
 
 export class WebSocket {
-    heartbeatInterval?: NodeJS.Timeout
+    heartbeatInterval?: NodeJS.Timer
     lastPingTimestamp?: number
     socket: Socket | null = null
     connected = false
@@ -24,9 +24,11 @@ export class WebSocket {
     setHeartbeatTimer(time: number): void {
         this.debug(`Setting a heartbeat interval for ${time}ms.`)
 
-        if (this.heartbeatInterval) clearInterval(this.heartbeatInterval)
-
-        this.heartbeatInterval = setInterval(() => this.sendHeartbeat(), time).unref()
+        if (time === -1) {
+            if (this.heartbeatInterval) clearInterval(this.heartbeatInterval)
+        } else {
+            this.heartbeatInterval = setInterval(() => this.sendHeartbeat(), time).unref()
+        }
     }
 
     sendHeartbeat(type = 'Ping'): void {
@@ -68,10 +70,11 @@ export class WebSocket {
     }
 
     private onOpen(): void {
+        const type = WSEvents.AUTHENTICATED
         if (typeof this.client.session === 'string') {
-            this.send({ type: WSEvents.AUTHENTICATE, token: this.client.session })
+            this.send({ type, token: this.client.session })
         } else {
-            this.send({ type: WSEvents.AUTHENTICATE, ...(this.client.session as Session) })
+            this.send({ type, ...(this.client.session as Session) })
         }
     }
 
@@ -162,8 +165,7 @@ export class WebSocket {
 
     destroy(): Promise<this> {
         return new Promise(resolve => {
-            if (this.heartbeatInterval) clearInterval(this.heartbeatInterval)
-
+            this.setHeartbeatTimer(-1)
             this.connected = false
             this.ready = false
 
