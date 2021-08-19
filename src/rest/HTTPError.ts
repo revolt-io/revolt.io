@@ -1,11 +1,11 @@
-import { APIRequest } from './APIRequest'
-import { RequestMethod } from './REST'
+import type { APIRequest } from './APIRequest'
+import type { RequestMethod } from './REST'
 
 export class HTTPError extends Error {
     code: number
     method: RequestMethod
     path: string
-    info: string
+    info: Record<string, unknown>
     constructor(message: string, name: string, code: number, request: APIRequest) {
         super(message)
         this.name = name
