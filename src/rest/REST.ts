@@ -92,7 +92,7 @@ export class REST extends EventEmitter {
             return this.request(request)
         }
 
-        return null
+        throw new HTTPError(res.statusText, res.constructor.name, res.status, request)
     }
 
     get(route: RouteLike, options: RequestData = {}) {
