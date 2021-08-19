@@ -1,3 +1,5 @@
+import type { ClientOptions } from '../client/BaseClient'
+
 export enum Events {
     DEBUG = 'debug',
     ERROR = 'error',
@@ -77,7 +79,7 @@ export enum MessageTypes {
     CHANNEL_RENAMED = 'CHANNEL_RENAMED'
 }
 
-export const DEFUALT_OPTIONS = {
+export const DEFUALT_OPTIONS: ClientOptions = {
     http: {
         api: 'https://api.revolt.chat',
         cdn: 'https://autumn.revolt.chat',
@@ -86,7 +88,40 @@ export const DEFUALT_OPTIONS = {
         retries: 3,
         offset: 50
     },
-    heartbeat: 3_000
+    ws: {
+        heartbeat: 3_000
+    }
 } as const
 
 export const SYSTEM_USER_ID = '0'.repeat(26)
+
+export const PermissionsFlags = {
+    CHANNEL: {
+        VIEW_CHANNEL: 1 << 0,
+        SEND_MESSAGE: 1 << 1,
+        MANAGE_MESSAGE: 1 << 2,
+        MANAGE_CHANNEL: 1 << 3,
+        VOICE_CALL: 1 << 4,
+        INVITE_OTHERS: 1 << 5,
+        EMBED_LINKS: 1 << 6,
+        UPLOAD_FILES: 1 << 7
+    },
+    USER: {
+        ACCESS: 1 << 0,
+        VIEW_PROFILE: 1 << 1,
+        SEND_MESSAGES: 1 << 2,
+        INVITE: 1 << 3
+    },
+    SERVER: {
+        VIEW_SERVER: 1 << 0,
+        MANAGE_ROLES: 1 << 1,
+        MANAGE_CHANNELS: 1 << 2,
+        MANAGE_SERVER: 1 << 3,
+        KICK_MEMBERS: 1 << 4,
+        BAN_MEMBERS: 1 << 5,
+        CHANGE_NICKNAME: 1 << 12,
+        MANAGE_NICKNAMES: 1 << 13,
+        CHANGE_AVATAR: 1 << 14,
+        REMOVE_AVATARS: 1 << 15
+    }
+} as const
