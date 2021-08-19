@@ -22,6 +22,8 @@ export class User extends Base {
     }
 
     _patch(data: RawUser): this {
+        if (!data) return this
+
         if (data._id) {
             this.id = data._id
         }
