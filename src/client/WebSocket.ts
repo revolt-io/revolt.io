@@ -4,6 +4,10 @@ import { Client } from './Client'
 import { ClientUser } from '../structures'
 import { Events, WSEvents } from '../util'
 
+export interface WSOptions {
+    heartbeat: number
+}
+
 export class WebSocket {
     heartbeatInterval?: NodeJS.Timeout
     lastPingTimestamp?: number
@@ -113,7 +117,7 @@ export class WebSocket {
                     this.client.servers.cache.get(member._id.server)?.members._add(member)
                 }
 
-                this.setHeartbeatTimer(this.client.options.heartbeat)
+                this.setHeartbeatTimer(this.client.options.ws.heartbeat)
 
                 this.ready = true
 

@@ -2,6 +2,7 @@
 import { EventEmitter } from 'events'
 import { HeadersInit } from 'node-fetch'
 import { Session } from 'revolt-api/types/Auth'
+import { WSOptions } from './WebSocket'
 import { Client, DEFUALT_OPTIONS, Message, Server } from '..'
 import { Endpoints } from '../rest/Endpoints'
 import { REST, RESTOptions } from '../rest/REST'
@@ -17,7 +18,7 @@ export interface ClientEvents {
     serverCreate: [Server]
     serverDelete: [Server]
     serverUpdate: [Server, Server]
-    debug: [unknown]
+    debug: [string]
     error: [unknown]
     raw: [unknown]
     userUpdate: [User, User]
@@ -47,7 +48,7 @@ type DeepPartial<T> = {
 
 export interface ClientOptions {
     http: RESTOptions
-    heartbeat: number
+    ws: WSOptions
 }
 
 export class BaseClient extends EventEmitter {
