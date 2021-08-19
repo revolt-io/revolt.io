@@ -24,6 +24,7 @@ export class Message extends Base {
         clone._patch(data)
         return clone
     }
+
     _patch(data: RawMessage): this {
         if (!data) return this
 
@@ -59,6 +60,7 @@ export class Message extends Base {
 
         return this
     }
+
     get createdAt(): Date {
         return UUID.extrectTime(this.id)
     }
@@ -74,31 +76,38 @@ export class Message extends Base {
     async ack(): Promise<void> {
         await this.channel.messages.ack(this)
     }
+
     async delete(): Promise<void> {
         await this.channel.messages.delete(this)
     }
+
     async reply(content: string, mention = true): Promise<unknown> {
         return this.channel.messages.send({
             content,
             replies: [{ id: this.id, mention }]
         })
     }
+
     async edit(content: string): Promise<void> {
         await this.channel.messages.edit(this, { content })
     }
+
     fetch(): Promise<Message> {
         return this.channel.messages.fetch(this.id)
     }
+
     get system(): boolean {
         return this.type !== MessageTypes.TEXT
     }
 
-    inServer(): this is this & { serverId: string; server: Server } {
+    inServer(): this is this & { serverId: string; server: Server; channel: TextChannel } {
         return this.channel.inServer()
     }
+
     get author(): User | null {
         return this.client.users.cache.get(this.authorId) ?? null
     }
+
     get channel(): TextChannel | DMChannel | GroupChannel {
         return this.client.channels.cache.get(this.channelId) as TextChannel
     }
