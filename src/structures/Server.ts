@@ -61,7 +61,7 @@ export class Server extends Base {
             this._roles = data.roles
         }
 
-        if (Array.isArray(data.default_permissions) && typeof data.default_permissions[0] === 'number') {
+        if (typeof data.default_permissions?.[0] === 'number') {
             this.permissions = new ServerPermissions(data.default_permissions[0]).freeze()
         }
 
