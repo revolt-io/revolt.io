@@ -21,7 +21,9 @@ export enum Events {
     ROLE_CREATE = 'roleCreate',
     ROLE_DELETE = 'roleDelete',
     TYPING_START = 'typingStart',
-    TYPING_STOP = 'typingStop'
+    TYPING_STOP = 'typingStop',
+    GROUP_JOIN = 'groupJoin',
+    GROUP_LEAVE = 'groupLeave'
 }
 
 export enum WSEvents {
