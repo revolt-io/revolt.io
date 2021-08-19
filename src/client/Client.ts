@@ -75,7 +75,7 @@ export class Client extends BaseClient {
         await this.ws.destroy()
     }
 
-    private debug(message: unknown): void {
+    private debug(message: string): void {
         this.emit(Events.DEBUG, message)
     }
 
