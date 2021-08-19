@@ -1,8 +1,8 @@
 import { Role as RawRole, Server as RawServer } from 'revolt-api/types/Servers'
-import { Base, ServerMember, User } from '.'
+import { Base, ServerMember, User, Category } from '.'
 import { Client } from '..'
 import { RoleManager, ServerChannelManager, ServerMemberManager } from '../managers'
-import { ServerPermissions, UUID } from '../util'
+import { Collection, ServerPermissions, UUID } from '../util'
 
 export class Server extends Base {
     name!: string
@@ -16,6 +16,7 @@ export class Server extends Base {
     icon: string | null = null
     banner: string | null = null
     permissions!: ServerPermissions
+    categories = new Collection<string, Category>()
     _channels: string[] = []
     _roles: Record<string, RawRole> = {}
 
@@ -31,6 +32,14 @@ export class Server extends Base {
 
         if (data._id) {
             this.id = data._id
+        }
+
+        if (Array.isArray(data.categories)) {
+            this.categories.clear()
+            for (const cat of data.categories) {
+                const category = new Category(this, cat)
+                this.categories.set(category.id, category)
+            }
         }
 
         if ('icon' in data) {

@@ -1,4 +1,5 @@
 export * from './Base'
+export * from './Category'
 export * from './Channel'
 export * from './ClientUser'
 export * from './DMChannel'
