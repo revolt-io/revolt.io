@@ -1,5 +1,5 @@
 import { Attachment } from 'revolt-api/types/Autumn'
-import { User as RawUser } from 'revolt-api/types/Users'
+import { User as RawUser, Presence as RawPresence } from 'revolt-api/types/Users'
 import { Base, DMChannel } from '.'
 import { Client } from '..'
 import { Badges, Presence, UUID } from '../util'
@@ -10,7 +10,7 @@ export class User extends Base {
     avatar: Attachment | null = null
     status = {
         text: null,
-        presence: Presence.Invisible
+        presence: Presence.INVISIBLE
     } as {
         text: string | null
         presence: Presence
@@ -41,8 +41,8 @@ export class User extends Base {
         }
 
         if ('status' in data) {
-            const presence = data.status?.presence ? Presence[data.status?.presence] : Presence.Invisible
-            this.status.presence = presence ?? Presence.Invisible
+            const presence = data.status?.presence ? Presence[data.status.presence.toUpperCase() as Uppercase<RawPresence>] : Presence.INVISIBLE
+            this.status.presence = presence
             this.status.text = data.status?.text ?? null
         }
 
@@ -77,10 +77,7 @@ export class User extends Base {
     }
 
     avatarURL(options?: { size: number }): string | null {
-        if (this.avatar) {
-            return this.client.endpoints.avatar(this.avatar._id, this.avatar.filename, options?.size)
-        }
-        return null
+        return this.avatar ? this.client.endpoints.avatar(this.avatar._id, this.avatar.filename, options?.size) : null
     }
 
     displayAvatarURL(options?: { size: number }): string {

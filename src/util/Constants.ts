@@ -57,10 +57,10 @@ export enum WSEvents {
 }
 
 export enum Presence {
-    Online = 'online',
-    Idle = 'idle',
-    Busy = 'dnd',
-    Invisible = 'offline'
+    ONLINE = 'ONLINE',
+    IDLE = 'IDLE',
+    BUSY = 'DND',
+    INVISIBLE = 'OFFLINE'
 }
 
 export enum ChannelTypes {
