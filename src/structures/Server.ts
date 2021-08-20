@@ -9,7 +9,7 @@ export class Server extends Base {
     id!: string
     description: string | null = null
     ownerId!: string
-    members = new ServerMemberManager(this)
+    members: ServerMemberManager
     channels: ServerChannelManager
     roles: RoleManager
     deleted = false
@@ -25,6 +25,7 @@ export class Server extends Base {
         this._patch(data)
         this.channels = new ServerChannelManager(this)
         this.roles = new RoleManager(this)
+        this.members = new ServerMemberManager(this)
     }
 
     _patch(data: RawServer): this {
@@ -63,11 +64,11 @@ export class Server extends Base {
         }
 
         if (Array.isArray(data.channels)) {
-            this._channels = data.channels
+            this._channels = [...data.channels]
         }
 
         if (typeof data.roles === 'object') {
-            this._roles = data.roles
+            this._roles = { ...data.roles }
         }
 
         if (typeof data.default_permissions?.[0] === 'number') {
@@ -92,11 +93,11 @@ export class Server extends Base {
     }
 
     iconURL(options?: { size: number }): string | null {
-        return this.icon && this.client.endpoints.icon(this.icon, options?.size)
+        return this.icon ? this.client.endpoints.icon(this.icon, options?.size) : null
     }
 
     bannerURL(options?: { size: number }): string | null {
-        return this.banner && this.client.endpoints.banner(this.banner, options?.size)
+        return this.banner ? this.client.endpoints.banner(this.banner, options?.size) : null
     }
 
     get me(): ServerMember | null {
