@@ -1,7 +1,7 @@
 {
   "name": "better-revolt-js",
-  "description": "Discord.js-like revolt library",
-  "version": "0.0.8-alpha",
+  "description": "A NodeJS Revolt library",
+  "version": "0.1.0-beta",
   "scripts": {
     "start-debug": "ts-node -T test.ts",
     "build": "tsc",
@@ -15,6 +15,7 @@
   },
   "keywords": [
     "revolt",
+    "revoltchat",
     "api",
     "bot",
     "node"
