@@ -1,18 +1,6 @@
-# Status: ALPHA
-
-### In Progress...
-- [X] Patch/Update methods
-- [ ] Ratelimit handler
-- [ ] Cache handler
-- [ ] More events
-- [ ] More methods
-- [ ] Add errors
-- [ ] Voice Support
-- [ ] Permissions
-
 ### Example Usage
 ```typescript
-import { Client } from './src'
+import { Client } from 'better-revolt-js'
 
 const client = new Client()
 
