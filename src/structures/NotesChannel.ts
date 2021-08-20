@@ -30,7 +30,7 @@ export class NotesChannel extends TextBasedChannel {
         return clone
     }
 
-    get user(): User | null {
-        return this.client.users.cache.get(this.userId) ?? null
+    get user(): User {
+        return this.client.users.cache.get(this.userId) as User
     }
 }
