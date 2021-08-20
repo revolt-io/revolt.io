@@ -9,6 +9,8 @@
     "lint:fix": "eslint src --fix",
     "prettier": "prettier --write src/**/*.ts"
   },
+  "main": "dist/index.js",
+  "license": "GNU-3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/TheMaestro0/better-revolt.js"
