@@ -70,7 +70,7 @@ export class WebSocket {
     }
 
     private onOpen(): void {
-        const type = WSEvents.AUTHENTICATED
+        const type = WSEvents.AUTHENTICATE
         if (typeof this.client.session === 'string') {
             this.send({ type, token: this.client.session })
         } else {
