@@ -1,4 +1,14 @@
-### Example Usage
+Better Revolt.JS [![NPM version](https://img.shields.io/npm/v/better-revolt-js.svg?style=flat-square&color=informational)](https://npmjs.com/package/better-revolt-js)
+====
+A Node.js wrapper for interfacing with Revolt API.
+
+
+## Installing
+```bash
+npm i better-revolt-js
+```
+
+## Example Usage
 ```typescript
 import { Client } from 'better-revolt-js'
 
@@ -20,3 +30,6 @@ client.on('message', msg => {
     }
 })
 ```
+
+## License
+Refer to the [LICENSE](LICENSE) file.
