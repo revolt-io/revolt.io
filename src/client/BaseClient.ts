@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EventEmitter } from 'events'
 import { HeadersInit } from 'node-fetch'
-import { Session } from 'revolt-api/types/Auth'
 import { WSOptions } from './WebSocket'
 import { Client, DEFUALT_OPTIONS, Message, Server } from '..'
 import { Endpoints } from '../rest/Endpoints'
@@ -58,7 +57,8 @@ export interface ClientOptions {
 
 export class BaseClient extends EventEmitter {
     public readonly api: REST
-    public session: Session | string | null = null
+    public token: string | null = null
+    public bot = true
     public options: ClientOptions = { ...DEFUALT_OPTIONS }
     constructor(options: DeepPartial<ClientOptions> = {}) {
         super()
@@ -72,17 +72,9 @@ export class BaseClient extends EventEmitter {
     }
 
     get headers(): HeadersInit {
-        if (!this.session) {
-            return {}
-        } else if (typeof this.session === 'string') {
-            return {
-                'x-bot-token': this.session
-            }
-        } else {
-            return {
-                'x-user-id': this.session.user_id,
-                'x-session-token': this.session.session_token
-            }
+        if (!this.token) return {}
+        return {
+            [`x-${this.bot ? 'bot' : 'session'}-token`]: this.token
         }
     }
 }
