@@ -28,7 +28,7 @@
   "dependencies": {
     "@discordjs/collection": "^0.2.1",
     "node-fetch": "^2.6.1",
-    "revolt-api": "^0.5.1-alpha.22",
+    "revolt-api": "^0.5.3-alpha.0-patch.0",
     "ws": "^8.0.0"
   },
   "devDependencies": {
