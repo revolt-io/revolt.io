@@ -44,6 +44,8 @@ export enum WSEvents {
     MESSAGE = 'Message',
     MESSAGE_DELETE = 'MessageDelete',
     MESSAGE_UPDATE = 'MessageUpdate',
+    PING = 'Ping',
+    PONG = 'Pong',
     READY = 'Ready',
     SERVER_DELETE = 'ServerDelete',
     SERVER_MEMBER_JOIN = 'ServerMemberJoin',

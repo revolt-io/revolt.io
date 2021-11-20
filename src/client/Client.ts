@@ -7,16 +7,7 @@ import { ChannelManager, ServerManager, UserManager } from '../managers'
 import { ClientUser } from '../structures/ClientUser'
 import { Events } from '../util/Constants'
 
-export type LoginDetails =
-    | {
-          email: string
-          password: string
-      }
-    | {
-          id: string
-          token: string
-      }
-    | string
+export type LoginDetails = string | { token: string; type?: 'bot' | 'user' }
 
 export class Client extends BaseClient {
     private readonly ws: WebSocket = new WebSocket(this)
@@ -39,16 +30,13 @@ export class Client extends BaseClient {
     async login(details: LoginDetails): Promise<void> {
         this.configuration = await this.api.get('/')
 
-        if (typeof details === 'string') {
-            this.session = details
-        } else if ('id' in details && 'token' in details) {
-            this.session = {
-                user_id: details.id,
-                session_token: details.token
-            }
-            await this.api.get('/auth/check')
+        if (typeof details === 'object') {
+            const { type = 'bot', token } = details
+            this.token = token
+            this.bot = type.toLowerCase() === 'bot'
         } else {
-            this.session = await this.api.post('/auth/login', { body: details })
+            this.token = details
+            this.bot = true
         }
 
         this.debug('Preparing to connect to the gateway...')
@@ -63,13 +51,8 @@ export class Client extends BaseClient {
         this.readyAt = new Date()
     }
 
-    async logout(): Promise<void> {
-        await this.api.get('/auth/logout')
-        await this.destroy()
-    }
-
     async destroy(): Promise<void> {
-        this.session = null
+        this.token = null
         this.user = null
         this.readyAt = null
         await this.ws.destroy()

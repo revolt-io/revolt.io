@@ -1,4 +1,3 @@
-import { Session } from 'revolt-api/types/Auth'
 import { default as Socket } from 'ws'
 import { Client } from './Client'
 import { ClientUser } from '../structures'
@@ -11,6 +10,7 @@ export interface WSOptions {
 export class WebSocket {
     heartbeatInterval?: NodeJS.Timer
     lastPingTimestamp?: number
+    lastPongAcked = false
     socket: Socket | null = null
     connected = false
     ready = false
@@ -19,6 +19,11 @@ export class WebSocket {
 
     private debug(message: unknown): void {
         this.client.emit(Events.DEBUG, `[WS]: ${message}`)
+    }
+
+    get ping(): number {
+        if (!this.lastPingTimestamp) return -0
+        return Date.now() - this.lastPingTimestamp
     }
 
     setHeartbeatTimer(time: number): void {
@@ -31,19 +36,31 @@ export class WebSocket {
         }
     }
 
-    sendHeartbeat(type = 'Ping'): void {
+    sendHeartbeat(skip = false): void {
+        if (!skip && !this.lastPongAcked) {
+            this.debug('Didn\'t receive a pong ack last time.');
+        }
+
         const now = Date.now()
-        this.debug(`[${type}] Sending a heartbeat.`)
-        this.send({ type, time: now })
+        
+        this.debug('Sending a heartbeat.')
+        this.send({ type: WSEvents.PING, data: now })
+        this.lastPongAcked = false
         this.lastPingTimestamp = now
     }
 
-    send(data: unknown): void {
-        if (this.socket?.readyState === Socket.OPEN) {
-            this.socket.send(JSON.stringify(data))
-        } else {
-            this.debug(`Tried to send packet '${JSON.stringify(data)}' but no WebSocket is available!`)
-        }
+    async send(data: unknown): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this.socket?.readyState === Socket.OPEN) {
+                this.socket.send(JSON.stringify(data), err => {
+                    if (err) return reject(err)
+                    resolve()
+                })
+            } else {
+                this.debug(`Tried to send packet '${JSON.stringify(data)}' but no WebSocket is available!`)
+                resolve()
+            }
+        })
     }
 
     private onError(event: Socket.ErrorEvent): void {
@@ -69,13 +86,11 @@ export class WebSocket {
         this.onPacket(packet)
     }
 
-    private onOpen(): void {
-        const type = WSEvents.AUTHENTICATE
-        if (typeof this.client.session === 'string') {
-            this.send({ type, token: this.client.session })
-        } else {
-            this.send({ type, ...(this.client.session as Session) })
-        }
+    private async onOpen(): Promise<void> {
+        await this.send({
+            type: WSEvents.AUTHENTICATE,
+            token: this.client.token
+        })
     }
 
     private onClose(event: Socket.CloseEvent): void {
@@ -94,10 +109,15 @@ export class WebSocket {
             case WSEvents.AUTHENTICATED:
                 this.connected = true
                 break
+            case WSEvents.PONG:
+                this.lastPongAcked = true
+                break
             case WSEvents.ERROR:
                 this.client.emit(Events.ERROR, packet.error)
                 break
             case WSEvents.READY:
+                this.lastPongAcked = true
+
                 for (const user of packet.users) {
                     this.client.users._add(user)
                     if (user.relationship === 'User' && !this.client.user) {
@@ -149,8 +169,8 @@ export class WebSocket {
                 throw new Error('Attempted to open WebSocket without syncing configuration from server.')
             }
 
-            if (typeof this.client.session === 'undefined') {
-                throw new Error('Attempted to open WebSocket without valid session.')
+            if (typeof this.client.token === 'undefined') {
+                throw new Error('Attempted to open WebSocket without valid token.')
             }
 
             const ws = (this.socket = this.socket ?? new Socket(this.client.configuration.ws))

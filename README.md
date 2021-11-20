@@ -14,10 +14,15 @@ import { Client } from 'better-revolt-js'
 
 const client = new Client()
 
+// Login with bot account
 client.login(process.env.TOKEN)
 
-// Or using session
-// client.login({ id: process.env.SESSION_ID, token: process.env.SESSION_TOKEN })
+// Self bot
+// client.login({
+//    type: 'user', // user or bot
+//    token: process.env.TOKEN
+// })
+
 
 client.on('ready', () => {
     console.log('Connected')
