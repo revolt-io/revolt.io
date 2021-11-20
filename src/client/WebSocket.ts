@@ -38,11 +38,11 @@ export class WebSocket {
 
     sendHeartbeat(skip = false): void {
         if (!skip && !this.lastPongAcked) {
-            this.debug('Didn\'t receive a pong ack last time.');
+            this.debug("Didn't receive a pong ack last time.")
         }
 
         const now = Date.now()
-        
+
         this.debug('Sending a heartbeat.')
         this.send({ type: WSEvents.PING, data: now })
         this.lastPongAcked = false

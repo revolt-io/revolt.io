@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "moduleResolution": "node",
-    "removeComments": false,
+    "removeComments": true,
     "alwaysStrict": true,
     "pretty": true,
     "target": "es2019",

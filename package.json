@@ -1,19 +1,18 @@
 {
   "name": "better-revolt-js",
   "description": "A NodeJS Revolt library",
-  "version": "0.1.1-beta",
+  "version": "0.1.2-beta",
   "scripts": {
-    "start-debug": "ts-node -T test.ts",
     "build": "tsc",
-    "tsc": "tsc",
+    "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "prettier": "prettier --write src/**/*.ts"
+    "format": "prettier --write src/**/*.ts"
   },
   "main": "dist/index.js",
   "license": "GNU-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TheMaestro0/better-revolt.js"
+    "url": "https://github.com/TheMaestro1s/better-revolt.js"
   },
   "keywords": [
     "revolt",
@@ -23,18 +22,18 @@
     "node"
   ],
   "bugs": {
-    "url": "https://github.com/TheMaestro0/better-revolt.js/issues"
+    "url": "https://github.com/TheMaestro1s/better-revolt.js/issues"
   },
   "dependencies": {
     "@discordjs/collection": "^0.2.1",
     "node-fetch": "^2.6.1",
-    "revolt-api": "^0.5.3-alpha.0-patch.0",
-    "ws": "^8.0.0"
+    "revolt-api": "^0.5.3-alpha.10",
+    "ws": "^8.2.3"
   },
   "devDependencies": {
     "@types/node": "^16.4.13",
     "@types/node-fetch": "^2.5.12",
-    "@types/ws": "^7.4.7",
+    "@types/ws": "^8.2.0",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
     "eslint": "^7.32.0",
@@ -43,8 +42,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-sort-class-members": "^1.11.0",
     "prettier": "^2.3.2",
-    "ts-node": "^10.2.0",
-    "typescript": "^4.3.5"
+    "typescript": "^4.5.2"
   },
   "files": [
     "dist/*"

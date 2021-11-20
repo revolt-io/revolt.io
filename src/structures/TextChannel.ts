@@ -11,7 +11,7 @@ export class TextChannel extends ServerChannel implements TextBasedChannel {
     readonly type = ChannelTypes.TEXT
     constructor(client: Client, raw: RawTextChannel) {
         super(client, raw)
-        this.lastMessageId = raw.last_message ?? null
+        this.lastMessageId = raw.last_message_id ?? null
     }
 
     send(options: MessageOptions | string): Promise<Message> {

@@ -58,7 +58,9 @@ export class REST extends EventEmitter {
             res = await request.execute({ timeout: this.options.timeout })
         } catch (error) {
             if (request.retries === this.options.retries) {
-                throw new HTTPError(error.statusText, error.constructor.name, error.status, request)
+                if (error instanceof Response) {
+                    throw new HTTPError(error.statusText, error.constructor.name, error.status, request)
+                }
             }
 
             request.retries++
