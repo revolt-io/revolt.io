@@ -1,11 +1,12 @@
-import { Channel as RawChannel, ServerChannel as RawServerChannel } from 'revolt-api/types/Channels'
+import { Channel as APIChannel } from 'revolt-api'
 import { BaseManager } from '.'
-import { Client } from '..'
 import { TypeError } from '../errors'
 import { Server, ServerChannel, TextChannel, VoiceChannel } from '../structures'
 import { UUID } from '../util'
 
-export type ServerChannelResolvable = ServerChannel | RawServerChannel | string
+type APIServerChannel = Extract<APIChannel, { channel_type: 'TextChannel' | 'VoiceChannel' }>
+
+export type ServerChannelResolvable = ServerChannel | APIServerChannel | string
 
 export interface CreateChannelOptions {
     name: string
@@ -13,30 +14,25 @@ export interface CreateChannelOptions {
     description?: string
 }
 
-export class ServerChannelManager extends BaseManager<string, ServerChannel> {
-    client: Client
+export class ServerChannelManager extends BaseManager<ServerChannel> {
+    client = this.server.client
     holds = ServerChannel
     constructor(public server: Server) {
         super()
-        this.client = server.client
-        for (const channelId of server._channels) {
-            const channel = this.client.channels.cache.get(channelId)
-            if (channel?.inServer()) this.cache.set(channel.id, channel)
-        }
     }
 
-    _add(raw: RawChannel): ServerChannel {
+    _add(data: APIChannel): ServerChannel {
         let channel: ServerChannel
 
-        switch (raw.channel_type) {
+        switch (data.channel_type) {
             case 'TextChannel':
-                channel = new TextChannel(this.client, raw)
+                channel = new TextChannel(this.client, data)
                 break
             case 'VoiceChannel':
-                channel = new VoiceChannel(this.client, raw)
+                channel = new VoiceChannel(this.client, data)
                 break
             default:
-                throw new Error(`Unknown channel type: ${raw.channel_type}`)
+                throw new Error(`Unknown channel type: ${data.channel_type}`)
         }
 
         this.cache.set(channel.id, channel)
@@ -57,16 +53,16 @@ export class ServerChannelManager extends BaseManager<string, ServerChannel> {
     }
 
     async fetch(channel: ServerChannelResolvable, { force = true } = {}): Promise<ServerChannel> {
-        const channelId = this.resolveId(channel)
+        const id = this.resolveId(channel)
 
-        if (!channelId) throw new TypeError('INVALID_TYPE', 'channel', 'ServerChannelResolvable')
+        if (!id) throw new TypeError('INVALID_TYPE', 'channel', 'ServerChannelResolvable')
 
         if (!force) {
-            const channel = this.cache.get(channelId)
+            const channel = this.cache.get(id)
             if (channel) return channel
         }
 
-        const data = await this.client.api.get(`/servers/${this.server.id}/channels/${channelId}`)
+        const data = await this.client.api.get(`/servers/${this.server.id}/channels/${id}`)
 
         return this._add(data)
     }

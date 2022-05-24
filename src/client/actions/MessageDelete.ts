@@ -1,19 +1,15 @@
 import { Action } from './Action'
-import { TextBasedChannel } from '../../structures/interfaces/TextBasedChannel'
 import { Events } from '../../util/Constants'
 
 export class MessageDeleteAction extends Action {
     handle(data: { id: string; channel: string }): unknown {
-        const channel = this.client.channels.cache.get(data.channel) as TextBasedChannel
+        const channel = this.client.channels.cache.get(data.channel)
 
-        if (channel) {
+        if (channel?.isText()) {
             const message = channel.messages.cache.get(data.id)
 
             if (message) {
-                message.deleted = true
-
                 channel.messages._remove(message.id)
-
                 this.client.emit(Events.MESSAGE_DELETE, message)
             }
 

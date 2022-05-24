@@ -1,20 +1,18 @@
-import { Attachment } from 'revolt-api/types/Autumn'
-import { Member as RawMember } from 'revolt-api/types/Servers'
+import { Member as APIMember, File } from 'revolt-api'
 import { Base, Server, User } from '.'
 import { Client } from '..'
 
-export class ServerMember extends Base {
-    id!: string
+export class ServerMember extends Base<APIMember> {
     serverId!: string
     nickname: string | null = null
-    avatar: Attachment | null = null
-    constructor(client: Client, data: RawMember) {
+    avatar: File | null = null
+    constructor(client: Client, data: APIMember) {
         super(client)
         this._patch(data)
     }
 
-    _patch(data: RawMember): this {
-        if (!data) return this
+    protected _patch(data: APIMember): this {
+        super._patch(data)
 
         if ('nickname' in data) {
             this.nickname = data.nickname ?? null
@@ -30,12 +28,6 @@ export class ServerMember extends Base {
         }
 
         return this
-    }
-
-    _update(data: RawMember): this {
-        const clone = this._clone()
-        clone._patch(data)
-        return clone
     }
 
     async setNickname(nickname?: string): Promise<this> {
@@ -60,11 +52,11 @@ export class ServerMember extends Base {
     }
 
     get user(): User {
-        return this.client.users.cache.get(this.id) as User
+        return this.client.users.cache.get(this.id)!
     }
 
     get server(): Server {
-        return this.client.servers.cache.get(this.serverId) as Server
+        return this.client.servers.cache.get(this.serverId)!
     }
 
     toString(): string {

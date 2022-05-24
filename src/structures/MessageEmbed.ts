@@ -1,25 +1,8 @@
-import { Embed } from 'revolt-api/types/January'
+import { Embed, Special } from 'revolt-api'
 
-export type EmbedImage = {
-    url: string
-    width: number
-    height: number
-    size: 'Large' | 'Preview'
-}
-
-export type EmbedVideo = {
-    url: string
-    width: number
-    height: number
-}
-
-export type EmbedSpecial =
-    | { type: 'None' }
-    | { type: 'YouTube'; id: string }
-    | { type: 'Twitch'; content_type: 'Channel' | 'Video' | 'Clip'; id: string }
-    | { type: 'Spotify'; content_type: string; id: string }
-    | { type: 'Soundcloud' }
-    | { type: 'Bandcamp'; content_type: 'Album' | 'Track'; id: string }
+export type EmbedImage = Extract<Embed, { type: 'Image' }>
+export type EmbedVideo = Extract<Embed, { type: 'Video' }>
+export type EmbedSpecial = Special
 
 export class MessageEmbed {
     type: Embed['type'] = 'Website'

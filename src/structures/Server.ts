@@ -1,39 +1,28 @@
-import { Role as RawRole, Server as RawServer } from 'revolt-api/types/Servers'
+import { Server as APIServer } from 'revolt-api'
 import { Base, ServerMember, User, Category } from '.'
 import { Client } from '..'
 import { RoleManager, ServerChannelManager, ServerMemberManager } from '../managers'
 import { Collection, ServerPermissions, UUID } from '../util'
 
-export class Server extends Base {
+export class Server extends Base<APIServer> {
     name!: string
-    id!: string
     description: string | null = null
     ownerId!: string
-    members: ServerMemberManager
-    channels: ServerChannelManager
-    roles: RoleManager
-    deleted = false
+    members = new ServerMemberManager(this)
+    channels = new ServerChannelManager(this)
+    roles = new RoleManager(this)
     icon: string | null = null
     banner: string | null = null
     permissions!: ServerPermissions
     categories = new Collection<string, Category>()
-    _channels: string[] = []
-    _roles: Record<string, RawRole> = {}
 
-    constructor(client: Client, data: RawServer) {
+    constructor(client: Client, data: APIServer) {
         super(client)
         this._patch(data)
-        this.channels = new ServerChannelManager(this)
-        this.roles = new RoleManager(this)
-        this.members = new ServerMemberManager(this)
     }
 
-    _patch(data: RawServer): this {
-        if (!data) return this
-
-        if (data._id) {
-            this.id = data._id
-        }
+    protected _patch(data: APIServer): this {
+        super._patch(data)
 
         if (Array.isArray(data.categories)) {
             this.categories.clear()
@@ -64,24 +53,23 @@ export class Server extends Base {
         }
 
         if (Array.isArray(data.channels)) {
-            this._channels = [...data.channels]
+            for (const id of data.channels) {
+                const channel = this.client.channels.cache.get(id)
+                if (channel?.inServer()) this.channels.cache.set(channel.id, channel)
+            }
         }
 
         if (typeof data.roles === 'object') {
-            this._roles = { ...data.roles }
+            for (const [id, raw] of Object.entries(data.roles)) {
+                this.roles._add(Object.assign(raw, { id }))
+            }
         }
 
-        if (typeof data.default_permissions?.[0] === 'number') {
-            this.permissions = new ServerPermissions(data.default_permissions[0]).freeze()
+        if (typeof data.default_permissions === 'number') {
+            this.permissions = new ServerPermissions(data.default_permissions).freeze()
         }
 
         return this
-    }
-
-    _update(data: RawServer): this {
-        const clone = this._clone()
-        clone._patch(data)
-        return clone
     }
 
     async ack(): Promise<void> {
@@ -105,7 +93,7 @@ export class Server extends Base {
     }
 
     get createdAt(): Date {
-        return UUID.extrectTime(this.id)
+        return UUID.timestampOf(this.id)
     }
 
     get createdTimestamp(): number {

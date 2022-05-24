@@ -1,43 +1,30 @@
-import { Message as RawMessage, SystemMessage } from 'revolt-api/types/Channels'
-import { Embed } from 'revolt-api/types/January'
+import { Message as APIMessage, SystemMessage, Embed } from 'revolt-api'
 import { Base, DMChannel, GroupChannel, Mentions, Server, ServerMember, TextChannel, User } from '.'
 import { Client } from '..'
-import { MessageTypes, UUID } from '../util'
+import { UUID } from '../util'
 
-export class Message extends Base {
+export class Message extends Base<APIMessage> {
     content = ''
-    id!: string
     channelId!: string
     authorId!: string
     embeds: Embed[] = []
-    deleted = false
-    mentions = new Mentions(this)
-    type: MessageTypes | 'UNKNOWN' = MessageTypes.TEXT
+    mentions = new Mentions(this, [])
+    type: Uppercase<SystemMessage['type']> = 'TEXT'
     editedAt: Date | null = null
-    constructor(client: Client, data: RawMessage) {
+    constructor(client: Client, data: APIMessage) {
         super(client)
         this._patch(data)
     }
 
-    _update(data: RawMessage): this {
-        const clone = this._clone()
-        clone._patch(data)
-        return clone
-    }
-
-    _patch(data: RawMessage): this {
-        if (!data) return this
-
-        if (data._id) {
-            this.id = data._id
-        }
+    protected _patch(data: APIMessage): this {
+        super._patch(data)
 
         if (Array.isArray(data.embeds)) {
             this.embeds = data.embeds
         }
 
         if (Array.isArray(data.mentions)) {
-            this.mentions._patch(data.mentions)
+            this.mentions = new Mentions(this, data.mentions)
         }
 
         if (data.author) {
@@ -48,21 +35,23 @@ export class Message extends Base {
             this.channelId = data.channel
         }
 
-        if (typeof data.content === 'object') {
-            this.type = MessageTypes[data.content.type.toUpperCase() as Uppercase<SystemMessage['type']>] ?? 'UNKNOWN'
-        } else if (typeof data.content === 'string') {
+        if (typeof data.content === 'string') {
             this.content = data.content
         }
 
+        if (data.system) {
+            this.type = data.system.type.toUpperCase() as Uppercase<SystemMessage['type']>
+        }
+
         if (data.edited) {
-            this.editedAt = new Date(data.edited.$date)
+            this.editedAt = new Date(data.edited)
         }
 
         return this
     }
 
     get createdAt(): Date {
-        return UUID.extrectTime(this.id)
+        return UUID.timestampOf(this.id)
     }
 
     get createdTimestamp(): number {
@@ -97,7 +86,7 @@ export class Message extends Base {
     }
 
     get system(): boolean {
-        return this.type !== MessageTypes.TEXT
+        return this.type !== 'TEXT'
     }
 
     inServer(): this is this & { serverId: string; server: Server; channel: TextChannel } {

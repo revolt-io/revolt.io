@@ -1,21 +1,25 @@
-import { DirectMessageChannel as RawDMChannel } from 'revolt-api/types/Channels'
-import { TextBasedChannel } from './interfaces/TextBasedChannel'
-import { Client } from '..'
+import { Channel as APIChannel } from 'revolt-api'
+import { Channel, Message } from '.'
+import { TextBasedChannel } from './interfaces'
+import { Client, MessageManager, MessageOptions } from '..'
 import { ChannelTypes, DEFAULT_PERMISSION_DM } from '../util'
 
-export class DMChannel extends TextBasedChannel {
-    active!: boolean
+type APIDirectChannel = Extract<APIChannel, { channel_type: 'DirectMessage' }>
+
+export class DMChannel extends Channel<APIDirectChannel> implements TextBasedChannel {
     readonly type = ChannelTypes.DM
+    active!: boolean
     permissions = DEFAULT_PERMISSION_DM
-    constructor(client: Client, data: RawDMChannel) {
+    messages = new MessageManager(this)
+    lastMessageId: string | null = null
+
+    constructor(client: Client, data: APIDirectChannel) {
         super(client, data)
         this._patch(data)
     }
 
-    _patch(data: RawDMChannel): this {
-        if (data._id) {
-            this.id = data._id
-        }
+    protected _patch(data: APIDirectChannel): this {
+        super._patch(data)
 
         if (typeof data.active === 'boolean') {
             this.active = data.active
@@ -23,10 +27,12 @@ export class DMChannel extends TextBasedChannel {
 
         return this
     }
+    send(options: MessageOptions | string): Promise<Message> {
+        return this.messages.send(options)
+    }
 
-    _update(data: RawDMChannel): this {
-        const clone = this._clone()
-        clone._patch(data)
-        return clone
+    get lastMessage(): Message | null {
+        if (!this.lastMessageId) return null
+        return this.messages.cache.get(this.lastMessageId) ?? null
     }
 }

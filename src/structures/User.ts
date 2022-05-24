@@ -1,13 +1,11 @@
-import { Attachment } from 'revolt-api/types/Autumn'
-import { User as RawUser, Presence as RawPresence } from 'revolt-api/types/Users'
+import { User as APIUser, Presence as APIPresence, File } from 'revolt-api'
 import { Base, DMChannel } from '.'
 import { Client } from '..'
 import { Badges, Presence, UUID } from '../util'
 
-export class User extends Base {
+export class User extends Base<APIUser> {
     username!: string
-    id!: string
-    avatar: Attachment | null = null
+    avatar: File | null = null
     status = {
         text: null,
         presence: Presence.INVISIBLE
@@ -16,17 +14,13 @@ export class User extends Base {
         presence: Presence
     }
     badges!: Badges
-    constructor(client: Client, data: RawUser) {
+    constructor(client: Client, data: APIUser) {
         super(client)
         this._patch(data)
     }
 
-    _patch(data: RawUser): this {
-        if (!data) return this
-
-        if (data._id) {
-            this.id = data._id
-        }
+    protected _patch(data: APIUser): this {
+        super._patch(data)
 
         if (data.username) {
             this.username = data.username
@@ -41,7 +35,7 @@ export class User extends Base {
         }
 
         if ('status' in data) {
-            const presence = data.status?.presence ? Presence[data.status.presence.toUpperCase() as Uppercase<RawPresence>] : Presence.INVISIBLE
+            const presence = data.status?.presence ? Presence[data.status.presence.toUpperCase() as Uppercase<APIPresence>] : Presence.INVISIBLE
             this.status.presence = presence
             this.status.text = data.status?.text ?? null
         }
@@ -49,14 +43,8 @@ export class User extends Base {
         return this
     }
 
-    _update(data: RawUser): this {
-        const clone = this._clone()
-        clone._patch(data)
-        return clone
-    }
-
     get createdAt(): Date {
-        return UUID.extrectTime(this.id)
+        return UUID.timestampOf(this.id)
     }
 
     get createdTimestamp(): number {

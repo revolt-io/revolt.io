@@ -73,20 +73,7 @@ export enum ChannelTypes {
     NOTES = 'NOTES'
 }
 
-export enum MessageTypes {
-    TEXT = 'TEXT',
-    USER_ADDED = 'USER_ADDED',
-    USER_REMOVE = 'USER_REMOVE',
-    USER_LEFT = 'USER_LEFT',
-    USER_JOINED = 'USER_JOINED',
-    USER_KICKED = 'USER_KICKED',
-    USER_BANNED = 'USER_BANNED',
-    CHANNEL_DESCRIPTION_CHANGED = 'CHANNEL_DESCRIPTION_CHANGED',
-    CHANNEL_ICON_CHANGED = 'CHANNEL_ICON_CHANGED',
-    CHANNEL_RENAMED = 'CHANNEL_RENAMED'
-}
-
-export const DEFUALT_OPTIONS: ClientOptions = {
+export const DEFAULT_OPTIONS: ClientOptions = {
     http: {
         api: 'https://api.revolt.chat',
         cdn: 'https://autumn.revolt.chat',

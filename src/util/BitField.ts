@@ -6,11 +6,18 @@ export type BitFieldResolvable = BitField | number | string | BitFieldResolvable
 
 export class BitField {
     static FLAGS: Record<string, number> = {}
-    bitfield = 0
+    bitfield = DEFAULT_BIT
     constructor(bits: BitFieldResolvable = DEFAULT_BIT) {
         this.bitfield = this.self.resolve(bits)
     }
 
+    static resolve(bit: BitFieldResolvable): number {
+        if (bit instanceof BitField) return bit.bitfield
+        if (typeof bit === 'number' && bit >= DEFAULT_BIT) return bit
+        if (Array.isArray(bit)) return bit.map(p => this.resolve(p)).reduce((prev, p) => prev | p, DEFAULT_BIT)
+        if (typeof this.FLAGS[bit] !== 'undefined') return this.FLAGS[bit]
+        throw new RangeError('BITFIELD_INVALID', bit)
+    }
     get self(): {
         FLAGS: Record<string, number>
         resolve(bit: BitFieldResolvable): number
@@ -81,13 +88,5 @@ export class BitField {
 
     *[Symbol.iterator](): Iterable<string> {
         yield* this.toArray()
-    }
-
-    static resolve(bit: BitFieldResolvable): number {
-        if (bit instanceof BitField) return bit.bitfield
-        if (typeof bit === 'number' && bit >= DEFAULT_BIT) return bit
-        if (Array.isArray(bit)) return bit.map(p => this.resolve(p)).reduce((prev, p) => prev | p, DEFAULT_BIT)
-        if (typeof this.FLAGS[bit] !== 'undefined') return this.FLAGS[bit]
-        throw new RangeError('BITFIELD_INVALID', bit)
     }
 }

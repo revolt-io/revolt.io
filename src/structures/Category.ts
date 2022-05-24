@@ -1,46 +1,35 @@
-import { Category as RawCategory } from 'revolt-api/types/Servers'
+import { Category as APICategory } from 'revolt-api'
 import { Base, Server, ServerChannel } from '.'
 import { Collection } from '../util'
 
-export class Category extends Base {
-    id!: string
+export class Category extends Base<APICategory> {
     name!: string
-    _channels: string[] = []
-    constructor(public server: Server, data: RawCategory) {
+    protected _children: string[] = []
+    constructor(public server: Server, data: APICategory) {
         super(server.client)
         this._patch(data)
     }
 
-    _patch(data: RawCategory): this {
-        if (!data) return this
-
-        if (data.id) {
-            this.id = data.id
-        }
+    protected _patch(data: APICategory): this {
+        super._patch(data)
 
         if (data.title) {
             this.name = data.title
         }
 
         if (Array.isArray(data.channels)) {
-            this._channels = [...data.channels]
+            this._children = data.channels
         }
 
         return this
     }
 
-    _update(data: RawCategory): this {
-        const clone = this._clone()
-        clone._patch(data)
-        return clone
-    }
-
-    get channels(): Collection<string, ServerChannel> {
+    get children(): Collection<string, ServerChannel> {
         const coll = new Collection<string, ServerChannel>()
 
-        for (const channelId of this._channels) {
-            const channel = this.server.channels.cache.get(channelId)
-            if (channel) coll.set(channel.id, channel)
+        for (const childId of this._children) {
+            const child = this.server.channels.cache.get(childId)
+            if (child) coll.set(child.id, child)
         }
 
         return coll

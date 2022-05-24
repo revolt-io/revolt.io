@@ -1,40 +1,24 @@
-import { Role as RawRole } from 'revolt-api/types/Servers'
+import { Role as APIRole } from 'revolt-api'
 import { Base, Server } from '.'
 import { UUID } from '../util'
 
 export class Role extends Base {
-    id!: string
     name!: string
     color: string | null = null
-    constructor(public server: Server, data: RawRole & { id: string }) {
+    constructor(public server: Server, data: APIRole & { id: string }) {
         super(server.client)
         this._patch(data)
     }
 
-    _patch(data: RawRole & { id?: string }): this {
-        if (data.id) {
-            this.id = data.id
-        }
-
-        if (data.name) {
-            this.name = data.name
-        }
-
-        if ('colour' in data) {
-            this.color = data.colour ?? null
-        }
-
+    protected _patch(data: APIRole & { _id?: string }): this {
+        super._patch(data)
+        if (data.name) this.name = data.name
+        if ('colour' in data) this.color = data.colour ?? null
         return this
     }
 
-    _update(data: RawRole & { id: string }): this {
-        const clone = this._clone()
-        clone._patch(data)
-        return clone
-    }
-
     get createdAt(): Date {
-        return UUID.extrectTime(this.id)
+        return UUID.timestampOf(this.id)
     }
 
     get createdTimestamp(): number {

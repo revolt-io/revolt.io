@@ -1,11 +1,18 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { EventEmitter } from 'events'
 import { Response } from 'node-fetch'
+import { APIRoutes } from 'revolt-api/dist/routes'
 import { APIRequest } from './APIRequest'
 import { HTTPError } from './HTTPError'
 import { parseResponse } from './utils/utils'
 import { BaseClient } from '../client/BaseClient'
 import { Events } from '../util'
+
+type GetRoutes = Extract<APIRoutes, { method: 'get' }>
+type PostRoutes = Extract<APIRoutes, { method: 'post' }>
+type DeleteRoutes = Extract<APIRoutes, { method: 'delete' }>
+type PatchRoutes = Extract<APIRoutes, { method: 'patch' }>
+type PutRoutes = Extract<APIRoutes, { method: 'put' }>
 
 export enum RequestMethod {
     Delete = 'DELETE',
@@ -15,8 +22,6 @@ export enum RequestMethod {
     Put = 'PUT'
 }
 
-export type RouteLike = `/${string}`
-
 export interface RequestData {
     body?: unknown
     headers?: Record<string, string>
@@ -24,7 +29,7 @@ export interface RequestData {
 
 export interface InternalRequest extends RequestData {
     method: RequestMethod
-    route: RouteLike
+    path: string
 }
 
 export interface RESTOptions {
@@ -43,7 +48,7 @@ export class REST extends EventEmitter {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async request(options: InternalRequest | APIRequest): Promise<any> {
-        const request = options instanceof APIRequest ? options : new APIRequest(this.options.api + options.route)
+        const request = options instanceof APIRequest ? options : new APIRequest(this.options.api + options.path)
 
         if (!(options instanceof APIRequest)) {
             request
@@ -97,23 +102,29 @@ export class REST extends EventEmitter {
         throw new HTTPError(res.statusText, res.constructor.name, res.status, request)
     }
 
-    get(route: RouteLike, options: RequestData = {}) {
-        return this.request({ ...options, route, method: RequestMethod.Get })
+    get<Path extends GetRoutes['path']>(path: Path, options: RequestData = {}): Promise<Extract<GetRoutes, { path: Path }>['response']> {
+        return this.request({ ...options, path, method: RequestMethod.Get })
     }
 
-    delete(route: RouteLike, options: RequestData = {}) {
-        return this.request({ ...options, route, method: RequestMethod.Delete })
+    delete<Path extends DeleteRoutes['path']>(path: Path, options: RequestData = {}): Promise<Extract<DeleteRoutes, { path: Path }>['response']> {
+        return this.request({ ...options, path, method: RequestMethod.Delete })
     }
 
-    post(route: RouteLike, options: RequestData = {}) {
-        return this.request({ ...options, route, method: RequestMethod.Post })
+    post<Path extends PostRoutes['path']>(path: Path, options: RequestData = {}): Promise<Extract<PostRoutes, { path: Path }>['response']> {
+        return this.request({ ...options, path, method: RequestMethod.Post })
     }
 
-    put(route: RouteLike, options: RequestData = {}) {
-        return this.request({ ...options, route, method: RequestMethod.Put })
+    put<Path extends PutRoutes['path']>(path: Path, options: RequestData = {}): Promise<Extract<PutRoutes, { path: Path }>['response']> {
+        return this.request({ ...options, path, method: RequestMethod.Put })
     }
 
-    patch(route: RouteLike, options: RequestData = {}) {
-        return this.request({ ...options, route, method: RequestMethod.Patch })
+    patch<Path extends PatchRoutes['path']>(path: Path, options: RequestData = {}): Promise<Extract<PatchRoutes, { path: Path }>['response']> {
+        return this.request({ ...options, path, method: RequestMethod.Patch })
     }
 }
+
+declare const rest: REST
+
+rest.get(`/users/${'' as string}`).then(c => {
+    c
+})

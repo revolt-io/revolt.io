@@ -17,6 +17,25 @@ export class WebSocket {
 
     constructor(public client: Client) {}
 
+    async send(data: unknown): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this.socket?.readyState === Socket.OPEN) {
+                this.socket.send(JSON.stringify(data), err => {
+                    if (err) return reject(err)
+                    resolve()
+                })
+            } else {
+                this.debug(`Tried to send packet '${JSON.stringify(data)}' but no WebSocket is available!`)
+                resolve()
+            }
+        })
+    }
+    private async onOpen(): Promise<void> {
+        await this.send({
+            type: WSEvents.AUTHENTICATE,
+            token: this.client.token
+        })
+    }
     private debug(message: unknown): void {
         this.client.emit(Events.DEBUG, `[WS]: ${message}`)
     }
@@ -38,7 +57,7 @@ export class WebSocket {
 
     sendHeartbeat(skip = false): void {
         if (!skip && !this.lastPongAcked) {
-            this.debug("Didn't receive a pong ack last time.")
+            this.debug('Did not receive a pong ack last time.')
         }
 
         const now = Date.now()
@@ -47,20 +66,6 @@ export class WebSocket {
         this.send({ type: WSEvents.PING, data: now })
         this.lastPongAcked = false
         this.lastPingTimestamp = now
-    }
-
-    async send(data: unknown): Promise<void> {
-        return new Promise((resolve, reject) => {
-            if (this.socket?.readyState === Socket.OPEN) {
-                this.socket.send(JSON.stringify(data), err => {
-                    if (err) return reject(err)
-                    resolve()
-                })
-            } else {
-                this.debug(`Tried to send packet '${JSON.stringify(data)}' but no WebSocket is available!`)
-                resolve()
-            }
-        })
     }
 
     private onError(event: Socket.ErrorEvent): void {
@@ -84,13 +89,6 @@ export class WebSocket {
         this.client.emit(Events.RAW, packet)
 
         this.onPacket(packet)
-    }
-
-    private async onOpen(): Promise<void> {
-        await this.send({
-            type: WSEvents.AUTHENTICATE,
-            token: this.client.token
-        })
     }
 
     private onClose(event: Socket.CloseEvent): void {
@@ -169,7 +167,7 @@ export class WebSocket {
                 throw new Error('Attempted to open WebSocket without syncing configuration from server.')
             }
 
-            if (typeof this.client.token === 'undefined') {
+            if (typeof this.client.token !== 'string') {
                 throw new Error('Attempted to open WebSocket without valid token.')
             }
 

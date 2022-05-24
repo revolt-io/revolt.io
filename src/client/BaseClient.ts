@@ -2,13 +2,11 @@
 import { EventEmitter } from 'events'
 import { HeadersInit } from 'node-fetch'
 import { WSOptions } from './WebSocket'
-import { Client, DEFUALT_OPTIONS, Message, Server } from '..'
+import { Client, DEFAULT_OPTIONS, Message, Server } from '..'
 import { Endpoints } from '../rest/Endpoints'
 import { REST, RESTOptions } from '../rest/REST'
 import { Channel, GroupChannel, Role, ServerMember, User } from '../structures'
 import { TextBasedChannel } from '../structures/interfaces/TextBasedChannel'
-
-export type Awaited<T> = T | Promise<T>
 
 export interface ClientEvents {
     message: [Message]
@@ -59,7 +57,7 @@ export class BaseClient extends EventEmitter {
     public readonly api: REST
     public token: string | null = null
     public bot = true
-    public options: ClientOptions = { ...DEFUALT_OPTIONS }
+    public options: ClientOptions = { ...DEFAULT_OPTIONS }
     constructor(options: DeepPartial<ClientOptions> = {}) {
         super()
         Object.assign(this.options, options)

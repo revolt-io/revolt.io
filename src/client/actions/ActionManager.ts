@@ -6,9 +6,7 @@ export class ActionManager {
     private actions: Record<string, BaseAction> = {}
 
     constructor(public client: Client) {
-        for (const Action of Object.values(Actions)) {
-            this.register(Action)
-        }
+        for (const Action of Object.values(Actions)) this.register(Action)
     }
 
     register(Action: new (client: Client) => BaseAction): void {

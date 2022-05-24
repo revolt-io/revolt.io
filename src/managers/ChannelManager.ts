@@ -1,20 +1,19 @@
-import { Channel as RawChannel } from 'revolt-api/types/Channels'
+import { Channel as APIChannel } from 'revolt-api'
 import { BaseManager } from '.'
 import { Client } from '..'
 import { TypeError } from '../errors'
 import { Channel, NotesChannel } from '../structures'
 import { ChannelTypes } from '../util'
 
-export type ChannelResolvable = Channel | RawChannel | string
+export type ChannelResolvable = Channel | APIChannel | string
 
-export class ChannelManager extends BaseManager<string, Channel, RawChannel> {
+export class ChannelManager extends BaseManager<Channel, APIChannel> {
     holds = null
-
     constructor(public client: Client) {
         super()
     }
 
-    _add(raw: RawChannel): Channel {
+    _add(raw: APIChannel): Channel {
         const channel = Channel.create(this.client, raw)
 
         if (channel.type === ChannelTypes.NOTES && this.client.user) {
@@ -37,28 +36,22 @@ export class ChannelManager extends BaseManager<string, Channel, RawChannel> {
     }
 
     async delete(channel: ChannelResolvable): Promise<void> {
-        const channelId = this.resolveId(channel)
-        if (!channelId) throw new TypeError('INVALID_TYPE', 'channel', 'ChannelResolvable')
-        await this.client.api.delete(`/channels/${channelId}`)
-    }
-
-    async ack(channel: ChannelResolvable): Promise<void> {
-        const channelId = this.resolveId(channel)
-        if (!channelId) throw new TypeError('INVALID_TYPE', 'channel', 'ChannelResolvable')
-        await this.client.api.put(`/channels/${channelId}/ack`)
+        const id = this.resolveId(channel)
+        if (!id) throw new TypeError('INVALID_TYPE', 'channel', 'ChannelResolvable')
+        await this.client.api.delete(`/channels/${id}`)
     }
 
     async fetch(channel: ChannelResolvable, { force = true } = {}): Promise<Channel> {
-        const channelId = this.resolveId(channel)
+        const id = this.resolveId(channel)
 
-        if (!channelId) throw new TypeError('INVALID_TYPE', 'channel', 'ChannelResolvable')
+        if (!id) throw new TypeError('INVALID_TYPE', 'channel', 'ChannelResolvable')
 
         if (!force) {
-            const channel = this.cache.get(channelId)
+            const channel = this.cache.get(id)
             if (channel) return channel
         }
 
-        const data = await this.client.api.get(`/channels/${channelId}`)
+        const data = (await this.client.api.get(`/channels/${id}`)) as APIChannel
 
         return this._add(data)
     }

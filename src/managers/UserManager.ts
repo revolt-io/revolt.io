@@ -1,12 +1,12 @@
-import { User as RawUser } from 'revolt-api/types/Users'
+import { User as APIUser } from 'revolt-api'
 import { BaseManager } from '.'
 import { Client } from '../client/Client'
 import { TypeError } from '../errors'
 import { Message, User } from '../structures'
 
-export type UserResolvable = User | RawUser | Message | string
+export type UserResolvable = User | APIUser | Message | string
 
-export class UserManager extends BaseManager<string, User, RawUser> {
+export class UserManager extends BaseManager<User, APIUser> {
     holds = User
     constructor(public client: Client) {
         super()
@@ -22,14 +22,14 @@ export class UserManager extends BaseManager<string, User, RawUser> {
             if (user) return user
         }
 
-        const data = await this.client.api.get(`/users/${userId}`)
+        const data = (await this.client.api.get(`/users/${userId}`)) as APIUser
 
         return this._add(data)
     }
 
     resolve(resolvable: Message | User): User
-    resolve(resolvable: string | RawUser): User | null
-    resolve(resolvable: User | RawUser | string | Message): User | null {
+    resolve(resolvable: string | APIUser): User | null
+    resolve(resolvable: User | APIUser | string | Message): User | null {
         if (resolvable instanceof Message) return resolvable.author
         return super.resolve(resolvable)
     }

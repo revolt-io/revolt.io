@@ -1,20 +1,19 @@
-import { Server as RawServer } from 'revolt-api/types/Servers'
+import { Server as APIServer } from 'revolt-api'
 import { BaseManager } from '.'
 import { Client } from '..'
 import { TypeError } from '../errors'
 import { Server } from '../structures'
 import { UUID } from '../util'
 
-export type ServerResolvable = Server | RawServer | string
+export type ServerResolvable = Server | APIServer | string
 
 export interface EditServerOptions {
     name?: string
     description?: string
 }
 
-export class ServerManager extends BaseManager<string, Server, RawServer> {
+export class ServerManager extends BaseManager<Server, APIServer> {
     readonly holds = Server
-
     constructor(public client: Client) {
         super()
     }
@@ -22,54 +21,52 @@ export class ServerManager extends BaseManager<string, Server, RawServer> {
     _remove(id: string): void {
         const server = this.cache.get(id)
 
-        for (const channelId of server?._channels ?? []) {
-            this.client.channels._remove(channelId)
+        for (const id of server?.channels.cache.keys() ?? []) {
+            this.client.channels._remove(id)
         }
 
         return super._remove(id)
     }
 
     async create(name: string): Promise<Server> {
-        const data = await this.client.api.post('/servers/create', {
+        const { server } = await this.client.api.post('/servers/create', {
             body: {
                 name,
                 nonce: UUID.generate()
             }
         })
-        return this._add(data)
+        return this._add(server)
     }
 
     async edit(server: ServerResolvable, options: EditServerOptions): Promise<void> {
-        const serverId = this.resolveId(server)
-        if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
-        await this.client.api.patch(`/servers/${serverId}`, {
-            body: options
-        })
+        const id = this.resolveId(server)
+        if (!id) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
+        await this.client.api.patch(`/servers/${id}`, { body: options })
     }
 
     async ack(server: ServerResolvable): Promise<void> {
-        const serverId = this.resolveId(server)
-        if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
-        await this.client.api.put(`/servers/${serverId}/ack`)
+        const id = this.resolveId(server)
+        if (!id) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
+        await this.client.api.put(`/servers/${id}/ack`)
     }
 
     async delete(server: ServerResolvable): Promise<void> {
-        const serverId = this.resolveId(server)
-        if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
-        await this.client.api.delete(`/servers/${serverId}`)
+        const id = this.resolveId(server)
+        if (!id) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
+        await this.client.api.delete(`/servers/${id}`)
     }
 
     async fetch(server: ServerResolvable, { force = true } = {}): Promise<Server> {
-        const serverId = this.resolveId(server)
+        const id = this.resolveId(server)
 
-        if (!serverId) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
+        if (!id) throw new TypeError('INVALID_TYPE', 'server', 'ServerResolvable')
 
         if (!force) {
-            const server = this.cache.get(serverId)
+            const server = this.cache.get(id)
             if (server) return server
         }
 
-        const data = await this.client.api.get(`/servers/${serverId}`)
+        const data = (await this.client.api.get(`/servers/${id}`)) as APIServer
 
         return this._add(data)
     }

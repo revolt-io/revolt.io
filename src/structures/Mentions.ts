@@ -1,30 +1,17 @@
-import { Base, Message, ServerMember, User } from '.'
+import { Message, ServerMember, User } from '.'
 import { TypeError } from '../errors'
 import { UserResolvable } from '../managers'
 import { Collection } from '../util'
 
-export class Mentions extends Base {
-    private _users: string[] = []
-    constructor(public message: Message) {
-        super(message.client)
-    }
+export class Mentions {
+    client = this.message.client
 
-    _patch(userIds: string[]): this {
-        this._users.length = 0
-        this._users.push(...userIds)
-        return this
-    }
-
-    _update(userIds: string[]): this {
-        const clone = this._clone()
-        this._patch(userIds)
-        return clone
-    }
+    constructor(public message: Message, protected _users: string[]) {}
 
     has(user: UserResolvable): boolean {
-        const userId = this.client.users.resolveId(user)
-        if (!userId) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable')
-        return this._users.includes(userId)
+        const id = this.client.users.resolveId(user)
+        if (!id) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable')
+        return this._users.includes(id)
     }
 
     get members(): Collection<string, ServerMember> | null {

@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto'
+import { randomBytes } from 'node:crypto'
 
 export class UUID extends null {
     static readonly ENCODING = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
@@ -43,7 +43,7 @@ export class UUID extends null {
         return this.time(timestamp) + this.hash()
     }
 
-    static extrectTime(id: string): Date {
+    static timestampOf(id: string): Date {
         const timestamp = id
             .substr(0, this.TIME_LENGTH)
             .split('')
