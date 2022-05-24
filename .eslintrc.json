@@ -19,7 +19,6 @@
     "plugins": [
         "@typescript-eslint",
         "prettier",
-        "sort-class-members",
         "import"
     ],
     "rules": {
@@ -52,23 +51,6 @@
                 }
             }
         ],
-        "sort-class-members/sort-class-members": [
-            "error",
-            {
-                "order": [
-                    "[static-properties]",
-                    "[properties]",
-                    "[conventional-private-properties]",
-                    "constructor",
-                    "[conventional-private-methods]",
-                    "[getters]",
-                    "[async-methods]",
-                    "[methods]",
-                    "[static-methods]"
-                ],
-                "accessorPairPositioning": "getThenSet"
-            }
-        ],
         "strict": [
             "error",
             "global"
@@ -80,6 +62,7 @@
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "@typescript-eslint/no-non-null-assertion": "off"
     }
 }
