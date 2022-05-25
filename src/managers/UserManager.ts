@@ -1,16 +1,12 @@
 import { User as APIUser } from 'revolt-api'
-import { BaseManager } from '.'
-import { Client } from '../client/Client'
-import { TypeError } from '../errors'
-import { Message, User } from '../structures'
+import { BaseManager } from './BaseManager'
+import { TypeError } from '../errors/index'
+import { Message, User } from '../structures/index'
 
 export type UserResolvable = User | APIUser | Message | string
 
 export class UserManager extends BaseManager<User, APIUser> {
     holds = User
-    constructor(public client: Client) {
-        super()
-    }
 
     async fetch(user: UserResolvable, { force = true } = {}): Promise<User> {
         const userId = this.resolveId(user)

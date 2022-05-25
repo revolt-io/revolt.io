@@ -1,4 +1,4 @@
-import type { MessageManager, Message, MessageOptions } from '../..'
+import type { MessageManager, Message, MessageOptions } from '../../index'
 
 export interface TextBasedChannel {
     messages: MessageManager

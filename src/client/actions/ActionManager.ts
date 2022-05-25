@@ -1,4 +1,4 @@
-import * as Actions from '.'
+import * as Actions from './index'
 import { Action as BaseAction } from './Action'
 import { Client } from '../Client'
 

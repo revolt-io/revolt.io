@@ -1,8 +1,8 @@
 import { Channel as APIChannel } from 'revolt-api'
-import { BaseManager } from '.'
-import { TypeError } from '../errors'
-import { Server, ServerChannel, TextChannel, VoiceChannel } from '../structures'
-import { UUID } from '../util'
+import { BaseManager } from './BaseManager'
+import { TypeError } from '../errors/index'
+import { Server, ServerChannel, TextChannel, VoiceChannel } from '../structures/index'
+import { UUID } from '../util/index'
 
 type APIServerChannel = Extract<APIChannel, { channel_type: 'TextChannel' | 'VoiceChannel' }>
 
@@ -15,10 +15,9 @@ export interface CreateChannelOptions {
 }
 
 export class ServerChannelManager extends BaseManager<ServerChannel> {
-    client = this.server.client
     holds = ServerChannel
-    constructor(public server: Server) {
-        super()
+    constructor(protected readonly server: Server) {
+        super(server.client)
     }
 
     _add(data: APIChannel): ServerChannel {

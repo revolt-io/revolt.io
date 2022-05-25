@@ -1,9 +1,9 @@
 import { Channel as APIChannel } from 'revolt-api'
-import { Message, ServerChannel } from '.'
-import { TextBasedChannel } from './interfaces'
-import { Client } from '..'
-import { MessageManager, MessageOptions } from '../managers'
-import { ChannelTypes } from '../util'
+import { Message, ServerChannel } from './index'
+import { TextBasedChannel } from './interfaces/index'
+import { Client } from '../client/Client'
+import { MessageManager, MessageOptions } from '../managers/index'
+import { ChannelTypes } from '../util/index'
 
 type APITextChannel = Extract<APIChannel, { channel_type: 'TextChannel' }>
 

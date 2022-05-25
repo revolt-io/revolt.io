@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RevoltConfig } from 'revolt-api'
-import { BaseClient } from './BaseClient'
-import { WebSocket } from './WebSocket'
+import { BaseClient, WebSocket } from './index'
 import { ActionManager } from './actions/ActionManager'
-import { ChannelManager, ServerManager, UserManager } from '../managers'
-import { ClientUser } from '../structures/ClientUser'
+import { Error } from '../errors/index'
+import { ChannelManager, ServerManager, UserManager } from '../managers/index'
+import { ClientUser } from '../structures/index'
 import { Events } from '../util/Constants'
 
 export class Client extends BaseClient {
-    protected readonly ws: WebSocket = new WebSocket(this)
+    protected readonly ws = new WebSocket(this)
     readonly actions = new ActionManager(this)
     readonly channels = new ChannelManager(this)
     readonly servers = new ServerManager(this)
@@ -26,17 +25,13 @@ export class Client extends BaseClient {
     }
 
     async login(token?: string, type: 'user' | 'bot' = 'bot'): Promise<void> {
+        if (!token) throw new Error('INVALID_TOKEN')
+
         this.debug('Fetch configuration...')
 
         this.configuration = await this.api.get('/')
-        this.bot = type === 'bot'
-
-        Object.defineProperty(this, 'token', {
-            value: token,
-            writable: true,
-            enumerable: false,
-            configurable: true
-        })
+        this.bot = type.toLowerCase() === 'bot'
+        this.token = token ?? null
 
         this.debug('Preparing to connect to the gateway...')
 
@@ -54,6 +49,7 @@ export class Client extends BaseClient {
         this.token = null
         this.user = null
         this.readyAt = null
+        this.api.setToken(null)
         await this.ws.destroy()
     }
 

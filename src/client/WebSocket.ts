@@ -1,11 +1,7 @@
 import { default as Socket } from 'ws'
-import { Client } from './Client'
-import { ClientUser } from '../structures'
-import { Events, WSEvents } from '../util'
-
-export interface WSOptions {
-    heartbeat: number
-}
+import type { Client } from './Client'
+import { ClientUser } from '../structures/index'
+import { Events, WSEvents } from '../util/index'
 
 export class WebSocket {
     heartbeatInterval?: NodeJS.Timer
@@ -15,7 +11,7 @@ export class WebSocket {
     connected = false
     ready = false
 
-    constructor(public client: Client) {}
+    constructor(protected readonly client: Client) {}
 
     async send(data: unknown): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -30,12 +26,14 @@ export class WebSocket {
             }
         })
     }
+
     private async onOpen(): Promise<void> {
         await this.send({
             type: WSEvents.AUTHENTICATE,
             token: this.client.token
         })
     }
+
     private debug(message: unknown): void {
         this.client.emit(Events.DEBUG, `[WS]: ${message}`)
     }

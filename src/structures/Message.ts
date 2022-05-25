@@ -1,7 +1,7 @@
 import { Message as APIMessage, SystemMessage, Embed } from 'revolt-api'
-import { Base, DMChannel, GroupChannel, Mentions, Server, ServerMember, TextChannel, User } from '.'
-import { Client } from '..'
-import { UUID } from '../util'
+import { Base, DMChannel, GroupChannel, Mentions, Server, ServerMember, TextChannel, User } from './index'
+import { Client } from '../client/Client'
+import { UUID } from '../util/index'
 
 export class Message extends Base<APIMessage> {
     content = ''

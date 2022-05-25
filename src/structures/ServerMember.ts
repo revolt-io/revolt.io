@@ -1,6 +1,6 @@
 import { Member as APIMember, File } from 'revolt-api'
-import { Base, Server, User } from '.'
-import { Client } from '..'
+import { Base, Server, User } from './index'
+import { Client } from '../client/Client'
 
 export class ServerMember extends Base<APIMember> {
     serverId!: string

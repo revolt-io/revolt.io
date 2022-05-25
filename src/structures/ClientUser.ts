@@ -1,4 +1,4 @@
-import type { NotesChannel } from '.'
+import type { NotesChannel } from './index'
 import { User } from './User'
 
 export class ClientUser extends User {

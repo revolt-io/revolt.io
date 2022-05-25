@@ -1,4 +1,4 @@
-import { RangeError } from '../errors'
+import { RangeError } from '../errors/index'
 
 const DEFAULT_BIT = 0
 

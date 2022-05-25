@@ -1,8 +1,8 @@
 import { Server as APIServer } from 'revolt-api'
-import { Base, ServerMember, User, Category } from '.'
-import { Client } from '..'
-import { RoleManager, ServerChannelManager, ServerMemberManager } from '../managers'
-import { Collection, ServerPermissions, UUID } from '../util'
+import { Base, ServerMember, User, Category } from './index'
+import { Client } from '../client/Client'
+import { RoleManager, ServerChannelManager, ServerMemberManager } from '../managers/index'
+import { Collection, ServerPermissions, UUID } from '../util/index'
 
 export class Server extends Base<APIServer> {
     name!: string

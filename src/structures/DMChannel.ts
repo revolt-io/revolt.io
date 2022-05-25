@@ -1,8 +1,8 @@
 import { Channel as APIChannel } from 'revolt-api'
-import { Channel, Message } from '.'
-import { TextBasedChannel } from './interfaces'
-import { Client, MessageManager, MessageOptions } from '..'
-import { ChannelTypes, DEFAULT_PERMISSION_DM } from '../util'
+import { Channel, Message } from './index'
+import { TextBasedChannel } from './interfaces/index'
+import { Client, MessageManager, MessageOptions } from '../index'
+import { ChannelTypes, DEFAULT_PERMISSION_DM } from '../util/index'
 
 type APIDirectChannel = Extract<APIChannel, { channel_type: 'DirectMessage' }>
 

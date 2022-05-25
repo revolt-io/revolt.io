@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EventEmitter } from 'events'
-import { HeadersInit } from 'node-fetch'
-import { WSOptions } from './WebSocket'
-import { Client, DEFAULT_OPTIONS, Message, Server } from '..'
-import { Endpoints } from '../rest/Endpoints'
-import { REST, RESTOptions } from '../rest/REST'
-import { Channel, GroupChannel, Role, ServerMember, User } from '../structures'
-import { TextBasedChannel } from '../structures/interfaces/TextBasedChannel'
+import { Client } from '../client/index'
+import { REST, Endpoints } from '../rest/index'
+import type { Channel, DMChannel, GroupChannel, Role, ServerMember, TextChannel, User, Server, Message } from '../structures/index'
+import { DEFAULT_CLIENT_OPTIONS, Events } from '../util/Constants'
 
 export interface ClientEvents {
     message: [Message]
@@ -25,8 +22,8 @@ export interface ClientEvents {
     serverMemberLeave: [ServerMember]
     serverMemberUpdate: [ServerMember, ServerMember]
     roleDelete: [Role]
-    typingStart: [TextBasedChannel, User]
-    typingStop: [TextBasedChannel, User]
+    typingStart: [TextChannel | DMChannel | GroupChannel, User]
+    typingStop: [TextChannel | DMChannel | GroupChannel, User]
     groupJoin: [GroupChannel, User]
     groupLeave: [GroupChannel, User]
 }
@@ -44,35 +41,57 @@ export declare interface BaseClient {
     removeAllListeners<S extends string | symbol>(event?: Exclude<S, keyof ClientEvents>): this
 }
 
-type DeepPartial<T> = {
-    [P in keyof T]?: DeepPartial<T[P]>
+export interface BaseClientOptions {
+    rest: {
+        url: string
+        retries: number
+        timeout: number
+    }
+    endpoints: {
+        cdn: string
+        invite: string
+        api: string
+    }
+    ws: {
+        heartbeat: number
+    }
 }
 
-export interface ClientOptions {
-    http: RESTOptions
-    ws: WSOptions
+type DeepPartial<T> = T extends object
+    ? {
+          [P in keyof T]?: DeepPartial<T[P]>
+      }
+    : T
+
+export function isObject(item: unknown) {
+    return item && typeof item === 'object' && !Array.isArray(item)
 }
 
-export class BaseClient extends EventEmitter {
-    public readonly api: REST
-    public token: string | null = null
-    public bot = true
-    public options: ClientOptions = { ...DEFAULT_OPTIONS }
-    constructor(options: DeepPartial<ClientOptions> = {}) {
+export abstract class BaseClient extends EventEmitter {
+    readonly api: REST
+    readonly endpoints: Endpoints
+    #token: string | null = null
+    bot = true
+    options = { ...DEFAULT_CLIENT_OPTIONS }
+
+    constructor(opts: DeepPartial<BaseClientOptions> = {}) {
         super()
-        Object.assign(this.options, options)
-        this.api = new REST(this, { ...this.options.http })
-    }
 
-    get endpoints(): Endpoints {
-        const { api, cdn, invite } = this.options.http
-        return new Endpoints({ api, cdn, invite })
-    }
-
-    get headers(): HeadersInit {
-        if (!this.token) return {}
-        return {
-            [`x-${this.bot ? 'bot' : 'session'}-token`]: this.token
+        for (const key in opts) {
+            Object.assign(this.options[key as keyof BaseClientOptions], opts[key as keyof BaseClientOptions])
         }
+
+        this.api = new REST(this.options.rest)
+        this.endpoints = new Endpoints(this.options.endpoints)
+        this.api.debug = (msg: string) => this.emit(Events.DEBUG, msg)
+    }
+
+    set token(token: string | null) {
+        this.#token = token
+        this.api.setToken(token, this.bot)
+    }
+
+    get token() {
+        return this.#token
     }
 }

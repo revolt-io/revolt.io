@@ -6,7 +6,7 @@ export class ChannelStartTypingAction extends Action {
         const channel = this.client.channels.cache.get(data.id)
         const user = this.client.users.cache.get(data.user)
 
-        if (channel && user) {
+        if (channel?.isText() && user) {
             this.client.emit(Events.TYPING_START, channel, user)
         }
 

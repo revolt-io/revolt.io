@@ -1,17 +1,13 @@
 import { Channel as APIChannel } from 'revolt-api'
-import { BaseManager } from '.'
-import { Client } from '..'
-import { TypeError } from '../errors'
-import { Channel, NotesChannel } from '../structures'
-import { ChannelTypes } from '../util'
+import { BaseManager } from './BaseManager'
+import { TypeError } from '../errors/index'
+import { Channel, NotesChannel } from '../structures/index'
+import { ChannelTypes } from '../util/index'
 
 export type ChannelResolvable = Channel | APIChannel | string
 
 export class ChannelManager extends BaseManager<Channel, APIChannel> {
     holds = null
-    constructor(public client: Client) {
-        super()
-    }
 
     _add(raw: APIChannel): Channel {
         const channel = Channel.create(this.client, raw)

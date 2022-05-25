@@ -1,9 +1,8 @@
 import { Server as APIServer } from 'revolt-api'
-import { BaseManager } from '.'
-import { Client } from '..'
-import { TypeError } from '../errors'
-import { Server } from '../structures'
-import { UUID } from '../util'
+import { BaseManager } from './BaseManager'
+import { TypeError } from '../errors/index'
+import { Server } from '../structures/index'
+import { UUID } from '../util/index'
 
 export type ServerResolvable = Server | APIServer | string
 
@@ -14,9 +13,6 @@ export interface EditServerOptions {
 
 export class ServerManager extends BaseManager<Server, APIServer> {
     readonly holds = Server
-    constructor(public client: Client) {
-        super()
-    }
 
     _remove(id: string): void {
         const server = this.cache.get(id)

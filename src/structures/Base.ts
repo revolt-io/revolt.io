@@ -1,4 +1,4 @@
-import type { Client } from '..'
+import type { Client } from '../client/Client'
 
 type ID = { _id: string } | { id: string } | { _id: { user: string } }
 

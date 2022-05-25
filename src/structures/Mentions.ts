@@ -1,4 +1,4 @@
-import { Message, ServerMember, User } from '.'
+import { Message, ServerMember, User } from './index'
 import { TypeError } from '../errors'
 import { UserResolvable } from '../managers'
 import { Collection } from '../util'

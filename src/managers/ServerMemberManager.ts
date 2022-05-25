@@ -1,8 +1,8 @@
 import { Member as APIMember } from 'revolt-api'
-import { BaseManager } from '.'
-import { TypeError } from '../errors'
-import { Server, ServerMember, User } from '../structures'
-import { Collection } from '../util'
+import { BaseManager } from './BaseManager'
+import { TypeError } from '../errors/index'
+import { Server, ServerMember, User } from '../structures/index'
+import { Collection } from '../util/index'
 
 export type ServerMemberResolvable = ServerMember | User | APIMember | string
 
@@ -14,9 +14,8 @@ export interface EditServerMemberOptions {
 
 export class ServerMemberManager extends BaseManager<ServerMember, APIMember> {
     holds = ServerMember
-    client = this.server.client
-    constructor(public server: Server) {
-        super()
+    constructor(protected readonly server: Server) {
+        super(server.client)
     }
 
     async edit(member: ServerMemberResolvable, options: EditServerMemberOptions): Promise<void> {

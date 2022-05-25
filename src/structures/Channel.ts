@@ -1,7 +1,7 @@
 import { Channel as APIChannel } from 'revolt-api'
-import { Base, DMChannel, GroupChannel, NotesChannel, ServerChannel, TextChannel, VoiceChannel } from '.'
-import { Client } from '..'
-import { ChannelTypes, UUID } from '../util'
+import { Base, DMChannel, GroupChannel, NotesChannel, ServerChannel, TextChannel, VoiceChannel } from './index'
+import type { Client } from '../client/Client'
+import { ChannelTypes, UUID } from '../util/index'
 
 export abstract class Channel<T extends APIChannel = APIChannel> extends Base<T> {
     type: ChannelTypes | 'UNKNOWN' = 'UNKNOWN'

@@ -1,5 +1,5 @@
 import { Category as APICategory } from 'revolt-api'
-import { Base, Server, ServerChannel } from '.'
+import { Base, Server, ServerChannel } from './index'
 import { Collection } from '../util'
 
 export class Category extends Base<APICategory> {

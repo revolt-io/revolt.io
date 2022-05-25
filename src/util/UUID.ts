@@ -45,7 +45,7 @@ export class UUID extends null {
 
     static timestampOf(id: string): Date {
         const timestamp = id
-            .substr(0, this.TIME_LENGTH)
+            .slice(0, this.TIME_LENGTH)
             .split('')
             .reverse()
             .reduce((carry, char, index) => {

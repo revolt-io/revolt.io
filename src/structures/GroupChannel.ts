@@ -1,9 +1,10 @@
 import { Channel as APIChannel } from 'revolt-api'
-import { TextBasedChannel } from './interfaces'
-import { Client, User, Channel, Message } from '..'
-import { TypeError } from '../errors'
-import { MessageManager, MessageOptions, UserResolvable } from '../managers'
-import { ChannelPermissions, ChannelTypes, Collection } from '../util'
+import { TextBasedChannel } from './interfaces/index'
+import { User, Channel, Message } from './index'
+import { TypeError } from '../errors/index'
+import { MessageManager, MessageOptions, UserResolvable } from '../managers/index'
+import { ChannelPermissions, ChannelTypes, Collection } from '../util/index'
+import type { Client } from '../client/Client'
 
 type APIGroupChannel = Extract<APIChannel, { channel_type: 'Group' }>
 

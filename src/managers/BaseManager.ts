@@ -1,8 +1,10 @@
-import { Client } from '..'
-import { Collection } from '../util'
+import type { Client } from '../client/Client'
+import { Collection } from '../util/index'
 
 export abstract class BaseManager<Holds extends { id: string }, R = unknown> {
     readonly cache = new Collection<string, Holds>()
+
+    constructor(protected readonly client: Client) {}
 
     _add(raw: R): Holds {
         if (!this.holds) throw new Error('No "holds" exists.')
@@ -17,7 +19,6 @@ export abstract class BaseManager<Holds extends { id: string }, R = unknown> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     abstract readonly holds: (new (...args: any[]) => Holds) | null
-    abstract readonly client: Client
 
     resolve(resolvable: Holds): Holds | null
     resolve(resolvable: string | R): Holds | null

@@ -1,7 +1,7 @@
 import { User as APIUser, Presence as APIPresence, File } from 'revolt-api'
-import { Base, DMChannel } from '.'
-import { Client } from '..'
-import { Badges, Presence, UUID } from '../util'
+import { Base, DMChannel } from './index'
+import { Client } from '../client/Client'
+import { Badges, Presence, UUID } from '../util/index'
 
 export class User extends Base<APIUser> {
     username!: string
@@ -69,7 +69,7 @@ export class User extends Base<APIUser> {
     }
 
     displayAvatarURL(options?: { size: number }): string {
-        return this.avatarURL(options) ?? `${this.client.options.http.api}/users/${this.id}/default_avatar`
+        return this.avatarURL(options) ?? this.client.endpoints.defaultAvatar(this.id)
     }
 
     fetch(force = true): Promise<User> {

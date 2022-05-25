@@ -1,5 +1,5 @@
 import { Role as APIRole } from 'revolt-api'
-import { Base, Server } from '.'
+import { Base, Server } from './index'
 import { UUID } from '../util'
 
 export class Role extends Base {

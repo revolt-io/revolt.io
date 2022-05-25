@@ -1,8 +1,8 @@
 import { User as APIUser, Message as APIMessage, Member as APIMember } from 'revolt-api'
-import { BaseManager } from '.'
-import { TypeError } from '../errors'
-import { Channel, Message, ServerMember, User } from '../structures'
-import { Collection, UUID } from '../util'
+import { BaseManager } from './BaseManager'
+import { TypeError } from '../errors/index'
+import { Channel, Message, ServerMember, User } from '../structures/index'
+import { Collection, UUID } from '../util/index'
 
 export type MessageResolvable = Message | APIMessage | string
 
@@ -33,9 +33,8 @@ type SearchResultWithUsers = {
 
 export class MessageManager extends BaseManager<Message, APIMessage> {
     holds = Message
-    client = this.channel.client
-    constructor(public channel: Channel) {
-        super()
+    constructor(protected readonly channel: Channel) {
+        super(channel.client)
     }
 
     private async _fetchId(messageId: string) {

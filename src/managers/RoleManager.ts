@@ -1,15 +1,14 @@
 import { Role as APIRole } from 'revolt-api'
-import { BaseManager } from '.'
-import { TypeError } from '../errors'
-import { Role, Server } from '../structures'
+import { BaseManager } from './BaseManager'
+import { TypeError } from '../errors/index'
+import { Role, Server } from '../structures/index'
 
 export type RoleResolvable = Role | string
 
 export class RoleManager extends BaseManager<Role, APIRole & { id: string }> {
     holds = Role
-    client = this.server.client
-    constructor(public server: Server) {
-        super()
+    constructor(protected readonly server: Server) {
+        super(server.client)
     }
 
     _add(data: APIRole & { id: string }): Role {
