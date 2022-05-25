@@ -33,5 +33,8 @@ client.on('message', msg => {
 })
 ```
 
+## Links
+- [Documentation](https://abdulrahman1s.github.io/better-revolt.js)
+
 ## License
 Refer to the [LICENSE](LICENSE) file.
