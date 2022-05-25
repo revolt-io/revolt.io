@@ -6,6 +6,7 @@ export class Role extends Base {
     name!: string
     color: string | null = null
     hoist = false
+    rank!: number
     overwrite!: Overwrite
     constructor(public server: Server, data: APIRole & { id: string }) {
         super(server.client)
@@ -14,9 +15,11 @@ export class Role extends Base {
 
     protected _patch(data: APIRole & { _id?: string }): this {
         super._patch(data)
-        
+
+
         if (data.name) this.name = data.name
         if (typeof data.hoist === 'boolean') this.hoist = data.hoist
+        if (typeof data.rank === 'number') this.rank = data.rank
         if ('colour' in data) this.color = data.colour ?? null
         if (data.permissions) {
             const { a, d } = data.permissions
