@@ -1,7 +1,7 @@
 {
   "name": "better-revolt-js",
   "description": "A NodeJS Revolt library",
-  "version": "0.1.2-beta",
+  "version": "1.0.0",
   "scripts": {
     "build": "tsc-esm",
     "test": "npm run test:types && npm run lint",
@@ -9,7 +9,7 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --write src/**/*.ts",
-    "docs": "npx typedoc src/index.ts"
+    "docs": "typedoc src/index.ts"
   },
   "main": "dist/index.js",
   "type": "module",
@@ -37,7 +37,7 @@
   "files": [
     "dist/*"
   ],
-  "license": "GNU-3.0",
+  "license": "Apache-2",
   "repository": {
     "type": "git",
     "url": "https://github.com/abdulrahman1s/better-revolt.js"
