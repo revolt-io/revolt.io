@@ -3,7 +3,7 @@ import { Action } from './Action'
 import { Events, SYSTEM_USER_ID } from '../../util/Constants'
 
 export class MessageAction extends Action {
-   async handle(data: APIMessage): Promise<unknown> {
+    async handle(data: APIMessage): Promise<unknown> {
         const channel = this.client.channels.cache.get(data.channel)
 
         if (channel?.isText()) {
