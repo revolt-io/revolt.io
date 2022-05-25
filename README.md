@@ -1,25 +1,34 @@
 Better Revolt.JS [![NPM version](https://img.shields.io/npm/v/better-revolt-js.svg?style=flat-square&color=informational)](https://npmjs.com/package/better-revolt-js)
 ====
-A Node.js wrapper for interfacing with Revolt API.
 
 
-## Installing
+### Overview
+An alternative library to the official revolt.js with good design in mind.
+
+### Features
+- Built with TypeScript
+- Object-oriented
+- Lightweight ([better-revolt.js *4 pkg](/package.json) > [revolt.js 12* pkg](https://github.com/revoltchat/revolt.js/blob/master/package.json))
+- Voice Support (*work in progress..*)
+- Deno Support (*work in progress...*)
+
+## Installation
+***Node.js v16.x or newer is required.***
 ```bash
-npm i better-revolt-js
+$ npm i better-revolt-js
 ```
 
-## Example Usage
-```ts
+## Usage
+```js
 import { Client } from 'better-revolt-js'
 
 const client = new Client()
 
 // Login with bot account
-client.login(process.env.TOKEN)
+client.login('revolt-token-here')
 
 // Self bot
-// client.login(process.env.TOKEN, 'user')
-
+// client.login('revolt-token-here', 'user')
 
 client.on('ready', () => {
     console.log('Connected')
@@ -34,6 +43,7 @@ client.on('message', msg => {
 ```
 
 ## Links
+- [More examples](/examples)
 - [Documentation](https://abdulrahman1s.github.io/better-revolt.js)
 
 ## License
