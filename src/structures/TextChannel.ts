@@ -11,7 +11,6 @@ export class TextChannel extends ServerChannel<APITextChannel> implements TextBa
     lastMessageId: string | null = null
     messages = new MessageManager(this)
     readonly type = ChannelTypes.TEXT
-    nsfw = false
     constructor(client: Client, data: APITextChannel) {
         super(client, data)
         this._patch(data)
@@ -20,7 +19,6 @@ export class TextChannel extends ServerChannel<APITextChannel> implements TextBa
     protected _patch(data: APITextChannel): this {
         super._patch(data)
 
-        if (typeof data.nsfw === 'boolean') this.nsfw = data.nsfw
         if (data.last_message_id) this.lastMessageId = data.last_message_id
 
         return this
