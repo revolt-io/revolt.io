@@ -14,6 +14,8 @@ export class User extends Base<APIUser> {
         presence: Presence
     }
     badges!: Badges
+    bot = false
+
     constructor(client: Client, data: APIUser) {
         super(client)
         this._patch(data)
@@ -24,6 +26,10 @@ export class User extends Base<APIUser> {
 
         if (data.username) {
             this.username = data.username
+        }
+
+        if (data.bot) {
+            this.bot = true
         }
 
         if (typeof data.badges === 'number') {
