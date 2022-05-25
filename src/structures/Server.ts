@@ -14,6 +14,7 @@ export class Server extends Base<APIServer> {
     icon: string | null = null
     banner: string | null = null
     analytics = false
+    discoverable = false
     permissions!: ServerPermissions
     categories = new Collection<string, Category>()
 
@@ -71,6 +72,7 @@ export class Server extends Base<APIServer> {
         }
 
         if (typeof data.analytics === 'boolean') this.analytics = data.analytics
+        if (typeof data.discoverable === 'boolean') this.discoverable = data.discoverable
 
         return this
     }
