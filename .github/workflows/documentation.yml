@@ -18,4 +18,4 @@ jobs:
         with:
           node-version: 16
       - name: Build docs
-        run: npm install && npm run docs
+        run: yarn install && yarn docs
