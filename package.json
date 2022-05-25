@@ -1,7 +1,7 @@
 {
   "name": "better-revolt-js",
   "description": "A NodeJS Revolt library",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "tsc-esm",
     "test": "npm run test:types && npm run lint",
