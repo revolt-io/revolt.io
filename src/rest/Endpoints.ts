@@ -1,11 +1,9 @@
-export interface EndPointsOptions {
-    cdn: string
-    invite: string
-    api: string
-}
+import type { BaseClientOptions } from '../client/index'
+
+export type EndpointsOptions = BaseClientOptions['endpoints']
 
 export class Endpoints {
-    constructor(private options: EndPointsOptions) {}
+    constructor(private readonly options: EndpointsOptions) {}
 
     get CDN(): string {
         return this.options.cdn
@@ -17,6 +15,10 @@ export class Endpoints {
 
     get API(): string {
         return this.options.api
+    }
+
+    defaultAvatar(id: string): string {
+        return `${this.API}/users/${id}/default_avatar`
     }
 
     avatar(hash: string, filename: string, size = 1024): string {

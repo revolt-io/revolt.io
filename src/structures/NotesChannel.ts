@@ -1,21 +1,24 @@
-import { SavedMessagesChannel as RawNotesChannel } from 'revolt-api/types/Channels'
-import { User } from '.'
-import { TextBasedChannel } from './interfaces/TextBasedChannel'
+import { Channel as APIChannel } from 'revolt-api'
+import { User, Channel, Message } from './index'
+import { TextBasedChannel } from './interfaces'
 import { Client } from '../client/Client'
+import { MessageManager, MessageOptions } from '../managers'
 import { ChannelTypes } from '../util'
 
-export class NotesChannel extends TextBasedChannel {
-    userId!: string
+type APINotesChannel = Extract<APIChannel, { channel_type: 'SavedMessages' }>
+
+export class NotesChannel extends Channel<APINotesChannel> implements TextBasedChannel {
     readonly type = ChannelTypes.NOTES
-    constructor(client: Client, data: RawNotesChannel) {
+    userId!: string
+    lastMessageId: string | null = null
+    messages = new MessageManager(this)
+    constructor(client: Client, data: APINotesChannel) {
         super(client, data)
         this._patch(data)
     }
 
-    _patch(data: RawNotesChannel): this {
-        if (data._id) {
-            this.id = data._id
-        }
+    protected _patch(data: APINotesChannel): this {
+        super._patch(data)
 
         if (data.user) {
             this.userId = data.user
@@ -24,13 +27,16 @@ export class NotesChannel extends TextBasedChannel {
         return this
     }
 
-    _update(data: RawNotesChannel): this {
-        const clone = this._clone()
-        clone._patch(data)
-        return clone
+    send(options: MessageOptions | string): Promise<Message> {
+        return this.messages.send(options)
+    }
+
+    get lastMessage(): Message | null {
+        if (!this.lastMessageId) return null
+        return this.messages.cache.get(this.lastMessageId) ?? null
     }
 
     get user(): User {
-        return this.client.users.cache.get(this.userId) as User
+        return this.client.user!
     }
 }

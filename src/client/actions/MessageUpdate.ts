@@ -1,11 +1,13 @@
-import { Message as RawMessage } from 'revolt-api/types/Channels'
+import { Message as APIMessage } from 'revolt-api'
 import { Action } from './Action'
-import { TextBasedChannel } from '../../structures/interfaces/TextBasedChannel'
 import { Events } from '../../util/Constants'
 
 export class MessageUpdateAction extends Action {
-    handle(data: { id: string; channel: string; data: RawMessage }): unknown {
-        const channel = this.client.channels.cache.get(data.channel) as TextBasedChannel
+    handle(data: { id: string; channel: string; data: APIMessage }): unknown {
+        const channel = this.client.channels.cache.get(data.channel)
+
+        if (!channel?.isText()) return
+
         const oldMessage = channel?.messages.cache.get(data.id)
 
         if (oldMessage) {

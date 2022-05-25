@@ -1,49 +1,38 @@
-import { ServerChannel as RawServerChannel } from 'revolt-api/types/Channels'
-import { Category, Channel, Server } from '.'
+import { Channel as APIChannel } from 'revolt-api'
+import { Category, Channel, Server } from './index'
 import { Client } from '../client/Client'
 import { ChannelPermissions, Collection } from '../util'
 
-export class ServerChannel extends Channel {
+type APIServerChannel = Extract<APIChannel, { channel_type: 'TextChannel' | 'VoiceChannel' }>
+
+export class ServerChannel<T extends APIServerChannel = APIServerChannel> extends Channel<T> {
     name!: string
     serverId!: string
     description: string | null = null
     icon: string | null = null
     overwrites = new Collection<string, ChannelPermissions>()
-    constructor(client: Client, data: RawServerChannel) {
-        super(client, Object.create(data))
+    nsfw = false
+    constructor(client: Client, data: T) {
+        super(client, data)
         this._patch(data)
     }
 
     // TODO: Add channel overwrites
-    _patch(data: RawServerChannel): this {
-        if (data.name) {
-            this.name = data.name
-        }
+    protected _patch(data: T): this {
+        super._patch(data)
 
-        if (data.server) {
-            this.serverId = data.server
-        }
-
-        if ('description' in data) {
-            this.description = data.description ?? null
-        }
-
-        if ('icon' in data) {
-            this.icon = data.icon?._id ?? null
-        }
+        if (data.name) this.name = data.name
+        if (data.server) this.serverId = data.server
+        if ('description' in data) this.description = data.description ?? null
+        if ('icon' in data) this.icon = data.icon?._id ?? null
+        if (typeof data.nsfw === 'boolean') this.nsfw = data.nsfw
 
         return this
     }
 
-    _update(data: RawServerChannel): this {
-        const clone = this._clone()
-        clone._patch(data)
-        return clone
-    }
-
     async createInvite(): Promise<string> {
-        const { code } = await this.client.api.post(`/channels/${this.id}/invites`)
-        return this.client.endpoints.invite(code)
+        const invite = await this.client.api.post(`/channels/${this.id}/invites`)
+        return this.client.endpoints.invite(invite._id)
     }
 
     iconURL(options?: { size: number }): string | null {
@@ -55,6 +44,6 @@ export class ServerChannel extends Channel {
     }
 
     get category(): Category | null {
-        return this.server.categories.find(cat => cat._channels.includes(this.id)) ?? null
+        return this.server.categories.find(cat => cat.children.has(this.id)) ?? null
     }
 }

@@ -1,11 +1,13 @@
-import { VoiceChannel as RawVoiceChannel } from 'revolt-api/types/Channels'
-import { ServerChannel } from '.'
-import { Client } from '..'
-import { ChannelTypes } from '../util'
+import { Channel as APIChannel } from 'revolt-api'
+import { ServerChannel } from './index'
+import { Client } from '../index'
+import { ChannelTypes } from '../util/index'
+
+type APIVoiceChannel = Extract<APIChannel, { channel_type: 'VoiceChannel' }>
 
 export class VoiceChannel extends ServerChannel {
     readonly type = ChannelTypes.VOICE
-    constructor(client: Client, raw: RawVoiceChannel) {
+    constructor(client: Client, raw: APIVoiceChannel) {
         super(client, raw)
     }
 

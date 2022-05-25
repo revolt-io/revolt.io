@@ -1,16 +1,8 @@
-import { Message, MessageManager, MessageOptions } from '../..'
-import { Channel } from '../Channel'
+import type { MessageManager, Message, MessageOptions } from '../../index'
 
-export abstract class TextBasedChannel extends Channel {
-    lastMessageId: string | null = null
-    messages = new MessageManager(this)
-
-    send(options: MessageOptions | string): Promise<Message> {
-        return this.messages.send(options)
-    }
-
-    get lastMessage(): Message | null {
-        if (!this.lastMessageId) return null
-        return this.messages.cache.get(this.lastMessageId) ?? null
-    }
+export interface TextBasedChannel {
+    messages: MessageManager
+    lastMessageId: string | null
+    lastMessage: Message | null
+    send(options: MessageOptions | string): Promise<Message>
 }

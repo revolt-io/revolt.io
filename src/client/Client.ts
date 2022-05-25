@@ -1,23 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { RevoltConfiguration } from 'revolt-api/types/Core'
-import { BaseClient } from './BaseClient'
-import { WebSocket } from './WebSocket'
+import { RevoltConfig } from 'revolt-api'
+import { BaseClient, WebSocket } from './index'
 import { ActionManager } from './actions/ActionManager'
-import { ChannelManager, ServerManager, UserManager } from '../managers'
-import { ClientUser } from '../structures/ClientUser'
+import { Error } from '../errors/index'
+import { ChannelManager, ServerManager, UserManager } from '../managers/index'
+import { ClientUser } from '../structures/index'
 import { Events } from '../util/Constants'
 
-export type LoginDetails = string | { token: string; type?: 'bot' | 'user' }
-
 export class Client extends BaseClient {
-    private readonly ws: WebSocket = new WebSocket(this)
-    public readonly actions = new ActionManager(this)
-    public readonly channels = new ChannelManager(this)
-    public configuration?: RevoltConfiguration
-    public readyAt: Date | null = null
-    public readonly servers = new ServerManager(this)
-    public user: ClientUser | null = null
-    public readonly users = new UserManager(this)
+    protected readonly ws = new WebSocket(this)
+    readonly actions = new ActionManager(this)
+    readonly channels = new ChannelManager(this)
+    readonly servers = new ServerManager(this)
+    readonly users = new UserManager(this)
+    user: ClientUser | null = null
+    configuration?: RevoltConfig
+    readyAt: Date | null = null
 
     get readyTimestamp(): number | null {
         return this.readyAt?.getTime() ?? null
@@ -27,17 +24,14 @@ export class Client extends BaseClient {
         return this.readyAt ? Date.now() - this.readyAt.getTime() : null
     }
 
-    async login(details: LoginDetails): Promise<void> {
-        this.configuration = await this.api.get('/')
+    async login(token?: string, type: 'user' | 'bot' = 'bot'): Promise<void> {
+        if (!token) throw new Error('INVALID_TOKEN')
 
-        if (typeof details === 'object') {
-            const { type = 'bot', token } = details
-            this.token = token
-            this.bot = type.toLowerCase() === 'bot'
-        } else {
-            this.token = details
-            this.bot = true
-        }
+        this.debug('Fetch configuration...')
+
+        this.configuration = await this.api.get('/')
+        this.bot = type.toLowerCase() === 'bot'
+        this.token = token ?? null
 
         this.debug('Preparing to connect to the gateway...')
 
@@ -55,6 +49,7 @@ export class Client extends BaseClient {
         this.token = null
         this.user = null
         this.readyAt = null
+        this.api.setToken(null)
         await this.ws.destroy()
     }
 

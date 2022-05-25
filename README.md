@@ -9,7 +9,7 @@ npm i better-revolt-js
 ```
 
 ## Example Usage
-```typescript
+```ts
 import { Client } from 'better-revolt-js'
 
 const client = new Client()
@@ -18,10 +18,7 @@ const client = new Client()
 client.login(process.env.TOKEN)
 
 // Self bot
-// client.login({
-//    type: 'user', // user or bot
-//    token: process.env.TOKEN
-// })
+// client.login(process.env.TOKEN, 'user')
 
 
 client.on('ready', () => {

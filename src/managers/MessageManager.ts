@@ -1,11 +1,10 @@
-import { Message as RawMessage } from 'revolt-api/types/Channels'
-import { User as RawUser } from 'revolt-api/types/Users'
-import { BaseManager } from '.'
-import { TypeError } from '../errors'
-import { Channel, Message, User } from '../structures'
-import { Collection, UUID } from '../util'
+import { User as APIUser, Message as APIMessage, Member as APIMember } from 'revolt-api'
+import { BaseManager } from './BaseManager'
+import { TypeError } from '../errors/index'
+import { Channel, Message, ServerMember, User } from '../structures/index'
+import { Collection, UUID } from '../util/index'
 
-export type MessageResolvable = Message | RawMessage | string
+export type MessageResolvable = Message | APIMessage | string
 
 export interface EditMessageOptions {
     content?: string
@@ -17,7 +16,7 @@ export interface MessageOptions {
     attachments?: string[]
 }
 
-export interface SerachMessageQuery {
+export interface SearchMessageQuery {
     query: string
     limit?: number
     before?: string
@@ -26,11 +25,16 @@ export interface SerachMessageQuery {
     include_users?: boolean
 }
 
-export class MessageManager extends BaseManager<string, Message, RawMessage> {
+type SearchResultWithUsers = {
+    users: Collection<string, User>
+    messages: Collection<string, Message>
+    members: Collection<string, ServerMember>
+}
+
+export class MessageManager extends BaseManager<Message, APIMessage> {
     holds = Message
-    client = this.channel.client
-    constructor(public channel: Channel) {
-        super()
+    constructor(protected readonly channel: Channel) {
+        super(channel.client)
     }
 
     private async _fetchId(messageId: string) {
@@ -40,7 +44,7 @@ export class MessageManager extends BaseManager<string, Message, RawMessage> {
 
     private async _fetchMany(withUsers = true) {
         const { messages } = await this.client.api.get(`/channels/${this.channel.id}/messages?include_users=${withUsers}`)
-        return (messages as RawMessage[]).reduce((coll, cur) => {
+        return (messages as APIMessage[]).reduce((coll, cur) => {
             const msg = this._add(cur)
             coll.set(msg.id, msg)
             return coll
@@ -68,65 +72,67 @@ export class MessageManager extends BaseManager<string, Message, RawMessage> {
     }
 
     async ack(message: MessageResolvable): Promise<void> {
-        const messageId = this.resolveId(message)
-        if (!messageId) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable')
-        await this.client.api.put(`/channels/${this.channel.id}/ack/${messageId}`)
+        const id = this.resolveId(message)
+        if (!id) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable')
+        await this.client.api.put(`/channels/${this.channel.id}/ack/${id}`)
     }
 
     async delete(message: MessageResolvable): Promise<void> {
-        const messageId = this.resolveId(message)
-        if (!messageId) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable')
-        await this.client.api.delete(`/channels/${this.channel.id}/messages/${messageId}`)
+        const id = this.resolveId(message)
+        if (!id) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable')
+        await this.client.api.delete(`/channels/${this.channel.id}/messages/${id}`)
     }
 
     async edit(message: MessageResolvable, options: EditMessageOptions): Promise<void> {
-        const messageId = this.resolveId(message)
-        if (!messageId) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable')
-        await this.client.api.patch(`/channels/${this.channel.id}/messages/${messageId}`, {
-            body: options
-        })
+        const id = this.resolveId(message)
+        if (!id) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable')
+        await this.client.api.patch(`/channels/${this.channel.id}/messages/${id}`, { body: options })
     }
 
-    async search(query: SerachMessageQuery & { include_users: true }): Promise<{
-        users: Collection<string, User>
-        messages: Collection<string, Message>
-    }>
-    async search(query: SerachMessageQuery & { include_users?: false }): Promise<Collection<string, Message>>
-    async search(query: SerachMessageQuery): Promise<
-        | Collection<string, Message>
-        | {
-              users: Collection<string, User>
-              messages: Collection<string, Message>
-          }
-    > {
-        const response = await this.client.api.post(`/channels/${this.channel.id}/search`, {
-            body: query
-        })
-
+    async search(query: SearchMessageQuery & { include_users: true }): Promise<SearchResultWithUsers>
+    async search(query: SearchMessageQuery): Promise<Collection<string, Message>>
+    async search(query: SearchMessageQuery): Promise<Collection<string, Message> | SearchResultWithUsers> {
         if (query.include_users) {
-            const users = (response.users as RawUser[]).reduce((coll, cur) => {
+            const response = (await this.client.api.post(`/channels/${this.channel.id}/search`, { body: query })) as {
+                users: APIUser[]
+                messages: APIMessage[]
+                members: APIMember[]
+            }
+
+            const users = response.users.reduce((coll, cur) => {
                 const user = this.client.users._add(cur)
                 coll.set(user.id, user)
                 return coll
             }, new Collection<string, User>())
 
-            const messages = (response.messages as RawMessage[]).reduce((coll, cur) => {
+            const messages = response.messages.reduce((coll, cur) => {
                 const msg = this._add(cur)
                 coll.set(msg.id, msg)
                 return coll
             }, new Collection<string, Message>())
 
-            return {
-                messages,
-                users
+            const server = this.client.servers.cache.get(response.members[0]?._id.server)
+
+            if (server) {
+                const members = response.members.reduce((coll, cur) => {
+                    const member = server!.members._add(cur)
+                    coll.set(cur._id.user, member)
+                    return coll
+                }, new Collection<string, ServerMember>())
+
+                return { messages, users, members }
             }
-        } else {
-            return (response as RawMessage[]).reduce((coll, cur) => {
-                const msg = this._add(cur)
-                coll.set(msg.id, msg)
-                return coll
-            }, new Collection<string, Message>())
+
+            return { messages, users, members: new Collection() }
         }
+
+        const response = (await this.client.api.post(`/channels/${this.channel.id}/search`, { body: query })) as APIMessage[]
+
+        return response.reduce((coll, cur) => {
+            const msg = this._add(cur)
+            coll.set(msg.id, msg)
+            return coll
+        }, new Collection<string, Message>())
     }
 
     fetch(messageId: string): Promise<Message>

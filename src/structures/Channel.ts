@@ -1,40 +1,61 @@
-import { Channel as RawChannel } from 'revolt-api/types/Channels'
-import { Base, DMChannel, GroupChannel, NotesChannel, ServerChannel, TextChannel, VoiceChannel } from '.'
-import { TextBasedChannel } from './interfaces/TextBasedChannel'
-import { Client } from '..'
-import { ChannelTypes, UUID } from '../util'
+import { Channel as APIChannel } from 'revolt-api'
+import { Base, DMChannel, GroupChannel, NotesChannel, ServerChannel, TextChannel, VoiceChannel } from './index'
+import type { Client } from '../client/Client'
+import { ChannelTypes, UUID } from '../util/index'
 
-export abstract class Channel extends Base {
-    id: string
+export abstract class Channel<T extends APIChannel = APIChannel> extends Base<T> {
     type: ChannelTypes | 'UNKNOWN' = 'UNKNOWN'
-    deleted = false
-    constructor(client: Client, raw: RawChannel) {
+
+    constructor(client: Client, data: T) {
         super(client)
-        this.id = raw._id
+        this._patch(data)
     }
 
+    static create(client: Client, data: APIChannel): Channel {
+        let channel: Channel
+
+        switch (data.channel_type) {
+            case 'TextChannel':
+                channel = new TextChannel(client, data)
+                break
+            case 'VoiceChannel':
+                channel = new VoiceChannel(client, data)
+                break
+            case 'DirectMessage':
+                channel = new DMChannel(client, data)
+                break
+            case 'Group':
+                channel = new GroupChannel(client, data)
+                break
+            case 'SavedMessages':
+                channel = new NotesChannel(client, data)
+                break
+        }
+
+        return channel
+    }
     get createdTimestamp(): number {
         return this.createdAt.getTime()
     }
 
     get createdAt(): Date {
-        return UUID.extrectTime(this.id)
-    }
-
-    async ack(): Promise<void> {
-        await this.client.channels.ack(this)
+        return UUID.timestampOf(this.id)
     }
 
     async delete(): Promise<void> {
         await this.client.channels.delete(this)
     }
 
-    isText(): this is TextBasedChannel {
+    isText(): this is TextChannel | GroupChannel | DMChannel {
         return 'messages' in this
     }
 
     isVoice(): this is VoiceChannel {
         return this.type === ChannelTypes.VOICE
+    }
+
+    isGroup(): this is GroupChannel {
+        return this.type === ChannelTypes.GROUP
     }
 
     inServer(): this is ServerChannel {
@@ -47,29 +68,5 @@ export abstract class Channel extends Base {
 
     fetch(force = true): Promise<Channel> {
         return this.client.channels.fetch(this, { force })
-    }
-
-    static create(client: Client, raw: RawChannel): Channel {
-        let channel: Channel
-
-        switch (raw.channel_type) {
-            case 'TextChannel':
-                channel = new TextChannel(client, raw)
-                break
-            case 'VoiceChannel':
-                channel = new VoiceChannel(client, raw)
-                break
-            case 'DirectMessage':
-                channel = new DMChannel(client, raw)
-                break
-            case 'Group':
-                channel = new GroupChannel(client, raw)
-                break
-            case 'SavedMessages':
-                channel = new NotesChannel(client, raw)
-                break
-        }
-
-        return channel
     }
 }

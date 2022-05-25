@@ -1,20 +1,12 @@
 {
   "compilerOptions": {
     "strict": true,
-    "moduleResolution": "node",
-    "removeComments": true,
     "alwaysStrict": true,
-    "pretty": true,
+    "moduleResolution": "node",
     "target": "es2019",
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
-    "sourceMap": true,
-    "inlineSources": true,
-    "module": "commonjs",
+    "lib": ["ESNext"],
+    "module": "ESNext",
     "declaration": true,
-    "declarationMap": true,
     "outDir": "dist",
     "incremental": true,
     "esModuleInterop": true,
