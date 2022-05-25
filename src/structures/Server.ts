@@ -72,11 +72,9 @@ export class Server extends Base<APIServer> {
             this.permissions = new ServerPermissions(data.default_permissions).freeze()
         }
 
-
         if (typeof data.analytics === 'boolean') this.analytics = data.analytics
         if (typeof data.discoverable === 'boolean') this.discoverable = data.discoverable
         if (typeof data.nsfw === 'boolean') this.nsfw = data.nsfw
-
 
         return this
     }

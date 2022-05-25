@@ -57,7 +57,7 @@ export class GroupChannel extends Channel<APIGroupChannel> implements TextBasedC
         }
 
         if (data.last_message_id) this.lastMessageId = data.last_message_id
-        
+
         if (typeof data.nsfw === 'boolean') this.nsfw = data.nsfw
 
         return this

@@ -16,7 +16,6 @@ export class Role extends Base {
     protected _patch(data: APIRole & { _id?: string }): this {
         super._patch(data)
 
-
         if (data.name) this.name = data.name
         if (typeof data.hoist === 'boolean') this.hoist = data.hoist
         if (typeof data.rank === 'number') this.rank = data.rank
