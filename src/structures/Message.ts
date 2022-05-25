@@ -1,4 +1,4 @@
-import { Message as APIMessage, SystemMessage, Embed } from 'revolt-api'
+import { Message as APIMessage, SystemMessage, Embed, File } from 'revolt-api'
 import { Base, DMChannel, GroupChannel, Mentions, Server, ServerMember, TextChannel, User } from './index'
 import { Client } from '../client/Client'
 import { UUID } from '../util/index'
@@ -8,6 +8,7 @@ export class Message extends Base<APIMessage> {
     channelId!: string
     authorId!: string
     embeds: Embed[] = []
+    attachments: File[] = []
     mentions = new Mentions(this, [])
     type: Uppercase<SystemMessage['type']> = 'TEXT'
     editedAt: Date | null = null
@@ -21,6 +22,10 @@ export class Message extends Base<APIMessage> {
 
         if (Array.isArray(data.embeds)) {
             this.embeds = data.embeds
+        }
+
+        if (Array.isArray(data.attachments)) {
+            this.attachments = data.attachments
         }
 
         if (Array.isArray(data.mentions)) {

@@ -18,6 +18,7 @@ export class GroupChannel extends Channel<APIGroupChannel> implements TextBasedC
     messages = new MessageManager(this)
     lastMessageId: string | null = null
     users = new Collection<string, User>()
+    nsfw = false
 
     constructor(client: Client, data: APIGroupChannel) {
         super(client, data)
@@ -54,6 +55,10 @@ export class GroupChannel extends Channel<APIGroupChannel> implements TextBasedC
         if (data.name) {
             this.name = data.name
         }
+
+        if (data.last_message_id) this.lastMessageId = data.last_message_id
+
+        if (typeof data.nsfw === 'boolean') this.nsfw = data.nsfw
 
         return this
     }

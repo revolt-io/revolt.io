@@ -21,9 +21,8 @@ export class DMChannel extends Channel<APIDirectChannel> implements TextBasedCha
     protected _patch(data: APIDirectChannel): this {
         super._patch(data)
 
-        if (typeof data.active === 'boolean') {
-            this.active = data.active
-        }
+        if (typeof data.active === 'boolean') this.active = data.active
+        if (data.last_message_id) this.lastMessageId = data.last_message_id
 
         return this
     }

@@ -5,19 +5,23 @@ import { ChannelPermissions, Collection } from '../util'
 
 type APIServerChannel = Extract<APIChannel, { channel_type: 'TextChannel' | 'VoiceChannel' }>
 
+export interface Overwrite {
+    allow: ChannelPermissions
+    deny: ChannelPermissions
+}
+
 export class ServerChannel<T extends APIServerChannel = APIServerChannel> extends Channel<T> {
     name!: string
     serverId!: string
     description: string | null = null
     icon: string | null = null
-    overwrites = new Collection<string, ChannelPermissions>()
+    overwrites = new Collection<string, Overwrite>()
     nsfw = false
     constructor(client: Client, data: T) {
         super(client, data)
         this._patch(data)
     }
 
-    // TODO: Add channel overwrites
     protected _patch(data: T): this {
         super._patch(data)
 
@@ -26,6 +30,12 @@ export class ServerChannel<T extends APIServerChannel = APIServerChannel> extend
         if ('description' in data) this.description = data.description ?? null
         if ('icon' in data) this.icon = data.icon?._id ?? null
         if (typeof data.nsfw === 'boolean') this.nsfw = data.nsfw
+        if (data.role_permissions) {
+            this.overwrites.clear()
+            for (const [id, { a, d }] of Object.entries(data.role_permissions)) {
+                this.overwrites.set(id, { allow: new ChannelPermissions(a), deny: new ChannelPermissions(d) })
+            }
+        }
 
         return this
     }

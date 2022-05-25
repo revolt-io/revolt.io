@@ -13,6 +13,9 @@ export class Server extends Base<APIServer> {
     roles = new RoleManager(this)
     icon: string | null = null
     banner: string | null = null
+    analytics = false
+    discoverable = false
+    nsfw = false
     permissions!: ServerPermissions
     categories = new Collection<string, Category>()
 
@@ -68,6 +71,10 @@ export class Server extends Base<APIServer> {
         if (typeof data.default_permissions === 'number') {
             this.permissions = new ServerPermissions(data.default_permissions).freeze()
         }
+
+        if (typeof data.analytics === 'boolean') this.analytics = data.analytics
+        if (typeof data.discoverable === 'boolean') this.discoverable = data.discoverable
+        if (typeof data.nsfw === 'boolean') this.nsfw = data.nsfw
 
         return this
     }
