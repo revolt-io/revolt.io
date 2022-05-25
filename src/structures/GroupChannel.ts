@@ -55,6 +55,8 @@ export class GroupChannel extends Channel<APIGroupChannel> implements TextBasedC
             this.name = data.name
         }
 
+        if (data.last_message_id) this.lastMessageId = data.last_message_id
+
         return this
     }
 
