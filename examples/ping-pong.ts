@@ -1,4 +1,4 @@
-import { Client } from '../src'
+import { Client } from 'better-revolt-js'
 
 const client = new Client()
 
