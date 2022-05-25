@@ -5,6 +5,7 @@ import { UUID } from '../util'
 export class Role extends Base {
     name!: string
     color: string | null = null
+    hoist = false
     constructor(public server: Server, data: APIRole & { id: string }) {
         super(server.client)
         this._patch(data)
@@ -13,6 +14,7 @@ export class Role extends Base {
     protected _patch(data: APIRole & { _id?: string }): this {
         super._patch(data)
         if (data.name) this.name = data.name
+        if (typeof data.hoist === 'boolean') this.hoist = data.hoist
         if ('colour' in data) this.color = data.colour ?? null
         return this
     }
