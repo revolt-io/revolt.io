@@ -1,4 +1,4 @@
-import { Role as APIRole } from 'revolt-api'
+import type { Role as APIRole } from 'revolt-api'
 import { BaseManager } from './BaseManager'
 import { TypeError } from '../errors/index'
 import { Role, Server } from '../structures/index'

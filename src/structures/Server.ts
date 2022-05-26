@@ -1,4 +1,4 @@
-import { Server as APIServer } from 'revolt-api'
+import type { Server as APIServer } from 'revolt-api'
 import { Base, ServerMember, User, Category } from './index'
 import { Client } from '../client/Client'
 import { RoleManager, ServerChannelManager, ServerMemberManager } from '../managers/index'

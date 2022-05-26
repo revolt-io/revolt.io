@@ -1,4 +1,4 @@
-import { Server as APIServer } from 'revolt-api'
+import type { Server as APIServer } from 'revolt-api'
 import { BaseManager } from './BaseManager'
 import { TypeError } from '../errors/index'
 import { Server } from '../structures/index'

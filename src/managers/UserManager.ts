@@ -1,4 +1,4 @@
-import { User as APIUser } from 'revolt-api'
+import type { User as APIUser } from 'revolt-api'
 import { BaseManager } from './BaseManager'
 import { TypeError } from '../errors/index'
 import { Message, User } from '../structures/index'

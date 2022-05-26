@@ -1,4 +1,4 @@
-import { Category as APICategory } from 'revolt-api'
+import type { Category as APICategory } from 'revolt-api'
 import { Base, Server, ServerChannel } from './index'
 import { Collection } from '../util'
 

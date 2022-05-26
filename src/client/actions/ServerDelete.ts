@@ -1,4 +1,4 @@
-import { Server as APIServer } from 'revolt-api'
+import type { Server as APIServer } from 'revolt-api'
 import { Action } from './Action'
 import { Events } from '../../util/Constants'
 

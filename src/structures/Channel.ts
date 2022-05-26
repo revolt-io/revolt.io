@@ -1,4 +1,4 @@
-import { Channel as APIChannel } from 'revolt-api'
+import type { Channel as APIChannel } from 'revolt-api'
 import { Base, DMChannel, GroupChannel, NotesChannel, ServerChannel, TextChannel, VoiceChannel } from './index'
 import type { Client } from '../client/Client'
 import { ChannelTypes, UUID } from '../util/index'

@@ -1,4 +1,4 @@
-import { Message as APIMessage, SystemMessage, Embed, File } from 'revolt-api'
+import type { Message as APIMessage, SystemMessage, Embed, File } from 'revolt-api'
 import { Base, DMChannel, GroupChannel, Mentions, Server, ServerMember, TextChannel, User } from './index'
 import { Client } from '../client/Client'
 import { UUID } from '../util/index'

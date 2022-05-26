@@ -1,4 +1,4 @@
-import { Channel as APIChannel } from 'revolt-api'
+import type { Channel as APIChannel } from 'revolt-api'
 import { BaseManager } from './BaseManager'
 import { TypeError } from '../errors/index'
 import { Server, ServerChannel, TextChannel, VoiceChannel } from '../structures/index'

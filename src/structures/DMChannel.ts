@@ -1,4 +1,4 @@
-import { Channel as APIChannel } from 'revolt-api'
+import type { Channel as APIChannel } from 'revolt-api'
 import { Channel, Message } from './index'
 import { TextBasedChannel } from './interfaces/index'
 import { Client, MessageManager, MessageOptions } from '../index'

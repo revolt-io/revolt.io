@@ -1,4 +1,4 @@
-import { Message as APIMessage } from 'revolt-api'
+import type { Message as APIMessage } from 'revolt-api'
 import { Action } from './Action'
 import { Events, SYSTEM_USER_ID } from '../../util/Constants'
 

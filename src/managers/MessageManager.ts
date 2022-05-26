@@ -1,4 +1,4 @@
-import { User as APIUser, Message as APIMessage, Member as APIMember } from 'revolt-api'
+import type { User as APIUser, Message as APIMessage, Member as APIMember } from 'revolt-api'
 import { BaseManager } from './BaseManager'
 import { TypeError } from '../errors/index'
 import { Channel, Message, ServerMember, User } from '../structures/index'

@@ -1,4 +1,4 @@
-import { Member as APIMember } from 'revolt-api'
+import type { Member as APIMember } from 'revolt-api'
 import { Action } from './Action'
 import { Events } from '../../util/Constants'
 
