@@ -1,4 +1,4 @@
-import { Embed, Special } from 'revolt-api'
+import type { Embed, Special } from 'revolt-api'
 
 export type EmbedImage = Extract<Embed, { type: 'Image' }>
 export type EmbedVideo = Extract<Embed, { type: 'Video' }>

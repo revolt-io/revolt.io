@@ -1,4 +1,4 @@
-import { User as APIUser, Presence as APIPresence, File } from 'revolt-api'
+import type { User as APIUser, Presence as APIPresence, File } from 'revolt-api'
 import { Base, DMChannel } from './index'
 import { Client } from '../client/Client'
 import { Badges, Presence, UUID } from '../util/index'

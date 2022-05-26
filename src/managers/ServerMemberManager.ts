@@ -1,4 +1,4 @@
-import { Member as APIMember } from 'revolt-api'
+import type { Member as APIMember } from 'revolt-api'
 import { BaseManager } from './BaseManager'
 import { TypeError } from '../errors/index'
 import { Server, ServerMember, User } from '../structures/index'

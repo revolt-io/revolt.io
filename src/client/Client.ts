@@ -1,4 +1,4 @@
-import { RevoltConfig } from 'revolt-api'
+import type { RevoltConfig } from 'revolt-api'
 import { BaseClient, WebSocket } from './index'
 import { ActionManager } from './actions/ActionManager'
 import { Error } from '../errors/index'

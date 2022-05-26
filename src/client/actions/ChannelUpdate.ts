@@ -1,4 +1,4 @@
-import { Channel as APIChannel } from 'revolt-api'
+import type { Channel as APIChannel } from 'revolt-api'
 import { Action } from './Action'
 import { Events } from '../../util/Constants'
 

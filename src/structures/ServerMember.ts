@@ -1,4 +1,4 @@
-import { Member as APIMember, File } from 'revolt-api'
+import type { Member as APIMember, File } from 'revolt-api'
 import { Base, Server, User } from './index'
 import { Client } from '../client/Client'
 

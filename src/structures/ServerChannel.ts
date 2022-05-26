@@ -1,4 +1,4 @@
-import { Channel as APIChannel } from 'revolt-api'
+import type { Channel as APIChannel } from 'revolt-api'
 import { Category, Channel, Server } from './index'
 import { Client } from '../client/Client'
 import { ChannelPermissions, Collection } from '../util'

@@ -1,4 +1,4 @@
-import { Role as APIRole } from 'revolt-api'
+import type { Role as APIRole } from 'revolt-api'
 import { Base, Server, Overwrite } from './index'
 import { UUID, ChannelPermissions } from '../util/index'
 
