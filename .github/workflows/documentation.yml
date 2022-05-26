@@ -1,21 +1,29 @@
-name: Documentation
+name: Deployment
 on:
   push:
     branches:
-      - 'stable'
+      - '*'
+      - '!docs'
+      - '!gh-pages'
     tags:
-      - '**'
+      - '*'
 jobs:
-  build:
-    name: Build documentation
+  docs:
+    name: Documentation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
 
-      - name: Install node.js v16
-        uses: actions/setup-node@v2
+      - name: Install Node v16
+        uses: actions/setup-node@master
         with:
           node-version: 16
-      - name: Build docs
-        run: yarn install && yarn docs
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build and deploy documentation
+        uses: discordjs/action-docs@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
