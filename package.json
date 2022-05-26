@@ -1,5 +1,5 @@
 {
-  "name": "better-revolt-js",
+  "name": "revolt.io",
   "description": "A NodeJS Revolt library",
   "version": "1.0.2",
   "scripts": {
@@ -40,7 +40,7 @@
   "license": "Apache-2",
   "repository": {
     "type": "git",
-    "url": "https://github.com/abdulrahman1s/better-revolt.js"
+    "url": "https://github.com/revolt-io/revolt.io"
   },
   "keywords": [
     "revolt",
@@ -50,7 +50,7 @@
     "node"
   ],
   "bugs": {
-    "url": "https://github.com/abdulrahman1s/better-revolt.js/issues"
+    "url": "https://github.com/revolt-io/revolt.io/issues"
   },
   "engines": {
     "node": ">=16.6.0",
