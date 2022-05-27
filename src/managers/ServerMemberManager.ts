@@ -52,7 +52,7 @@ export class ServerMemberManager extends BaseManager<ServerMember, APIMember> {
             return this._add(data)
         }
 
-        const { members } = await this.client.api.get(`/servers/${this.server.id}/members`)
+        const { members } = (await this.client.api.get(`/servers/${this.server.id}/members`)) as { members: APIMember[] }
 
         return members.reduce((coll, cur) => {
             const member = this._add(cur)

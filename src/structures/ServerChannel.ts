@@ -1,7 +1,7 @@
 import type { Channel as APIChannel } from 'revolt-api'
 import { Category, Channel, Server } from './index'
 import { Client } from '../client/Client'
-import { ChannelPermissions, Collection } from '../util'
+import { ChannelPermissions, Collection } from '../util/index'
 
 type APIServerChannel = Extract<APIChannel, { channel_type: 'TextChannel' | 'VoiceChannel' }>
 

@@ -1,9 +1,10 @@
 {
   "name": "revolt.io",
-  "description": "A NodeJS Revolt library",
+  "description": "A NodeJS & Deno Revolt library",
   "version": "1.0.2",
   "scripts": {
     "build": "tsc-esm",
+    "build:deno": "node transpile.deno.js",
     "test": "npm run test:types && npm run lint",
     "test:types": "tsc --noEmit && echo 'All specs passed validation. You are ready to push!'",
     "lint": "eslint src",
