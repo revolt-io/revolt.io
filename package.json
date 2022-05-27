@@ -10,7 +10,7 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --write src/**/*.ts",
-		"docs": "typedoc --json docs/typedoc-out.json src/index.ts && node scripts/docs.js"
+    "docs": "typedoc --readme README.md src/"
   },
   "main": "dist/index.js",
   "type": "module",
@@ -21,7 +21,6 @@
   },
   "devDependencies": {
     "@digitak/tsc-esm": "^3.1.2",
-    "@discordjs/ts-docgen": "^0.4.1",
     "@types/node": "16.9.x",
     "@types/node-fetch": "^2.6.1",
     "@types/ws": "^8.5.3",
