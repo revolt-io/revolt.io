@@ -3,14 +3,14 @@ Revolt.io [![NPM version](https://img.shields.io/npm/v/revolt.io.svg?style=flat-
 
 
 ### Overview
-An alternative library to the official revolt.js with good design in mind.
+A JS/TS library to interact with Revolt API
 
 ### Features
 - Built with TypeScript
 - Object-oriented
 - Lightweight ([revolt.io *3 pkg](/package.json) > [revolt.js 12* pkg](https://github.com/revoltchat/revolt.js/blob/master/package.json))
 - Voice Support (*work in progress..*)
-- Deno Support (*work in progress...*)
+- [Deno](./deno) Support
 
 ## Installation
 ***Node.js v16.x or newer is required.***

@@ -1,12 +1,15 @@
 import { Message, ServerMember, User } from './index'
-import { TypeError } from '../errors'
-import { UserResolvable } from '../managers'
-import { Collection } from '../util'
+import { Client } from '../client/Client'
+import { TypeError } from '../errors/index'
+import { UserResolvable } from '../managers/index'
+import { Collection } from '../util/index'
 
 export class Mentions {
-    client = this.message.client
+    public readonly client: Client
 
-    constructor(public message: Message, protected _users: string[]) {}
+    constructor(public message: Message, protected _users: string[]) {
+        this.client = message.client
+    }
 
     has(user: UserResolvable): boolean {
         const id = this.client.users.resolveId(user)

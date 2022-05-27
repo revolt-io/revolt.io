@@ -30,7 +30,7 @@ export class APIRequest {
 
     execute(): Promise<Response> {
         const controller = new AbortController()
-        const timeout = setTimeout(() => controller.abort(), this.timeout).unref()
+        const timeout = setTimeout(() => controller.abort(), this.timeout)
         return fetch(this.path, {
             method: this.method,
             body: this.body ? JSON.stringify(this.body) : null,
