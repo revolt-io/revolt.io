@@ -44,6 +44,7 @@ function transpile(content) {
     content = content.replace(/from '(.+)(?<!\.ts)'/gi, 'from \'$1.ts\'')
     content = content.replace(/Promise<Extract<.+, \{ path: Path \}>\['response'\]>/g, 'Promise<any>')
     content = content.replace(/## Installation(\n.*){4}/, '')
+    content = content.replace(/\[Documentation\](.+)/, '[Documentation](https://doc.deno.land/https://deno.land/x/revoltio/index.ts)')
 
     return content
 }
