@@ -1,29 +1,26 @@
-name: Deployment
+name: Publish Documentation
 on:
   push:
-    branches:
-      - '*'
-      - '!docs'
-      - '!gh-pages'
-    tags:
-      - '*'
+    branches: [ stable ]
 jobs:
   docs:
-    name: Documentation
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@master
+    - uses: actions/checkout@v2
 
-      - name: Install Node v16
-        uses: actions/setup-node@master
-        with:
-          node-version: 16
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16
 
-      - name: Install dependencies
-        run: yarn install
+    - name: Install dependencies
+      run: yarn install
 
-      - name: Build and deploy documentation
-        uses: discordjs/action-docs@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build
+      run: yarn run docs
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@4.1.5
+      with:
+        branch: docs
+        folder: docs
