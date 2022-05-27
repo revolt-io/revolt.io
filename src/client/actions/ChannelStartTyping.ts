@@ -1,5 +1,5 @@
 import { Action } from './Action'
-import { Events } from '../../util'
+import { Events } from '../../util/index'
 
 export class ChannelStartTypingAction extends Action {
     handle(data: { id: string; user: string }): unknown {

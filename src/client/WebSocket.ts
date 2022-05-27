@@ -1,25 +1,24 @@
-import { default as Socket } from 'ws'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import WebSocket from 'ws'
 import type { Client } from './Client'
 import { ClientUser } from '../structures/index'
 import { Events, WSEvents } from '../util/index'
 
-export class WebSocket {
+export class WebSocketShard {
     heartbeatInterval?: NodeJS.Timer
     lastPingTimestamp?: number
     lastPongAcked = false
-    socket: Socket | null = null
+    socket: WebSocket | null = null
     connected = false
     ready = false
 
     constructor(protected readonly client: Client) {}
 
-    async send(data: unknown): Promise<void> {
-        return new Promise((resolve, reject) => {
-            if (this.socket?.readyState === Socket.OPEN) {
-                this.socket.send(JSON.stringify(data), err => {
-                    if (err) return reject(err)
-                    resolve()
-                })
+    send(data: unknown): Promise<void> {
+        return new Promise(resolve => {
+            if (this.socket?.readyState === WebSocket.OPEN) {
+                this.socket.send(JSON.stringify(data))
+                resolve()
             } else {
                 this.debug(`Tried to send packet '${JSON.stringify(data)}' but no WebSocket is available!`)
                 resolve()
@@ -46,10 +45,10 @@ export class WebSocket {
     setHeartbeatTimer(time: number): void {
         this.debug(`Setting a heartbeat interval for ${time}ms.`)
 
-        if (time === -1) {
-            if (this.heartbeatInterval) clearInterval(this.heartbeatInterval)
-        } else {
-            this.heartbeatInterval = setInterval(() => this.sendHeartbeat(), time).unref()
+        if (this.heartbeatInterval) clearInterval(this.heartbeatInterval)
+
+        if (time !== -1) {
+            this.heartbeatInterval = setInterval(() => this.sendHeartbeat(), time)
         }
     }
 
@@ -66,15 +65,11 @@ export class WebSocket {
         this.lastPingTimestamp = now
     }
 
-    private onError(event: Socket.ErrorEvent): void {
-        const error = event?.error ?? event
-
-        if (error) {
-            this.client.emit(Events.ERROR, error)
-        }
+    private onError(event: ErrorEvent | Event): void {
+        this.client.emit(Events.ERROR, event)
     }
 
-    private onMessage({ data }: Socket.MessageEvent): void {
+    private onMessage({ data }: MessageEvent): void {
         let packet: unknown
 
         try {
@@ -89,7 +84,7 @@ export class WebSocket {
         this.onPacket(packet)
     }
 
-    private onClose(event: Socket.CloseEvent): void {
+    private onClose(event: CloseEvent): void {
         this.debug(`[WS] Closed with reason: ${event.reason}, code: ${event.code}`)
         this.destroy()
     }
@@ -157,7 +152,7 @@ export class WebSocket {
 
     connect(): Promise<this> {
         return new Promise(resolve => {
-            if (this.socket?.readyState === Socket.OPEN && this.ready) {
+            if (this.socket?.readyState === WebSocket.OPEN && this.ready) {
                 return resolve(this)
             }
 
@@ -169,13 +164,14 @@ export class WebSocket {
                 throw new Error('Attempted to open WebSocket without valid token.')
             }
 
-            const ws = (this.socket = this.socket ?? new Socket(this.client.configuration.ws))
+            const ws = (this.socket = this.socket ?? new WebSocket(this.client.configuration.ws))
 
-            ws.onopen = this.onOpen.bind(this)
-            ws.onmessage = this.onMessage.bind(this)
-            ws.onerror = this.onError.bind(this)
-            ws.onclose = this.onClose.bind(this)
-            ws.once('open', () => resolve(this))
+            // NOTE: Don't remove the 'any' they are requires to work with deno
+            ws.onopen = this.onOpen.bind(this) as any
+            ws.onmessage = this.onMessage.bind(this) as any
+            ws.onerror = this.onError.bind(this) as any
+            ws.onclose = this.onClose.bind(this) as any
+            ws.addEventListener('open', () => resolve(this))
         })
     }
 
@@ -185,9 +181,9 @@ export class WebSocket {
             this.connected = false
             this.ready = false
 
-            if (this.socket?.readyState === Socket.OPEN) {
+            if (this.socket?.readyState === WebSocket.OPEN) {
+                this.socket.addEventListener('close', () => resolve(this))
                 this.socket.close()
-                this.socket.once('close', () => resolve(this))
             } else {
                 resolve(this)
             }
