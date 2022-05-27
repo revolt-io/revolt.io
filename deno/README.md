@@ -12,11 +12,7 @@ A JS/TS library to interact with Revolt API
 - Voice Support (*work in progress..*)
 - [Deno](./deno) Support
 
-## Installation
-***Node.js v16.x or newer is required.***
-```bash
-$ npm i revolt.io
-```
+
 
 ## Usage
 ```js
