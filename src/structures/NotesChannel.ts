@@ -1,9 +1,9 @@
 import type { Channel as APIChannel } from 'revolt-api'
 import { User, Channel, Message } from './index'
-import { TextBasedChannel } from './interfaces'
+import { TextBasedChannel } from './interfaces/index'
 import { Client } from '../client/Client'
-import { MessageManager, MessageOptions } from '../managers'
-import { ChannelTypes } from '../util'
+import { MessageManager, MessageOptions } from '../managers/index'
+import { ChannelTypes } from '../util/index'
 
 type APINotesChannel = Extract<APIChannel, { channel_type: 'SavedMessages' }>
 

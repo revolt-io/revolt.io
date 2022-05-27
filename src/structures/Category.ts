@@ -1,6 +1,6 @@
 import type { Category as APICategory } from 'revolt-api'
 import { Base, Server, ServerChannel } from './index'
-import { Collection } from '../util'
+import { Collection } from '../util/index'
 
 export class Category extends Base<APICategory> {
     name!: string

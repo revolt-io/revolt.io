@@ -4,7 +4,7 @@ type ID = { _id: string } | { id: string } | { _id: { user: string } }
 
 export abstract class Base<APIBase extends Partial<ID> = Partial<ID>> {
     id!: string
-    constructor(public client: Client) {}
+    constructor(public readonly client: Client) {}
 
     _update(data: APIBase): this {
         const clone = this._clone()

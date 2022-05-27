@@ -1,5 +1,5 @@
 import type { RevoltConfig } from 'revolt-api'
-import { BaseClient, WebSocket } from './index'
+import { BaseClient, WebSocketShard } from './index'
 import { ActionManager } from './actions/ActionManager'
 import { Error } from '../errors/index'
 import { ChannelManager, ServerManager, UserManager } from '../managers/index'
@@ -7,7 +7,7 @@ import { ClientUser } from '../structures/index'
 import { Events } from '../util/Constants'
 
 export class Client extends BaseClient {
-    protected readonly ws = new WebSocket(this)
+    protected readonly ws = new WebSocketShard(this)
     readonly actions = new ActionManager(this)
     readonly channels = new ChannelManager(this)
     readonly servers = new ServerManager(this)
