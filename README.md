@@ -44,7 +44,7 @@ client.on('message', msg => {
 
 ## Links
 - [More examples](/examples)
-- [Documentation]()
+- [Documentation](https://revolt-io.github.io/revolt.io/)
 
 ## License
 Refer to the [LICENSE](LICENSE) file.

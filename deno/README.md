@@ -40,7 +40,7 @@ client.on('message', msg => {
 
 ## Links
 - [More examples](/examples)
-- [Documentation]()
+- [Documentation](https://doc.deno.land/https://deno.land/x/revoltio/index.ts)
 
 ## License
 Refer to the [LICENSE](LICENSE) file.
