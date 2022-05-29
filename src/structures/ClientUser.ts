@@ -1,16 +1,21 @@
-import type { NotesChannel } from './index'
-import { User } from './User'
+import type { NotesChannel } from './mod.ts';
+import { User } from './User.ts';
 
 export class ClientUser extends User {
-    notes: NotesChannel | null = null
+  notes: NotesChannel | null = null;
 
-    async setUsername(username: string, password?: string): Promise<void> {
-        await this.client.api.patch('/users/@me/username', {
-            body: { username, password }
-        })
-    }
+  async setUsername(username: string, password?: string): Promise<void> {
+    await this.client.api.patch('/users/@me/username', {
+      body: { username, password },
+    });
+  }
 
-    async setStatus(status: { text?: string; presence?: 'Online' | 'Idle' | 'Busy' | 'Invisible' }): Promise<void> {
-        await this.client.api.patch('/users/@me', { body: { status } })
-    }
+  async setStatus(
+    status: {
+      text?: string;
+      presence?: 'Online' | 'Idle' | 'Busy' | 'Invisible';
+    },
+  ): Promise<void> {
+    await this.client.api.patch('/users/@me', { body: { status } });
+  }
 }

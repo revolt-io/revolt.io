@@ -1,125 +1,147 @@
-import type { Message as APIMessage, SystemMessage, Embed, File } from 'revolt-api'
-import { Base, DMChannel, GroupChannel, Mentions, Server, ServerMember, TextChannel, User } from './index'
-import { Client } from '../client/Client'
-import { UUID } from '../util/index'
+import type {
+  Embed,
+  File,
+  Message as APIMessage,
+  SystemMessage,
+} from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import {
+  Base,
+  DMChannel,
+  GroupChannel,
+  Mentions,
+  Server,
+  ServerMember,
+  TextChannel,
+  User,
+} from './mod.ts';
+import { Client } from '../client/Client.ts';
+import { UUID } from '../util/mod.ts';
 
 export class Message extends Base<APIMessage> {
-    content = ''
-    channelId!: string
-    authorId!: string
-    embeds: Embed[] = []
-    attachments: File[] = []
-    mentions = new Mentions(this, [])
-    type: Uppercase<SystemMessage['type']> = 'TEXT'
-    editedAt: Date | null = null
-    constructor(client: Client, data: APIMessage) {
-        super(client)
-        this._patch(data)
+  content = '';
+  channelId!: string;
+  authorId!: string;
+  embeds: Embed[] = [];
+  attachments: File[] = [];
+  mentions = new Mentions(this, []);
+  type: Uppercase<SystemMessage['type']> = 'TEXT';
+  editedAt: Date | null = null;
+  constructor(client: Client, data: APIMessage) {
+    super(client);
+    this._patch(data);
+  }
+
+  protected _patch(data: APIMessage): this {
+    super._patch(data);
+
+    if (Array.isArray(data.embeds)) {
+      this.embeds = data.embeds;
     }
 
-    protected _patch(data: APIMessage): this {
-        super._patch(data)
-
-        if (Array.isArray(data.embeds)) {
-            this.embeds = data.embeds
-        }
-
-        if (Array.isArray(data.attachments)) {
-            this.attachments = data.attachments
-        }
-
-        if (Array.isArray(data.mentions)) {
-            this.mentions = new Mentions(this, data.mentions)
-        }
-
-        if (data.author) {
-            this.authorId = data.author
-        }
-
-        if (data.channel) {
-            this.channelId = data.channel
-        }
-
-        if (typeof data.content === 'string') {
-            this.content = data.content
-        }
-
-        if (data.system) {
-            this.type = data.system.type.toUpperCase() as Uppercase<SystemMessage['type']>
-        }
-
-        if (data.edited) {
-            this.editedAt = new Date(data.edited)
-        }
-
-        return this
+    if (Array.isArray(data.attachments)) {
+      this.attachments = data.attachments;
     }
 
-    get createdAt(): Date {
-        return UUID.timestampOf(this.id)
+    if (Array.isArray(data.mentions)) {
+      this.mentions = new Mentions(this, data.mentions);
     }
 
-    get createdTimestamp(): number {
-        return this.createdAt.getTime()
+    if (data.author) {
+      this.authorId = data.author;
     }
 
-    get editedTimestamp(): number | null {
-        return this.editedAt?.getTime() ?? null
+    if (data.channel) {
+      this.channelId = data.channel;
     }
 
-    async ack(): Promise<void> {
-        await this.channel.messages.ack(this)
+    if (typeof data.content === 'string') {
+      this.content = data.content;
     }
 
-    async delete(): Promise<void> {
-        await this.channel.messages.delete(this)
+    if (data.system) {
+      this.type = data.system.type.toUpperCase() as Uppercase<
+        SystemMessage['type']
+      >;
     }
 
-    async reply(content: string, mention = true): Promise<unknown> {
-        return this.channel.messages.send({
-            content,
-            replies: [{ id: this.id, mention }]
-        })
+    if (data.edited) {
+      this.editedAt = new Date(data.edited);
     }
 
-    async edit(content: string): Promise<void> {
-        await this.channel.messages.edit(this, { content })
-    }
+    return this;
+  }
 
-    fetch(): Promise<Message> {
-        return this.channel.messages.fetch(this.id)
-    }
+  get createdAt(): Date {
+    return UUID.timestampOf(this.id);
+  }
 
-    get system(): boolean {
-        return this.type !== 'TEXT'
-    }
+  get createdTimestamp(): number {
+    return this.createdAt.getTime();
+  }
 
-    inServer(): this is this & { serverId: string; server: Server; channel: TextChannel } {
-        return this.channel.inServer()
-    }
+  get editedTimestamp(): number | null {
+    return this.editedAt?.getTime() ?? null;
+  }
 
-    get author(): User | null {
-        return this.client.users.cache.get(this.authorId) ?? null
-    }
+  async ack(): Promise<void> {
+    await this.channel.messages.ack(this);
+  }
 
-    get channel(): TextChannel | DMChannel | GroupChannel {
-        return this.client.channels.cache.get(this.channelId) as TextChannel
-    }
+  async delete(): Promise<void> {
+    await this.channel.messages.delete(this);
+  }
 
-    get serverId(): string | null {
-        const channel = this.channel
-        return channel.inServer() ? channel.serverId : null
-    }
+  reply(content: string, mention = true): Promise<Message> {
+    return this.channel.messages.send({
+      content,
+      replies: [{ id: this.id, mention }],
+    });
+  }
 
-    get server(): Server | null {
-        return this.client.servers.cache.get(this.serverId as string) ?? null
-    }
+  async edit(content: string): Promise<void> {
+    await this.channel.messages.edit(this, { content });
+  }
 
-    get member(): ServerMember | null {
-        return this.server?.members.cache.get(this.authorId) ?? null
-    }
+  fetch(): Promise<Message> {
+    return this.channel.messages.fetch(this.id);
+  }
 
-    get url(): string {
-        return `https://app.revolt.chat/${this.serverId ? `server/${this.serverId}` : ''}/channel/${this.channelId}/${this.id}`
-    }
+  get system(): boolean {
+    return this.type !== 'TEXT';
+  }
+
+  inServer(): this is this & {
+    serverId: string;
+    server: Server;
+    channel: TextChannel;
+  } {
+    return this.channel.inServer();
+  }
+
+  get author(): User | null {
+    return this.client.users.cache.get(this.authorId) ?? null;
+  }
+
+  get channel(): TextChannel | DMChannel | GroupChannel {
+    return this.client.channels.cache.get(this.channelId) as TextChannel;
+  }
+
+  get serverId(): string | null {
+    const channel = this.channel;
+    return channel.inServer() ? channel.serverId : null;
+  }
+
+  get server(): Server | null {
+    return this.client.servers.cache.get(this.serverId as string) ?? null;
+  }
+
+  get member(): ServerMember | null {
+    return this.server?.members.cache.get(this.authorId) ?? null;
+  }
+
+  get url(): string {
+    return `https://app.revolt.chat/${
+      this.serverId ? `server/${this.serverId}` : ''
+    }/channel/${this.channelId}/${this.id}`;
+  }
 }

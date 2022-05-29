@@ -1,0 +1,24 @@
+name: Publish Package to npmjs
+on:
+  release:
+    types: [created]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@004814556e37c54a2f6e31384c9e18e983317366
+        with:
+           deno-version: v1.x
+      - uses: pnpm/action-setup@v2
+        with:
+            version: 7.x.x
+            run_install: false
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: deno run -A scripts/build_npm.ts ${{github.ref_name}}
+      - run: cd npm && pnpm install && pnpm publish --access=public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

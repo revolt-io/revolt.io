@@ -1,15 +1,15 @@
-import { Client } from 'better-revolt-js'
+import { Client } from 'revolt.io';
 
-const client = new Client()
+const client = new Client();
 
-client.login('BOT_TOKEN_HERE')
+client.login('BOT_TOKEN_HERE');
 
 client.on('ready', () => {
-    console.log('Ready!')
-})
+  console.log('Ready!');
+});
 
-client.on('message', msg => {
-    if (msg.content === '!ping') {
-        msg.reply('Pong!')
-    }
-})
+client.on('message', (msg) => {
+  if (msg.content === '!ping') {
+    msg.reply('Pong!');
+  }
+});

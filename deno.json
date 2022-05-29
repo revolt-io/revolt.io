@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "strict": true
+    },
+    "fmt": {
+        "files": {
+            "include": [
+                "src",
+                "examples",
+                "scripts"
+            ]
+        },
+        "options": {
+            "singleQuote": true
+        }
+    },
+    "lint": {
+        "files": {
+            "include": [
+                "src"
+            ]
+        },
+        "rules": {
+            "tags": [
+                "recommended"
+            ],
+            "include": [],
+            "exclude": []
+        }
+    }
+}
