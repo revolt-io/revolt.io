@@ -3,7 +3,7 @@ import type {
   File,
   Message as APIMessage,
   SystemMessage,
-} from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+} from 'revolt-api-types';
 import {
   Base,
   DMChannel,

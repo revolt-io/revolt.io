@@ -15,28 +15,17 @@ await build({
   outDir: './npm',
   shims: {
     webSocket: true,
-    custom: [{
-      package: {
-        name: 'crypto',
-      },
-      globalNames: ['randomBytes'],
-    }],
   },
+  compilerOptions: {
+    target: 'ES2021',
+  },
+  importMap: './import.json',
   mappings: {
     'https://deno.land/x/revoltio_rest@v1.1.0/mod.ts': {
       name: '@revoltio/rest',
       version: '^1.1.0',
     },
-    'https://esm.sh/@discordjs/collection@0.6.0': {
-      name: '@discordjs/collection',
-      version: '^0.6.0',
-    },
-    'https://deno.land/x/revolt_api@0.4.0/types.ts': {
-      name: 'revolt-api',
-      version: '^0.5.3-5-patch.4',
-    },
   },
-
   package: {
     name: 'revolt.io',
     version: Deno.args[0].replace(/[A-Z]+/gi, ''),
@@ -45,7 +34,6 @@ await build({
     devDependencies: {
       '@types/node': '^16',
       '@types/ws': '^8.5.3',
-      'revolt-api': '^0.5.3-5-patch.4',
     },
     repository: {
       type: 'git',

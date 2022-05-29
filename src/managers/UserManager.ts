@@ -1,4 +1,4 @@
-import type { User as APIUser } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { User as APIUser } from 'revolt-api-types';
 import { BaseManager } from './BaseManager.ts';
 import { TypeError } from '../errors/mod.ts';
 import { Message, User } from '../structures/mod.ts';

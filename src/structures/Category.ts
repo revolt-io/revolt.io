@@ -1,4 +1,4 @@
-import type { Category as APICategory } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { Category as APICategory } from 'revolt-api-types';
 import { Base, Server, ServerChannel } from './mod.ts';
 import { Collection } from '../util/mod.ts';
 

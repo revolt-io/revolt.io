@@ -1,4 +1,4 @@
-import type { Member as APIMember } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { Member as APIMember } from 'revolt-api-types';
 import { BaseManager } from './BaseManager.ts';
 import { TypeError } from '../errors/mod.ts';
 import { Server, ServerMember, User } from '../structures/mod.ts';

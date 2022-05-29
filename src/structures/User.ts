@@ -2,7 +2,7 @@ import type {
   File,
   Presence as APIPresence,
   User as APIUser,
-} from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+} from 'revolt-api-types';
 import { Base, DMChannel } from './mod.ts';
 import { Client } from '../client/Client.ts';
 import { Badges, Presence, UUID } from '../util/mod.ts';

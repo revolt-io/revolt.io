@@ -1,4 +1,4 @@
-import type { Role as APIRole } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { Role as APIRole } from 'revolt-api-types';
 import { Base, Overwrite, Server } from './mod.ts';
 import { ChannelPermissions, UUID } from '../util/mod.ts';
 

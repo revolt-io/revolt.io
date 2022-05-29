@@ -1,4 +1,4 @@
-import type { Message as APIMessage } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { Message as APIMessage } from 'revolt-api-types';
 import { Action } from './Action.ts';
 import { Events, SYSTEM_USER_ID } from '../../util/Constants.ts';
 

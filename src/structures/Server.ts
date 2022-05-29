@@ -1,4 +1,4 @@
-import type { Server as APIServer } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { Server as APIServer } from 'revolt-api-types';
 import { Base, Category, ServerMember, User } from './mod.ts';
 import { Client } from '../client/Client.ts';
 import {

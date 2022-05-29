@@ -1,0 +1,9 @@
+{
+    "imports": {
+        "revolt-api-types": "https://deno.land/x/revolt_api@0.4.0/types.ts",
+        "events": "https://deno.land/std@0.132.0/node/events.ts",
+        "crypto": "https://deno.land/std@0.132.0/node/crypto.ts",
+        "collection": "https://esm.sh/@discordjs/collection@0.6.0",
+        "@revoltio/rest": "https://deno.land/x/revoltio_rest@v1.1.0/mod.ts"
+    }
+}

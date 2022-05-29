@@ -1,4 +1,4 @@
-import type { Channel as APIChannel } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { Channel as APIChannel } from 'revolt-api-types';
 import {
   Base,
   DMChannel,
