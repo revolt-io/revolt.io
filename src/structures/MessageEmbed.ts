@@ -1,7 +1,4 @@
-import type {
-  Embed,
-  Special,
-} from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { Embed, Special } from 'revolt-api-types';
 
 export type EmbedImage = Extract<Embed, { type: 'Image' }>;
 export type EmbedVideo = Extract<Embed, { type: 'Video' }>;

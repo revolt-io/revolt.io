@@ -1,4 +1,4 @@
-import type { Channel as APIChannel } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { Channel as APIChannel } from 'revolt-api-types';
 import type { Message, User } from './mod.ts';
 import type { TextBasedChannel } from './interfaces/mod.ts';
 import type { Client } from '../client/Client.ts';

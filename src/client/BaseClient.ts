@@ -1,10 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
-import { EventEmitter } from 'https://deno.land/std@0.132.0/node/events.ts';
+import { EventEmitter } from 'events';
 import { Client } from './mod.ts';
-import {
-  REST,
-  RESTOptions,
-} from 'https://deno.land/x/revoltio_rest@v1.1.0/mod.ts';
+import { REST, RESTOptions } from '@revoltio/rest';
 import type {
   Channel,
   DMChannel,

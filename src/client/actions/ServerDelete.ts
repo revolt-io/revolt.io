@@ -1,4 +1,4 @@
-import type { Server as APIServer } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { Server as APIServer } from 'revolt-api-types';
 import { Action } from './Action.ts';
 import { Events } from '../../util/Constants.ts';
 

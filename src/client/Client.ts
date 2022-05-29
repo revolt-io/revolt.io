@@ -1,4 +1,4 @@
-import type { RevoltConfig } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { RevoltConfig } from 'revolt-api-types';
 import { BaseClient, WebSocketShard } from './mod.ts';
 import { ActionManager } from './actions/ActionManager.ts';
 import { Error } from '../errors/mod.ts';

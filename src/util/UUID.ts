@@ -1,4 +1,4 @@
-import { randomBytes } from 'https://deno.land/std@0.132.0/node/crypto.ts';
+import { randomBytes } from 'crypto';
 
 export class UUID extends null {
   static readonly ENCODING = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';

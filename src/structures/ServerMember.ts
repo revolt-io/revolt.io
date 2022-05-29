@@ -1,7 +1,4 @@
-import type {
-  File,
-  Member as APIMember,
-} from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { File, Member as APIMember } from 'revolt-api-types';
 import { Base, Server, User } from './mod.ts';
 import { Client } from '../client/Client.ts';
 

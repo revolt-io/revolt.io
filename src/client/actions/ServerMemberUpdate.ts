@@ -1,4 +1,4 @@
-import type { Member as APIMember } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { Member as APIMember } from 'revolt-api-types';
 import { Action } from './Action.ts';
 import { Events } from '../../util/Constants.ts';
 

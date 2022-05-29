@@ -1,4 +1,4 @@
-import type { User as APIUser } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import type { User as APIUser } from 'revolt-api-types';
 import { Action } from './Action.ts';
 import { ClientUser } from '../../structures/ClientUser.ts';
 import { Events } from '../../util/Constants.ts';

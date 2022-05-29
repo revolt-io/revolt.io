@@ -2,7 +2,7 @@ import type {
   Member as APIMember,
   Message as APIMessage,
   User as APIUser,
-} from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+} from 'revolt-api-types';
 import { BaseManager } from './BaseManager.ts';
 import { TypeError } from '../errors/mod.ts';
 import { Channel, Message, ServerMember, User } from '../structures/mod.ts';
