@@ -1,23 +1,23 @@
-import type { Channel as APIChannel } from 'revolt-api'
-import { ServerChannel } from './index'
-import { Client } from '../index'
-import { ChannelTypes } from '../util/index'
+import type { Channel as APIChannel } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import { ServerChannel } from './mod.ts';
+import { Client } from '../lib.ts';
+import { ChannelTypes } from '../util/mod.ts';
 
-type APIVoiceChannel = Extract<APIChannel, { channel_type: 'VoiceChannel' }>
+type APIVoiceChannel = Extract<APIChannel, { channel_type: 'VoiceChannel' }>;
 
 export class VoiceChannel extends ServerChannel {
-    readonly type = ChannelTypes.VOICE
-    constructor(client: Client, data: APIVoiceChannel) {
-        super(client, data)
-        this._patch(data)
-    }
+  readonly type = ChannelTypes.VOICE;
+  constructor(client: Client, data: APIVoiceChannel) {
+    super(client, data);
+    this._patch(data);
+  }
 
-    protected _patch(data: APIVoiceChannel): this {
-        super._patch(data)
-        return this
-    }
+  protected _patch(data: APIVoiceChannel): this {
+    super._patch(data);
+    return this;
+  }
 
-    async ack(): Promise<void> {
-        throw new TypeError('Cannot ack voice channel')
-    }
+  ack(): Promise<void> {
+    throw new TypeError('Cannot ack voice channel');
+  }
 }

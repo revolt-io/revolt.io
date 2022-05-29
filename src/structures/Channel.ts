@@ -1,72 +1,51 @@
-import type { Channel as APIChannel } from 'revolt-api'
-import { Base, DMChannel, GroupChannel, NotesChannel, ServerChannel, TextChannel, VoiceChannel } from './index'
-import type { Client } from '../client/Client'
-import { ChannelTypes, UUID } from '../util/index'
+import type { Channel as APIChannel } from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import {
+  Base,
+  DMChannel,
+  GroupChannel,
+  ServerChannel,
+  TextChannel,
+  VoiceChannel,
+} from './mod.ts';
+import { ChannelTypes, UUID } from '../util/mod.ts';
 
-export abstract class Channel<T extends APIChannel = APIChannel> extends Base<T> {
-    type: ChannelTypes | 'UNKNOWN' = 'UNKNOWN'
+export abstract class Channel<T extends APIChannel = APIChannel>
+  extends Base<T> {
+  type: ChannelTypes | 'UNKNOWN' = 'UNKNOWN';
 
-    constructor(client: Client, data: T) {
-        super(client)
-        this._patch(data)
-    }
+  get createdTimestamp(): number {
+    return this.createdAt.getTime();
+  }
 
-    static create(client: Client, data: APIChannel): Channel {
-        let channel: Channel
+  get createdAt(): Date {
+    return UUID.timestampOf(this.id);
+  }
 
-        switch (data.channel_type) {
-            case 'TextChannel':
-                channel = new TextChannel(client, data)
-                break
-            case 'VoiceChannel':
-                channel = new VoiceChannel(client, data)
-                break
-            case 'DirectMessage':
-                channel = new DMChannel(client, data)
-                break
-            case 'Group':
-                channel = new GroupChannel(client, data)
-                break
-            case 'SavedMessages':
-                channel = new NotesChannel(client, data)
-                break
-        }
+  async delete(): Promise<void> {
+    await this.client.channels.delete(this);
+  }
 
-        return channel
-    }
-    get createdTimestamp(): number {
-        return this.createdAt.getTime()
-    }
+  isText(): this is TextChannel | GroupChannel | DMChannel {
+    return 'messages' in this;
+  }
 
-    get createdAt(): Date {
-        return UUID.timestampOf(this.id)
-    }
+  isVoice(): this is VoiceChannel {
+    return this.type === ChannelTypes.VOICE;
+  }
 
-    async delete(): Promise<void> {
-        await this.client.channels.delete(this)
-    }
+  isGroup(): this is GroupChannel {
+    return this.type === ChannelTypes.GROUP;
+  }
 
-    isText(): this is TextChannel | GroupChannel | DMChannel {
-        return 'messages' in this
-    }
+  inServer(): this is ServerChannel {
+    return 'serverId' in this;
+  }
 
-    isVoice(): this is VoiceChannel {
-        return this.type === ChannelTypes.VOICE
-    }
+  toString(): string {
+    return `<#${this.id}>`;
+  }
 
-    isGroup(): this is GroupChannel {
-        return this.type === ChannelTypes.GROUP
-    }
-
-    inServer(): this is ServerChannel {
-        return 'serverId' in this
-    }
-
-    toString(): string {
-        return `<#${this.id}>`
-    }
-
-    fetch(force = true): Promise<Channel> {
-        return this.client.channels.fetch(this, { force })
-    }
+  fetch(force = true): Promise<Channel> {
+    return this.client.channels.fetch(this, { force });
+  }
 }

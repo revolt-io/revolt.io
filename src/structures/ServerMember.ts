@@ -1,65 +1,68 @@
-import type { Member as APIMember, File } from 'revolt-api'
-import { Base, Server, User } from './index'
-import { Client } from '../client/Client'
+import type {
+  File,
+  Member as APIMember,
+} from 'https://deno.land/x/revolt_api@0.4.0/types.ts';
+import { Base, Server, User } from './mod.ts';
+import { Client } from '../client/Client.ts';
 
 export class ServerMember extends Base<APIMember> {
-    serverId!: string
-    nickname: string | null = null
-    avatar: File | null = null
-    constructor(client: Client, data: APIMember) {
-        super(client)
-        this._patch(data)
+  serverId!: string;
+  nickname: string | null = null;
+  avatar: File | null = null;
+  constructor(client: Client, data: APIMember) {
+    super(client);
+    this._patch(data);
+  }
+
+  protected _patch(data: APIMember): this {
+    super._patch(data);
+
+    if ('nickname' in data) {
+      this.nickname = data.nickname ?? null;
     }
 
-    protected _patch(data: APIMember): this {
-        super._patch(data)
-
-        if ('nickname' in data) {
-            this.nickname = data.nickname ?? null
-        }
-
-        if ('avatar' in data) {
-            this.avatar = data.avatar ?? null
-        }
-
-        if (data._id) {
-            this.serverId = data._id.server
-            this.id = data._id.user
-        }
-
-        return this
+    if ('avatar' in data) {
+      this.avatar = data.avatar ?? null;
     }
 
-    async setNickname(nickname?: string): Promise<this> {
-        await this.server.members.edit(this, { nickname })
-        return this
+    if (data._id) {
+      this.serverId = data._id.server;
+      this.id = data._id.user;
     }
 
-    ban(reason?: string): Promise<void> {
-        return this.server.members.ban(this, reason)
-    }
+    return this;
+  }
 
-    kick(): Promise<void> {
-        return this.server.members.kick(this)
-    }
+  async setNickname(nickname?: string): Promise<this> {
+    await this.server.members.edit(this, { nickname });
+    return this;
+  }
 
-    leave(): Promise<void> {
-        return this.client.servers.delete(this.serverId)
-    }
+  ban(reason?: string): Promise<void> {
+    return this.server.members.ban(this, reason);
+  }
 
-    displayAvatarURL(options?: { size: number }): string {
-        return this.user.displayAvatarURL(options)
-    }
+  kick(): Promise<void> {
+    return this.server.members.kick(this);
+  }
 
-    get user(): User {
-        return this.client.users.cache.get(this.id)!
-    }
+  leave(): Promise<void> {
+    return this.client.servers.delete(this.serverId);
+  }
 
-    get server(): Server {
-        return this.client.servers.cache.get(this.serverId)!
-    }
+  displayAvatarURL(options?: { size: number }): string {
+    return this.user.displayAvatarURL(options);
+  }
 
-    toString(): string {
-        return `<@${this.id}>`
-    }
+  get user(): User {
+    return this.client.users.cache.get(this.id)!;
+  }
+
+  get server(): Server {
+    return this.client.servers.cache.get(this.serverId)!;
+  }
+
+  toString(): string {
+    return `<@${this.id}>`;
+  }
 }
