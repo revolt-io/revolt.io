@@ -14,7 +14,11 @@ export abstract class Base<APIBase extends Partial<ID> = Partial<ID>> {
       const a = that[key], b = this[key]
       if (a instanceof Base && !a.equals(b as typeof a)) return false
       if (a instanceof BitField && a.bitfield !== (b as unknown as BitField).bitfield) return false
-      if (a !== b) return false
+      if (a !== b) {
+        console.log('This did not match')
+        console.log(a, '!=', b)
+        return false
+      }
     }
 
     return true
@@ -38,7 +42,7 @@ export abstract class Base<APIBase extends Partial<ID> = Partial<ID>> {
   _clone(): this {
     const clone = Object.assign(Object.create(this), this)
 
-    for (const key of clone) {
+    for (const key in clone) {
       const prop = clone[key]
       if (prop instanceof Base) clone[key] = prop._clone()
     }
