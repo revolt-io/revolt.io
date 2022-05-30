@@ -1,9 +1,4 @@
-import type {
-  Embed,
-  File,
-  Message as APIMessage,
-  SystemMessage,
-} from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import {
   Base,
   DMChannel,
@@ -17,21 +12,21 @@ import {
 import { Client } from '../client/Client.ts';
 import { UUID } from '../util/mod.ts';
 
-export class Message extends Base<APIMessage> {
+export class Message extends Base<API.Message> {
   content = '';
   channelId!: string;
   authorId!: string;
-  embeds: Embed[] = [];
-  attachments: File[] = [];
+  embeds: API.Embed[] = [];
+  attachments: API.File[] = [];
   mentions = new Mentions(this, []);
-  type: Uppercase<SystemMessage['type']> = 'TEXT';
+  type: Uppercase<API.SystemMessage['type']> = 'TEXT';
   editedAt: Date | null = null;
-  constructor(client: Client, data: APIMessage) {
+  constructor(client: Client, data: API.Message) {
     super(client);
     this._patch(data);
   }
 
-  protected _patch(data: APIMessage): this {
+  protected _patch(data: API.Message): this {
     super._patch(data);
 
     if (Array.isArray(data.embeds)) {
@@ -60,7 +55,7 @@ export class Message extends Base<APIMessage> {
 
     if (data.system) {
       this.type = data.system.type.toUpperCase() as Uppercase<
-        SystemMessage['type']
+        API.SystemMessage['type']
       >;
     }
 

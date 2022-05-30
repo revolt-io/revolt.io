@@ -19,7 +19,6 @@ await build({
   compilerOptions: {
     target: 'ES2021',
   },
-  importMap: './import.json',
   mappings: {
     'https://deno.land/x/revoltio_rest@v1.1.3/mod.ts': {
       name: '@revoltio/rest',

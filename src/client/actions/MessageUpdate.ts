@@ -1,9 +1,9 @@
-import type { Message as APIMessage } from 'revolt-api-types';
+import type { API } from '../../../deps.ts';
 import { Action } from './Action.ts';
 import { Events } from '../../util/Constants.ts';
 
 export class MessageUpdateAction extends Action {
-  handle(data: { id: string; channel: string; data: APIMessage }): unknown {
+  handle(data: { id: string; channel: string; data: API.Message }): unknown {
     const channel = this.client.channels.cache.get(data.channel);
 
     if (!channel?.isText()) return;

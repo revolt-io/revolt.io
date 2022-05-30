@@ -1,10 +1,10 @@
-import type { Member as APIMember } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { BaseManager } from './BaseManager.ts';
 import { TypeError } from '../errors/mod.ts';
 import { Server, ServerMember, User } from '../structures/mod.ts';
 import { Collection } from '../util/mod.ts';
 
-export type ServerMemberResolvable = ServerMember | User | APIMember | string;
+export type ServerMemberResolvable = ServerMember | User | API.Member | string;
 
 export interface EditServerMemberOptions {
   nickname?: string;
@@ -12,7 +12,7 @@ export interface EditServerMemberOptions {
   roles?: string[];
 }
 
-export class ServerMemberManager extends BaseManager<ServerMember, APIMember> {
+export class ServerMemberManager extends BaseManager<ServerMember, API.Member> {
   holds = ServerMember;
   constructor(protected readonly server: Server) {
     super(server.client);

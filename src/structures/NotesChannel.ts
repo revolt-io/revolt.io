@@ -1,4 +1,4 @@
-import type { Channel as APIChannel } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { Channel, Message, User } from './mod.ts';
 import { TextBasedChannel } from './interfaces/mod.ts';
 import { Client } from '../client/Client.ts';
@@ -9,7 +9,7 @@ import {
 } from '../managers/mod.ts';
 import { ChannelTypes, Collection } from '../util/mod.ts';
 
-type APINotesChannel = Extract<APIChannel, { channel_type: 'SavedMessages' }>;
+type APINotesChannel = Extract<API.Channel, { channel_type: 'SavedMessages' }>;
 
 export class NotesChannel extends Channel<APINotesChannel>
   implements TextBasedChannel {

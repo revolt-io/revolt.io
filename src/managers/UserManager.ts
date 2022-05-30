@@ -1,11 +1,11 @@
-import type { User as APIUser } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { BaseManager } from './BaseManager.ts';
 import { TypeError } from '../errors/mod.ts';
 import { Message, User } from '../structures/mod.ts';
 
-export type UserResolvable = User | APIUser | Message | string;
+export type UserResolvable = User | API.User | Message | string;
 
-export class UserManager extends BaseManager<User, APIUser> {
+export class UserManager extends BaseManager<User, API.User> {
   holds = User;
 
   async fetch(user: UserResolvable, { force = true } = {}): Promise<User> {
@@ -18,14 +18,14 @@ export class UserManager extends BaseManager<User, APIUser> {
       if (user) return user;
     }
 
-    const data = await this.client.api.get(`/users/${id}`) as APIUser;
+    const data = await this.client.api.get(`/users/${id}`) as API.User;
 
     return this._add(data);
   }
 
   resolve(resolvable: Message | User): User;
-  resolve(resolvable: string | APIUser): User | null;
-  resolve(resolvable: User | APIUser | string | Message): User | null {
+  resolve(resolvable: string | API.User): User | null;
+  resolve(resolvable: User | API.User | string | Message): User | null {
     if (resolvable instanceof Message) return resolvable.author;
     return super.resolve(resolvable);
   }

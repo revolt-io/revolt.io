@@ -1,9 +1,9 @@
-import type { Server as APIServer } from 'revolt-api-types';
+import type { API } from '../../../deps.ts';
 import { Action } from './Action.ts';
 import { Events } from '../../util/Constants.ts';
 
 export class ServerDeleteAction extends Action {
-  handle(data: APIServer): unknown {
+  handle(data: API.Server): unknown {
     const server = this.client.servers.cache.get(data._id);
 
     if (server) {

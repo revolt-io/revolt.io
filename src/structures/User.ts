@@ -1,15 +1,11 @@
-import type {
-  File,
-  Presence as APIPresence,
-  User as APIUser,
-} from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { Base, DMChannel } from './mod.ts';
 import { Client } from '../client/Client.ts';
 import { Badges, Presence, UUID } from '../util/mod.ts';
 
-export class User extends Base<APIUser> {
+export class User extends Base<API.User> {
   username!: string;
-  avatar: File | null = null;
+  avatar: API.File | null = null;
   status = {
     text: null,
     presence: Presence.INVISIBLE,
@@ -20,12 +16,12 @@ export class User extends Base<APIUser> {
   badges!: Badges;
   bot = false;
 
-  constructor(client: Client, data: APIUser) {
+  constructor(client: Client, data: API.User) {
     super(client);
     this._patch(data);
   }
 
-  protected _patch(data: APIUser): this {
+  protected _patch(data: API.User): this {
     super._patch(data);
 
     if (data.username) {
@@ -46,7 +42,9 @@ export class User extends Base<APIUser> {
 
     if ('status' in data) {
       const presence = data.status?.presence
-        ? Presence[data.status.presence.toUpperCase() as Uppercase<APIPresence>]
+        ? Presence[
+          data.status.presence.toUpperCase() as Uppercase<API.Presence>
+        ]
         : Presence.INVISIBLE;
       this.status.presence = presence;
       this.status.text = data.status?.text ?? null;

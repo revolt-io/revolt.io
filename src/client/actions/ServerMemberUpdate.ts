@@ -1,9 +1,9 @@
-import type { Member as APIMember } from 'revolt-api-types';
+import type { API } from '../../../deps.ts';
 import { Action } from './Action.ts';
 import { Events } from '../../util/Constants.ts';
 
 export class ServerMemberUpdateAction extends Action {
-  handle(data: { id: string; data: APIMember }): unknown {
+  handle(data: { id: string; data: API.Member }): unknown {
     const server = this.client.servers.cache.get(data.id);
     const oldMember = server?.members.cache.get(data.data?._id?.user);
 

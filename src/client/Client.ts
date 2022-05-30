@@ -1,4 +1,4 @@
-import type { RevoltConfig } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { BaseClient, WebSocketShard } from './mod.ts';
 import { ActionManager } from './actions/ActionManager.ts';
 import { Error } from '../errors/mod.ts';
@@ -12,7 +12,7 @@ export class Client extends BaseClient {
   readonly servers = new ServerManager(this);
   readonly users = new UserManager(this);
   user: ClientUser | null = null;
-  configuration?: RevoltConfig;
+  configuration?: API.RevoltConfig;
   readyAt: Date | null = null;
 
   get readyTimestamp(): number | null {

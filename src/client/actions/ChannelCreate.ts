@@ -1,9 +1,9 @@
-import type { Channel as APIChannel } from 'revolt-api-types';
+import type { API } from '../../../deps.ts';
 import { Action } from './Action.ts';
 import { Events } from '../../util/Constants.ts';
 
 export class ChannelCreateAction extends Action {
-  async handle(data: APIChannel): Promise<unknown> {
+  async handle(data: API.Channel): Promise<unknown> {
     const channel = this.client.channels._add(data);
 
     if (channel) {

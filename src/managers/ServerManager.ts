@@ -1,17 +1,17 @@
-import type { Server as APIServer } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { BaseManager } from './BaseManager.ts';
 import { TypeError } from '../errors/mod.ts';
 import { Server } from '../structures/mod.ts';
 import { UUID } from '../util/mod.ts';
 
-export type ServerResolvable = Server | APIServer | string;
+export type ServerResolvable = Server | API.Server | string;
 
 export interface EditServerOptions {
   name?: string;
   description?: string;
 }
 
-export class ServerManager extends BaseManager<Server, APIServer> {
+export class ServerManager extends BaseManager<Server, API.Server> {
   readonly holds = Server;
 
   _remove(id: string): void {

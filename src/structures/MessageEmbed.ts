@@ -1,11 +1,11 @@
-import type { Embed, Special } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 
-export type EmbedImage = Extract<Embed, { type: 'Image' }>;
-export type EmbedVideo = Extract<Embed, { type: 'Video' }>;
-export type EmbedSpecial = Special;
+export type EmbedImage = Extract<API.Embed, { type: 'Image' }>;
+export type EmbedVideo = Extract<API.Embed, { type: 'Video' }>;
+export type EmbedSpecial = API.Special;
 
 export class MessageEmbed {
-  type: Embed['type'] = 'Website';
+  type: API.Embed['type'] = 'Website';
   url?: string;
   special?: EmbedSpecial;
   title?: string;
@@ -16,7 +16,7 @@ export class MessageEmbed {
   icon_url?: string;
   color?: string;
 
-  constructor(data: Partial<Embed> = {}) {
+  constructor(data: Partial<API.Embed> = {}) {
     Object.assign(this, data);
   }
 

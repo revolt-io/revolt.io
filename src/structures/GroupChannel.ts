@@ -1,4 +1,4 @@
-import type { Channel as APIChannel } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import type { Message, User } from './mod.ts';
 import type { TextBasedChannel } from './interfaces/mod.ts';
 import type { Client } from '../client/Client.ts';
@@ -12,7 +12,7 @@ import {
 } from '../managers/mod.ts';
 import { ChannelPermissions, ChannelTypes, Collection } from '../util/mod.ts';
 
-type APIGroupChannel = Extract<APIChannel, { channel_type: 'Group' }>;
+type APIGroupChannel = Extract<API.Channel, { channel_type: 'Group' }>;
 
 export class GroupChannel extends Channel<APIGroupChannel>
   implements TextBasedChannel {
