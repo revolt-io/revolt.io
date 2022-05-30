@@ -3,20 +3,13 @@ import { Action } from './Action.ts';
 import { Events } from '../../util/Constants.ts';
 
 export class ServerMemberUpdateAction extends Action {
-  handle(data: { id: string; data: API.Member }): unknown {
+  handle(data: { id: string; data: API.Member }): void {
     const server = this.client.servers.cache.get(data.id);
-    const oldMember = server?.members.cache.get(data.data?._id?.user);
+    const member = server?.members.cache.get(data.data?._id?.user);
+    const oldMember = member?._update(data.data)
 
-    if (server && oldMember) {
-      const newMember = oldMember._update(data.data);
-
-      server.members.cache.set(newMember.id, newMember);
-
-      this.client.emit(Events.SERVER_MEMBER_UPDATE, oldMember, newMember);
-
-      return { newMember, oldMember };
+    if (oldMember && member && !member.equals(oldMember)) {
+      this.client.emit(Events.SERVER_MEMBER_UPDATE, oldMember, member);
     }
-
-    return { oldMember };
   }
 }
