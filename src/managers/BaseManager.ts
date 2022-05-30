@@ -24,13 +24,8 @@ export abstract class BaseManager<Holds extends { id: string }, R = unknown> {
   resolve(resolvable: string | R): Holds | null;
   resolve(resolvable: string | R | Holds): Holds | null;
   resolve(resolvable: string | R | Holds): Holds | null {
-    if (resolvable == null) return null;
-    if (typeof resolvable === 'string') {
-      return this.cache.get(resolvable) ?? null;
-    }
-    if (this.holds && resolvable instanceof this.holds) return resolvable;
-    const raw = resolvable as unknown as { _id: string };
-    if ('_id' in raw) return this.cache.get(raw._id) ?? null;
+    const id = this.resolveId(resolvable);
+    if (id) return this.cache.get(id) ?? null;
     return null;
   }
 
@@ -39,7 +34,7 @@ export abstract class BaseManager<Holds extends { id: string }, R = unknown> {
     if (typeof resolvable === 'string') return resolvable;
     if (this.holds && resolvable instanceof this.holds) return resolvable.id;
     const raw = resolvable as unknown as { _id: string };
-    if ('_id' in raw) raw._id ?? null;
+    if (typeof raw === 'object' && '_id' in raw) raw._id ?? null;
     return null;
   }
 
