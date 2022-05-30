@@ -26,12 +26,6 @@ import { Client } from 'revolt.io'
 
 const client = new Client()
 
-// Connect to Revolt API
-client.login('revolt-token-here')
-
-// for user accounts add this extra parameter
-// client.login('revolt-token-here', 'user')
-
 client.on('ready', () => {
     console.log('Connected')
     console.log(client.user.username)
@@ -42,11 +36,20 @@ client.on('message', msg => {
         msg.reply('Pong!')
     }
 })
+
+// Connect to Revolt API
+client.login('revolt-token-here')
+
+// for user accounts add this extra parameter
+// client.login('revolt-token-here', 'user')
 ```
 
 ### Links
 - [More examples](/examples)
 - [Documentation](https://doc.deno.land/https://deno.land/x/revoltio/mod.ts)
+- [GitHub](https://github.com/revoltio/revolt.io)
+- [Deno](https://deno.land/x/revoltio)
+- [NPM](https://npmjs.com/package/revolt.io)
 
 #### License
 Refer to the [LICENSE](LICENSE) file.
