@@ -17,6 +17,7 @@ export enum Events {
   READY = 'ready',
   ROLE_CREATE = 'roleCreate',
   ROLE_DELETE = 'roleDelete',
+  ROLE_UPDATE = 'roleUpdate',
   SERVER_CREATE = 'serverCreate',
   SERVER_DELETE = 'serverDelete',
   SERVER_MEMBER_JOIN = 'serverMemberJoin',
@@ -59,13 +60,6 @@ export enum WSEvents {
   SERVER_UPDATE = 'ServerUpdate',
   USER_RELATIONSHIP = 'UserRelationship',
   USER_UPDATE = 'UserUpdate',
-}
-
-export enum Presence {
-  ONLINE = 'ONLINE',
-  IDLE = 'IDLE',
-  BUSY = 'DND',
-  INVISIBLE = 'OFFLINE',
 }
 
 export enum ChannelTypes {

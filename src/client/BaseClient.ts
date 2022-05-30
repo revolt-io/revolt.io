@@ -27,6 +27,7 @@ export interface ClientEvents {
   raw: [unknown];
   ready: [Client];
   roleDelete: [Role];
+  roleUpdate: [Role, Role]
   serverCreate: [Server];
   serverDelete: [Server];
   serverMemberJoin: [ServerMember];
