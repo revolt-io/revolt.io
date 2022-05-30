@@ -13,6 +13,6 @@ export * from './ServerMemberJoin.ts';
 export * from './ServerMemberLeave.ts';
 export * from './ServerMemberUpdate.ts';
 export * from './ServerRoleDelete.ts';
-export * from './ServerRoleUpdate.ts'
+export * from './ServerRoleUpdate.ts';
 export * from './ServerUpdate.ts';
 export * from './UserUpdate.ts';

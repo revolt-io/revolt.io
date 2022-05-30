@@ -1,12 +1,12 @@
 import type { API } from '../../deps.ts';
-import { Base, DMChannel, Presence, Status, Attachment } from './mod.ts';
+import { Attachment, Base, DMChannel, Presence, Status } from './mod.ts';
 import { Client } from '../client/Client.ts';
 import { Badges, UUID } from '../util/mod.ts';
 
 export class User extends Base<API.User> {
   username!: string;
   avatar: Attachment | null = null;
-  presence = new Presence(this.client)
+  presence = new Presence(this.client);
   badges!: Badges;
   bot = false;
 
@@ -31,19 +31,20 @@ export class User extends Base<API.User> {
     }
 
     if (data.avatar) {
-      this.avatar = new Attachment(this.client, data.avatar)
+      this.avatar = new Attachment(this.client, data.avatar);
     }
 
     if ('status' in data) {
-      const status = data.status?.presence && Status[data.status.presence.toUpperCase() as Uppercase<API.Presence>]
+      const status = data.status?.presence &&
+        Status[data.status.presence.toUpperCase() as Uppercase<API.Presence>];
       this.presence.status = status ?? Status.INVISIBLE;
       this.presence.text = data.status?.text ?? null;
     }
 
     for (const field of clear) {
-      if (field === 'Avatar') this.avatar = null
-      if (field === 'StatusText') this.presence.text = null
-      if (field === 'StatusPresence') this.presence.status = Status.INVISIBLE
+      if (field === 'Avatar') this.avatar = null;
+      if (field === 'StatusText') this.presence.text = null;
+      if (field === 'StatusPresence') this.presence.status = Status.INVISIBLE;
     }
 
     return this;

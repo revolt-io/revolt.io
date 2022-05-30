@@ -1,5 +1,5 @@
 import type { API } from '../../deps.ts';
-import { Base, Server, User, Attachment } from './mod.ts';
+import { Attachment, Base, Server, User } from './mod.ts';
 import { Client } from '../client/Client.ts';
 
 export class ServerMember extends Base<API.Member> {
@@ -19,7 +19,7 @@ export class ServerMember extends Base<API.Member> {
     }
 
     if (data.avatar) {
-      this.avatar =  new Attachment(this.client, data.avatar);
+      this.avatar = new Attachment(this.client, data.avatar);
     }
 
     if (data._id) {
@@ -28,8 +28,8 @@ export class ServerMember extends Base<API.Member> {
     }
 
     for (const field of clear) {
-      if (field === 'Avatar') this.avatar = null
-      if (field === 'Nickname') this.nickname = null
+      if (field === 'Avatar') this.avatar = null;
+      if (field === 'Nickname') this.nickname = null;
     }
 
     return this;
