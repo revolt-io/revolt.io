@@ -21,9 +21,9 @@ await build({
   },
   importMap: './import.json',
   mappings: {
-    'https://deno.land/x/revoltio_rest@v1.1.0/mod.ts': {
+    'https://deno.land/x/revoltio_rest@v1.1.2/mod.ts': {
       name: '@revoltio/rest',
-      version: '^1.1.0',
+      version: '^1.1.2',
     },
   },
   package: {

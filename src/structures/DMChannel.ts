@@ -1,8 +1,17 @@
 import type { Channel as APIChannel } from 'revolt-api-types';
 import { Channel, Message } from './mod.ts';
 import { TextBasedChannel } from './interfaces/mod.ts';
-import { Client, MessageManager, MessageOptions } from '../lib.ts';
-import { ChannelTypes, DEFAULT_PERMISSION_DM } from '../util/mod.ts';
+import {
+  Client,
+  MessageManager,
+  MessageOptions,
+  MessageResolvable,
+} from '../lib.ts';
+import {
+  ChannelTypes,
+  Collection,
+  DEFAULT_PERMISSION_DM,
+} from '../util/mod.ts';
 
 type APIDirectChannel = Extract<APIChannel, { channel_type: 'DirectMessage' }>;
 
@@ -27,6 +36,13 @@ export class DMChannel extends Channel<APIDirectChannel>
 
     return this;
   }
+
+  bulkDelete(
+    messages: MessageResolvable[] | Collection<string, Message> | number,
+  ): Promise<void> {
+    return this.messages.bulkDelete(messages);
+  }
+
   send(options: MessageOptions | string): Promise<Message> {
     return this.messages.send(options);
   }
