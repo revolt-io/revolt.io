@@ -4,6 +4,6 @@
         "events": "https://deno.land/std@0.132.0/node/events.ts",
         "crypto": "https://deno.land/std@0.132.0/node/crypto.ts",
         "collection": "https://esm.sh/@discordjs/collection@0.6.0",
-        "@revoltio/rest": "https://deno.land/x/revoltio_rest@v1.1.2/mod.ts"
+        "@revoltio/rest": "https://deno.land/x/revoltio_rest@v1.1.3/mod.ts"
     }
 }
