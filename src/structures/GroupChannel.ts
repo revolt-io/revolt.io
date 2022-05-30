@@ -1,9 +1,8 @@
 import type { API } from '../../deps.ts';
-import type { Message, User } from './mod.ts';
+import { Channel, Message, User, Attachment, Invite } from './mod.ts';
 import type { TextBasedChannel } from './interfaces/mod.ts';
 import type { Client } from '../client/Client.ts';
 import { TypeError } from '../errors/mod.ts';
-import { Channel } from './Channel.ts';
 import {
   MessageManager,
   MessageOptions,
@@ -14,14 +13,13 @@ import { ChannelPermissions, ChannelTypes, Collection } from '../util/mod.ts';
 
 type APIGroupChannel = Extract<API.Channel, { channel_type: 'Group' }>;
 
-export class GroupChannel extends Channel<APIGroupChannel>
-  implements TextBasedChannel {
+export class GroupChannel extends Channel<APIGroupChannel> implements TextBasedChannel {
+  readonly type = ChannelTypes.GROUP;
   name!: string;
   description: string | null = null;
   ownerId!: string;
-  readonly type = ChannelTypes.GROUP;
   permissions!: Readonly<ChannelPermissions>;
-  icon: string | null = null;
+  icon: Attachment | null = null;
   messages = new MessageManager(this);
   lastMessageId: string | null = null;
   users = new Collection<string, User>();
@@ -55,8 +53,8 @@ export class GroupChannel extends Channel<APIGroupChannel>
       this.ownerId = data.owner;
     }
 
-    if ('icon' in data) {
-      this.icon = data.icon?._id ?? null;
+    if (data.icon) {
+      this.icon = new Attachment(this.client, data.icon)
     }
 
     if (data.name) {
@@ -81,26 +79,35 @@ export class GroupChannel extends Channel<APIGroupChannel>
     return this.messages.bulkDelete(messages);
   }
 
+
+  async createInvite(): Promise<Invite> {
+    const data = await this.client.api.post(`/channels/${this.id}/invites`);
+    return new Invite(this.client, data)
+  }
+
   async add(user: UserResolvable): Promise<void> {
     const id = this.client.users.resolveId(user);
     if (!id) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable');
     await this.client.api.put(`/channels/${this.id}/recipients/${id}`);
   }
+  
   async remove(user: UserResolvable): Promise<void> {
     const id = this.client.users.resolveId(user);
     if (!id) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable');
     await this.client.api.delete(`/channels/${this.id}/recipients/${id}`);
   }
+  
   async leave(): Promise<void> {
     await super.delete();
   }
+
   send(options: MessageOptions | string): Promise<Message> {
     return this.messages.send(options);
   }
 
   iconURL(options?: { size: number }): string | null {
     if (!this.icon) return null;
-    return this.client.api.cdn.icon(this.icon, options?.size);
+    return this.client.api.cdn.icon(this.icon.id, options?.size);
   }
 
   get owner(): User | null {

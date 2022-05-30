@@ -1,30 +1,35 @@
 import type { API } from '../../deps.ts';
-import { Base, Server, User } from './mod.ts';
+import { Base, Server, User, Attachment } from './mod.ts';
 import { Client } from '../client/Client.ts';
 
 export class ServerMember extends Base<API.Member> {
   serverId!: string;
   nickname: string | null = null;
-  avatar: API.File | null = null;
+  avatar: Attachment | null = null;
   constructor(client: Client, data: API.Member) {
     super(client);
     this._patch(data);
   }
 
-  protected _patch(data: API.Member): this {
+  protected _patch(data: API.Member, clear: API.FieldsMember[] = []): this {
     super._patch(data);
 
     if ('nickname' in data) {
       this.nickname = data.nickname ?? null;
     }
 
-    if ('avatar' in data) {
-      this.avatar = data.avatar ?? null;
+    if (data.avatar) {
+      this.avatar =  new Attachment(this.client, data.avatar);
     }
 
     if (data._id) {
       this.serverId = data._id.server;
       this.id = data._id.user;
+    }
+
+    for (const field of clear) {
+      if (field === 'Avatar') this.avatar = null
+      if (field === 'Nickname') this.nickname = null
     }
 
     return this;
