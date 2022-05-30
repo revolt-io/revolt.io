@@ -7,6 +7,7 @@ import { Channel } from './Channel.ts';
 import {
   MessageManager,
   MessageOptions,
+  MessageResolvable,
   UserResolvable,
 } from '../managers/mod.ts';
 import { ChannelPermissions, ChannelTypes, Collection } from '../util/mod.ts';
@@ -72,6 +73,12 @@ export class GroupChannel extends Channel<APIGroupChannel>
   get lastMessage(): Message | null {
     if (!this.lastMessageId) return null;
     return this.messages.cache.get(this.lastMessageId) ?? null;
+  }
+
+  bulkDelete(
+    messages: MessageResolvable[] | Collection<string, Message> | number,
+  ): Promise<void> {
+    return this.messages.bulkDelete(messages);
   }
 
   async add(user: UserResolvable): Promise<void> {
