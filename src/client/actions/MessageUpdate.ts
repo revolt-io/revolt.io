@@ -8,18 +8,11 @@ export class MessageUpdateAction extends Action {
 
     if (!channel?.isText()) return;
 
-    const oldMessage = channel?.messages.cache.get(data.id);
+    const message = channel?.messages.cache.get(data.id);
+    const oldMessage = message?._update(data.data)
 
-    if (oldMessage) {
-      const newMessage = oldMessage._update(data.data);
-
-      channel.messages.cache.set(newMessage.id, newMessage);
-
-      this.client.emit(Events.MESSAGE_UPDATE, oldMessage, newMessage);
-
-      return { newMessage, oldMessage };
+    if (oldMessage && message && !message.equals(oldMessage)) {
+      this.client.emit(Events.MESSAGE_UPDATE, oldMessage, message);
     }
-
-    return { oldMessage };
   }
 }
