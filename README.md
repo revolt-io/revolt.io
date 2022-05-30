@@ -12,25 +12,24 @@ A JS/TS library to interact with Revolt API
 - Voice Support (*work in progress..*)
 - Deno Support
 
-## Installation (NodeJS Only)
+### Installation (NodeJS Only)
 ***Node.js v16.x or newer is required.***
 ```bash
 $ npm i revolt.io
 ```
 
-## Usage
+### Example Usage
 ```ts
-import { Client } from 'revolt.io'
-
 // for Deno runtime use this
 // import { Client } from 'https://deno.land/x/revoltio/mod.ts'
+import { Client } from 'revolt.io'
 
 const client = new Client()
 
-// Login with bot account
+// Connect to Revolt API
 client.login('revolt-token-here')
 
-// Self bot
+// for user accounts add this extra parameter
 // client.login('revolt-token-here', 'user')
 
 client.on('ready', () => {
@@ -45,9 +44,9 @@ client.on('message', msg => {
 })
 ```
 
-## Links
+### Links
 - [More examples](/examples)
 - [Documentation](https://doc.deno.land/https://deno.land/x/revoltio/mod.ts)
 
-## License
+#### License
 Refer to the [LICENSE](LICENSE) file.
