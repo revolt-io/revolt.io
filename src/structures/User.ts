@@ -1,18 +1,12 @@
 import type { API } from '../../deps.ts';
-import { Base, DMChannel } from './mod.ts';
+import { Base, DMChannel, Presence, Status, Attachment } from './mod.ts';
 import { Client } from '../client/Client.ts';
-import { Badges, Presence, UUID } from '../util/mod.ts';
+import { Badges, UUID } from '../util/mod.ts';
 
 export class User extends Base<API.User> {
   username!: string;
-  avatar: API.File | null = null;
-  status = {
-    text: null,
-    presence: Presence.INVISIBLE,
-  } as {
-    text: string | null;
-    presence: Presence;
-  };
+  avatar: Attachment | null = null;
+  presence = new Presence(this.client)
   badges!: Badges;
   bot = false;
 
@@ -21,7 +15,7 @@ export class User extends Base<API.User> {
     this._patch(data);
   }
 
-  protected _patch(data: API.User): this {
+  protected _patch(data: API.User, clear: API.FieldsUser[] = []): this {
     super._patch(data);
 
     if (data.username) {
@@ -36,18 +30,20 @@ export class User extends Base<API.User> {
       this.badges = new Badges(data.badges).freeze();
     }
 
-    if ('avatar' in data) {
-      this.avatar = data.avatar ?? null;
+    if (data.avatar) {
+      this.avatar = new Attachment(this.client, data.avatar)
     }
 
     if ('status' in data) {
-      const presence = data.status?.presence
-        ? Presence[
-          data.status.presence.toUpperCase() as Uppercase<API.Presence>
-        ]
-        : Presence.INVISIBLE;
-      this.status.presence = presence;
-      this.status.text = data.status?.text ?? null;
+      const status = data.status?.presence && Status[data.status.presence.toUpperCase() as Uppercase<API.Presence>]
+      this.presence.status = status ?? Status.INVISIBLE;
+      this.presence.text = data.status?.text ?? null;
+    }
+
+    for (const field of clear) {
+      if (field === 'Avatar') this.avatar = null
+      if (field === 'StatusText') this.presence.text = null
+      if (field === 'StatusPresence') this.presence.status = Status.INVISIBLE
     }
 
     return this;
@@ -77,7 +73,7 @@ export class User extends Base<API.User> {
   avatarURL(options?: { size: number }): string | null {
     return this.avatar
       ? this.client.api.cdn.avatar(
-        this.avatar._id,
+        this.avatar.id,
         this.avatar.filename,
         options?.size,
       )

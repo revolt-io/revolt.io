@@ -1,5 +1,5 @@
 import type { API } from '../../deps.ts';
-import { Base, Category, ServerMember, User } from './mod.ts';
+import { Base, Category, ServerMember, User, Attachment } from './mod.ts';
 import { Client } from '../client/Client.ts';
 import {
   RoleManager,
@@ -15,8 +15,8 @@ export class Server extends Base<API.Server> {
   members = new ServerMemberManager(this);
   channels = new ServerChannelManager(this);
   roles = new RoleManager(this);
-  icon: string | null = null;
-  banner: string | null = null;
+  icon: Attachment | null = null;
+  banner: Attachment | null = null;
   analytics = false;
   discoverable = false;
   nsfw = false;
@@ -28,7 +28,7 @@ export class Server extends Base<API.Server> {
     this._patch(data);
   }
 
-  protected _patch(data: API.Server): this {
+  protected _patch(data: API.Server, clear: API.FieldsServer[] = []): this {
     super._patch(data);
 
     if (Array.isArray(data.categories)) {
@@ -39,12 +39,12 @@ export class Server extends Base<API.Server> {
       }
     }
 
-    if ('icon' in data) {
-      this.icon = data.icon?._id ?? null;
+    if (data.icon) {
+      this.icon = new Attachment(this.client, data.icon)
     }
 
-    if ('banner' in data) {
-      this.banner = data.banner?._id ?? null;
+    if (data.banner) {
+      this.banner = new Attachment(this.client, data.banner)
     }
 
     if (data.owner) {
@@ -83,6 +83,12 @@ export class Server extends Base<API.Server> {
     }
     if (typeof data.nsfw === 'boolean') this.nsfw = data.nsfw;
 
+    for (const field of clear) {
+      if (field === 'Icon') this.icon = null
+      if (field === 'Description') this.description = null
+      if (field === 'Banner') this.banner = null
+    }
+
     return this;
   }
 
@@ -96,13 +102,13 @@ export class Server extends Base<API.Server> {
 
   iconURL(options?: { size: number }): string | null {
     return this.icon
-      ? this.client.api.cdn.icon(this.icon, options?.size)
+      ? this.client.api.cdn.icon(this.icon.id, options?.size)
       : null;
   }
 
   bannerURL(options?: { size: number }): string | null {
     return this.banner
-      ? this.client.api.cdn.banner(this.banner, options?.size)
+      ? this.client.api.cdn.banner(this.banner.id, options?.size)
       : null;
   }
 
