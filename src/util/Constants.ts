@@ -79,7 +79,7 @@ export const DEFAULT_CLIENT_OPTIONS: BaseClientOptions = {
     retries: 3,
   },
   ws: {
-    heartbeat: 3_000,
+    heartbeat: 30_000,
   },
 } as const;
 
