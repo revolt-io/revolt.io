@@ -1,5 +1,6 @@
 import type { API } from '../../deps.ts';
-import { Attachment, Base, Server, User } from './mod.ts';
+import { Base } from './Base.ts';
+import { Attachment, Server, User } from './mod.ts';
 import { Client } from '../client/Client.ts';
 
 export class ServerMember extends Base<API.Member> {
