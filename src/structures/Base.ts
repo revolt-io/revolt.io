@@ -1,5 +1,5 @@
 import type { Client } from '../client/Client.ts';
-import { BitField } from "../util/BitField.ts";
+import { BitField } from '../util/BitField.ts';
 
 type ID = { _id: string } | { id: string } | { _id: { user: string } };
 
@@ -8,20 +8,25 @@ export abstract class Base<APIBase extends Partial<ID> = Partial<ID>> {
   constructor(public readonly client: Client) {}
 
   equals(that?: this | null): boolean {
-    if (!that) return false
+    if (!that) return false;
 
     for (const key in that) {
-      const a = that[key], b = this[key]
-      if (a instanceof Base && !a.equals(b as typeof a)) return false
-      if (a instanceof BitField && a.bitfield !== (b as unknown as BitField).bitfield) return false
+      const a = that[key], b = this[key];
+      if (a instanceof Base && !a.equals(b as typeof a)) return false;
+      if (
+        a instanceof BitField &&
+        a.bitfield !== (b as unknown as BitField).bitfield
+      ) {
+        return false;
+      }
       if (a !== b) {
-        console.log('This did not match')
-        console.log(a, '!=', b)
-        return false
+        console.log('This did not match');
+        console.log(a, '!=', b);
+        return false;
       }
     }
 
-    return true
+    return true;
   }
 
   _update(data: APIBase, clear?: string[]): this {
@@ -40,13 +45,13 @@ export abstract class Base<APIBase extends Partial<ID> = Partial<ID>> {
   }
 
   _clone(): this {
-    const clone = Object.assign(Object.create(this), this)
+    const clone = Object.assign(Object.create(this), this);
 
     for (const key in clone) {
-      const prop = clone[key]
-      if (prop instanceof Base) clone[key] = prop._clone()
+      const prop = clone[key];
+      if (prop instanceof Base) clone[key] = prop._clone();
     }
 
-    return clone
+    return clone;
   }
 }

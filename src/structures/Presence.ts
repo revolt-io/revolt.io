@@ -1,4 +1,4 @@
-import { Base } from './Base.ts'
+import { Base } from './Base.ts';
 
 export enum Status {
   ONLINE = 'ONLINE',
@@ -8,6 +8,6 @@ export enum Status {
 }
 
 export class Presence extends Base {
-  text: string | null = null
-  status = Status.INVISIBLE
+  text: string | null = null;
+  status = Status.INVISIBLE;
 }

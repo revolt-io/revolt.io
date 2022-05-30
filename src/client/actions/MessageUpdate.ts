@@ -9,7 +9,7 @@ export class MessageUpdateAction extends Action {
     if (!channel?.isText()) return;
 
     const message = channel?.messages.cache.get(data.id);
-    const oldMessage = message?._update(data.data)
+    const oldMessage = message?._update(data.data);
 
     if (oldMessage && message && !message.equals(oldMessage)) {
       this.client.emit(Events.MESSAGE_UPDATE, oldMessage, message);

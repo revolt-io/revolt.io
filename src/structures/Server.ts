@@ -1,5 +1,5 @@
 import type { API } from '../../deps.ts';
-import { Base, Category, ServerMember, User, Attachment } from './mod.ts';
+import { Attachment, Base, Category, ServerMember, User } from './mod.ts';
 import { Client } from '../client/Client.ts';
 import {
   RoleManager,
@@ -40,11 +40,11 @@ export class Server extends Base<API.Server> {
     }
 
     if (data.icon) {
-      this.icon = new Attachment(this.client, data.icon)
+      this.icon = new Attachment(this.client, data.icon);
     }
 
     if (data.banner) {
-      this.banner = new Attachment(this.client, data.banner)
+      this.banner = new Attachment(this.client, data.banner);
     }
 
     if (data.owner) {
@@ -84,9 +84,9 @@ export class Server extends Base<API.Server> {
     if (typeof data.nsfw === 'boolean') this.nsfw = data.nsfw;
 
     for (const field of clear) {
-      if (field === 'Icon') this.icon = null
-      if (field === 'Description') this.description = null
-      if (field === 'Banner') this.banner = null
+      if (field === 'Icon') this.icon = null;
+      if (field === 'Description') this.description = null;
+      if (field === 'Banner') this.banner = null;
     }
 
     return this;

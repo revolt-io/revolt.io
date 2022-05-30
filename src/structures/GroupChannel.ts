@@ -1,5 +1,5 @@
 import type { API } from '../../deps.ts';
-import { Channel, Message, User, Attachment, Invite } from './mod.ts';
+import { Attachment, Channel, Invite, Message, User } from './mod.ts';
 import type { TextBasedChannel } from './interfaces/mod.ts';
 import type { Client } from '../client/Client.ts';
 import { TypeError } from '../errors/mod.ts';
@@ -13,7 +13,8 @@ import { ChannelPermissions, ChannelTypes, Collection } from '../util/mod.ts';
 
 type APIGroupChannel = Extract<API.Channel, { channel_type: 'Group' }>;
 
-export class GroupChannel extends Channel<APIGroupChannel> implements TextBasedChannel {
+export class GroupChannel extends Channel<APIGroupChannel>
+  implements TextBasedChannel {
   readonly type = ChannelTypes.GROUP;
   name!: string;
   description: string | null = null;
@@ -54,7 +55,7 @@ export class GroupChannel extends Channel<APIGroupChannel> implements TextBasedC
     }
 
     if (data.icon) {
-      this.icon = new Attachment(this.client, data.icon)
+      this.icon = new Attachment(this.client, data.icon);
     }
 
     if (data.name) {
@@ -79,10 +80,9 @@ export class GroupChannel extends Channel<APIGroupChannel> implements TextBasedC
     return this.messages.bulkDelete(messages);
   }
 
-
   async createInvite(): Promise<Invite> {
     const data = await this.client.api.post(`/channels/${this.id}/invites`);
-    return new Invite(this.client, data)
+    return new Invite(this.client, data);
   }
 
   async add(user: UserResolvable): Promise<void> {
@@ -90,13 +90,13 @@ export class GroupChannel extends Channel<APIGroupChannel> implements TextBasedC
     if (!id) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable');
     await this.client.api.put(`/channels/${this.id}/recipients/${id}`);
   }
-  
+
   async remove(user: UserResolvable): Promise<void> {
     const id = this.client.users.resolveId(user);
     if (!id) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable');
     await this.client.api.delete(`/channels/${this.id}/recipients/${id}`);
   }
-  
+
   async leave(): Promise<void> {
     await super.delete();
   }

@@ -1,5 +1,5 @@
 import type { API } from '../../deps.ts';
-import { Category, Channel, Server, Attachment, Invite } from './mod.ts';
+import { Attachment, Category, Channel, Invite, Server } from './mod.ts';
 import { Client } from '../client/Client.ts';
 import { ChannelPermissions, Collection } from '../util/mod.ts';
 
@@ -30,13 +30,13 @@ export class ServerChannel<T extends APIServerChannel = APIServerChannel>
     super._patch(data);
 
     if (data.name) this.name = data.name;
-    
+
     if (data.server) this.serverId = data.server;
-    
+
     if ('description' in data) this.description = data.description ?? null;
-    
-    if (data.icon) this.icon = new Attachment(this.client, data.icon)
-    
+
+    if (data.icon) this.icon = new Attachment(this.client, data.icon);
+
     if (typeof data.nsfw === 'boolean') this.nsfw = data.nsfw;
 
     if (data.role_permissions) {
@@ -50,8 +50,8 @@ export class ServerChannel<T extends APIServerChannel = APIServerChannel>
     }
 
     for (const field of clear) {
-      if (field === 'Icon') this.icon = null
-      if (field === 'Description') this.description = null
+      if (field === 'Icon') this.icon = null;
+      if (field === 'Description') this.description = null;
     }
 
     return this;
@@ -59,7 +59,7 @@ export class ServerChannel<T extends APIServerChannel = APIServerChannel>
 
   async createInvite(): Promise<Invite> {
     const data = await this.client.api.post(`/channels/${this.id}/invites`);
-    return new Invite(this.client, data)
+    return new Invite(this.client, data);
   }
 
   iconURL(options?: { size: number }): string | null {

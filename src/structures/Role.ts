@@ -13,17 +13,20 @@ export class Role extends Base<API.Role & { _id?: string }> {
     this._patch(data);
   }
 
-  protected _patch(data: API.Role & { _id?: string }, clear: API.FieldsRole[] = []): this {
+  protected _patch(
+    data: API.Role & { _id?: string },
+    clear: API.FieldsRole[] = [],
+  ): this {
     super._patch(data);
 
     if (data.name) this.name = data.name;
-    
+
     if (typeof data.hoist === 'boolean') this.hoist = data.hoist;
-    
+
     if (typeof data.rank === 'number') this.rank = data.rank;
-    
+
     if ('colour' in data) this.color = data.colour ?? null;
-    
+
     if (data.permissions) {
       const { a, d } = data.permissions;
       this.overwrite = {
@@ -33,7 +36,7 @@ export class Role extends Base<API.Role & { _id?: string }> {
     }
 
     for (const field of clear) {
-      if (field === 'Colour') this.color = null
+      if (field === 'Colour') this.color = null;
     }
 
     return this;
