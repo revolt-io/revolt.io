@@ -119,15 +119,17 @@ export class MessageManager extends BaseManager<Message, APIMessage> {
     }, new Collection<string, Message>());
   }
 
-  fetch(messageId: string): Promise<Message>;
+  fetch(message: MessageResolvable): Promise<Message>;
   fetch(query: MessageQueryOptions): Promise<Collection<string, Message>>;
   fetch(limit: number): Promise<Collection<string, Message>>;
   async fetch(
-    query?: string | MessageQueryOptions | number,
+    query?: MessageResolvable | MessageQueryOptions | number,
   ): Promise<Collection<string, Message> | Message> {
-    if (typeof query === 'string') {
+    const id = this.resolveId(query as string);
+
+    if (id) {
       const data = await this.client.api.get(
-        `/channels/${this.channel.id}/messages/${query}`,
+        `/channels/${this.channel.id}/messages/${id}`,
       ) as APIMessage;
       return this._add(data);
     }
