@@ -1,5 +1,5 @@
 import type { Client } from '../client/Client.ts';
-import { BitField } from '../util/BitField.ts';
+import { BitField, Collection } from '../util/mod.ts';
 
 type ID = { _id: string } | { id: string } | { _id: { user: string } };
 
@@ -19,11 +19,8 @@ export abstract class Base<APIBase extends Partial<ID> = Partial<ID>> {
       ) {
         return false;
       }
-      if (a !== b) {
-        console.log('This did not match');
-        console.log(a, '!=', b);
-        return false;
-      }
+      if (a instanceof Collection) continue;
+      if (a !== b) return false;
     }
 
     return true;
