@@ -1,9 +1,9 @@
-import type { Server as APIServer } from 'revolt-api-types';
+import type { API } from '../../../deps.ts';
 import { Action } from './Action.ts';
 import { Events } from '../../util/Constants.ts';
 
 export class ServerUpdateAction extends Action {
-  handle(data: { id: string; data: APIServer }): unknown {
+  handle(data: { id: string; data: API.Server }): unknown {
     const oldServer = this.client.servers.cache.get(data.id);
 
     if (oldServer) {

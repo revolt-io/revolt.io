@@ -1,5 +1,4 @@
 {
-    "importMap": "import.json",
     "compilerOptions": {
         "strict": true
     },

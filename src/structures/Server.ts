@@ -1,4 +1,4 @@
-import type { Server as APIServer } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { Base, Category, ServerMember, User } from './mod.ts';
 import { Client } from '../client/Client.ts';
 import {
@@ -8,7 +8,7 @@ import {
 } from '../managers/mod.ts';
 import { Collection, ServerPermissions, UUID } from '../util/mod.ts';
 
-export class Server extends Base<APIServer> {
+export class Server extends Base<API.Server> {
   name!: string;
   description: string | null = null;
   ownerId!: string;
@@ -23,12 +23,12 @@ export class Server extends Base<APIServer> {
   permissions!: ServerPermissions;
   categories = new Collection<string, Category>();
 
-  constructor(client: Client, data: APIServer) {
+  constructor(client: Client, data: API.Server) {
     super(client);
     this._patch(data);
   }
 
-  protected _patch(data: APIServer): this {
+  protected _patch(data: API.Server): this {
     super._patch(data);
 
     if (Array.isArray(data.categories)) {

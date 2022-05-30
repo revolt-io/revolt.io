@@ -1,9 +1,9 @@
-import type { Channel as APIChannel } from 'revolt-api-types';
+import type { API } from '../../../deps.ts';
 import { Action } from './Action.ts';
 import { Events } from '../../util/Constants.ts';
 
 export class ChannelUpdateAction extends Action {
-  handle(data: { id: string; data: APIChannel }): unknown {
+  handle(data: { id: string; data: API.Channel }): unknown {
     const oldChannel = this.client.channels.cache.get(data.id);
 
     if (oldChannel) {

@@ -1,10 +1,10 @@
-import type { Channel as APIChannel } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { Category, Channel, Server } from './mod.ts';
 import { Client } from '../client/Client.ts';
 import { ChannelPermissions, Collection } from '../util/mod.ts';
 
 type APIServerChannel = Extract<
-  APIChannel,
+  API.Channel,
   { channel_type: 'TextChannel' | 'VoiceChannel' }
 >;
 

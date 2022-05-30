@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto';
+import { randomBytes } from '../../deps.ts';
 
 export class UUID extends null {
   static readonly ENCODING = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';

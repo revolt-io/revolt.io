@@ -1,10 +1,10 @@
-import type { User as APIUser } from 'revolt-api-types';
+import type { API } from '../../../deps.ts';
 import { Action } from './Action.ts';
 import { ClientUser } from '../../structures/ClientUser.ts';
 import { Events } from '../../util/Constants.ts';
 
 export class UserUpdateAction extends Action {
-  handle(data: { id: string; data: APIUser }): unknown {
+  handle(data: { id: string; data: API.User }): unknown {
     const oldUser = this.client.users.cache.get(data.id);
 
     if (oldUser) {

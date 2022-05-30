@@ -1,16 +1,16 @@
-import type { Category as APICategory } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { Base, Server, ServerChannel } from './mod.ts';
 import { Collection } from '../util/mod.ts';
 
-export class Category extends Base<APICategory> {
+export class Category extends Base<API.Category> {
   name!: string;
   protected _children: string[] = [];
-  constructor(public server: Server, data: APICategory) {
+  constructor(public server: Server, data: API.Category) {
     super(server.client);
     this._patch(data);
   }
 
-  protected _patch(data: APICategory): this {
+  protected _patch(data: API.Category): this {
     super._patch(data);
 
     if (data.title) {

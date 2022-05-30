@@ -1,17 +1,17 @@
-import type { Role as APIRole } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { BaseManager } from './BaseManager.ts';
 import { TypeError } from '../errors/mod.ts';
 import { Role, Server } from '../structures/mod.ts';
 
 export type RoleResolvable = Role | string;
 
-export class RoleManager extends BaseManager<Role, APIRole & { id: string }> {
+export class RoleManager extends BaseManager<Role, API.Role & { id: string }> {
   holds = Role;
   constructor(protected readonly server: Server) {
     super(server.client);
   }
 
-  _add(data: APIRole & { id: string }): Role {
+  _add(data: API.Role & { id: string }): Role {
     const role = new Role(this.server, data);
     this.cache.set(role.id, role);
     return role;

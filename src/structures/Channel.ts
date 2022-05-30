@@ -1,4 +1,4 @@
-import type { Channel as APIChannel } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import {
   Base,
   DMChannel,
@@ -9,7 +9,7 @@ import {
 } from './mod.ts';
 import { ChannelTypes, UUID } from '../util/mod.ts';
 
-export abstract class Channel<T extends APIChannel = APIChannel>
+export abstract class Channel<T extends API.Channel = API.Channel>
   extends Base<T> {
   type: ChannelTypes | 'UNKNOWN' = 'UNKNOWN';
 

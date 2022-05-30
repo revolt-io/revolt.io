@@ -1,4 +1,4 @@
-import type { Channel as APIChannel } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { BaseManager } from './BaseManager.ts';
 import { TypeError } from '../errors/mod.ts';
 import {
@@ -10,7 +10,7 @@ import {
 import { UUID } from '../util/mod.ts';
 
 type APIServerChannel = Extract<
-  APIChannel,
+  API.Channel,
   { channel_type: 'TextChannel' | 'VoiceChannel' }
 >;
 
@@ -28,7 +28,7 @@ export class ServerChannelManager extends BaseManager<ServerChannel> {
     super(server.client);
   }
 
-  _add(data: APIChannel): ServerChannel {
+  _add(data: API.Channel): ServerChannel {
     let channel: ServerChannel;
 
     switch (data.channel_type) {

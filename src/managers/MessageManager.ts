@@ -1,10 +1,10 @@
-import type { Message as APIMessage } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { BaseManager } from './BaseManager.ts';
 import { TypeError } from '../errors/mod.ts';
 import { Channel, Message } from '../structures/mod.ts';
 import { Collection, UUID } from '../util/mod.ts';
 
-export type MessageResolvable = Message | APIMessage | string;
+export type MessageResolvable = Message | API.Message | string;
 
 export interface EditMessageOptions {
   content?: string;
@@ -32,7 +32,7 @@ export interface MessageQueryOptions {
   nearby?: string;
 }
 
-export class MessageManager extends BaseManager<Message, APIMessage> {
+export class MessageManager extends BaseManager<Message, API.Message> {
   holds = Message;
   constructor(protected readonly channel: Channel) {
     super(channel.client);
@@ -52,7 +52,7 @@ export class MessageManager extends BaseManager<Message, APIMessage> {
           attachments,
         },
       },
-    ) as APIMessage;
+    ) as API.Message;
 
     return this._add(data);
   }
@@ -111,7 +111,7 @@ export class MessageManager extends BaseManager<Message, APIMessage> {
     const response =
       (await this.client.api.post(`/channels/${this.channel.id}/search`, {
         query: query as Required<MessageSearchOptions>,
-      })) as APIMessage[];
+      })) as API.Message[];
     return response.reduce((coll, cur) => {
       const msg = this._add(cur);
       coll.set(msg.id, msg);
@@ -130,7 +130,7 @@ export class MessageManager extends BaseManager<Message, APIMessage> {
     if (id) {
       const data = await this.client.api.get(
         `/channels/${this.channel.id}/messages/${id}`,
-      ) as APIMessage;
+      ) as API.Message;
       return this._add(data);
     }
 
@@ -141,7 +141,7 @@ export class MessageManager extends BaseManager<Message, APIMessage> {
       { query: query as Required<MessageQueryOptions> },
     );
 
-    return (messages as APIMessage[]).reduce((coll, cur) => {
+    return (messages as API.Message[]).reduce((coll, cur) => {
       const msg = this._add(cur);
       coll.set(msg.id, msg);
       return coll;

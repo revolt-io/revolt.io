@@ -1,4 +1,4 @@
-import type { Channel as APIChannel } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { Channel, Message } from './mod.ts';
 import { TextBasedChannel } from './interfaces/mod.ts';
 import {
@@ -13,7 +13,7 @@ import {
   DEFAULT_PERMISSION_DM,
 } from '../util/mod.ts';
 
-type APIDirectChannel = Extract<APIChannel, { channel_type: 'DirectMessage' }>;
+type APIDirectChannel = Extract<API.Channel, { channel_type: 'DirectMessage' }>;
 
 export class DMChannel extends Channel<APIDirectChannel>
   implements TextBasedChannel {

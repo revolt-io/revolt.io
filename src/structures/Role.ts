@@ -1,4 +1,4 @@
-import type { Role as APIRole } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { Base, Overwrite, Server } from './mod.ts';
 import { ChannelPermissions, UUID } from '../util/mod.ts';
 
@@ -8,12 +8,12 @@ export class Role extends Base {
   hoist = false;
   rank!: number;
   overwrite!: Overwrite;
-  constructor(public server: Server, data: APIRole & { id: string }) {
+  constructor(public server: Server, data: API.Role & { id: string }) {
     super(server.client);
     this._patch(data);
   }
 
-  protected _patch(data: APIRole & { _id?: string }): this {
+  protected _patch(data: API.Role & { _id?: string }): this {
     super._patch(data);
 
     if (data.name) this.name = data.name;

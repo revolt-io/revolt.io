@@ -1,17 +1,17 @@
-import type { File, Member as APIMember } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { Base, Server, User } from './mod.ts';
 import { Client } from '../client/Client.ts';
 
-export class ServerMember extends Base<APIMember> {
+export class ServerMember extends Base<API.Member> {
   serverId!: string;
   nickname: string | null = null;
-  avatar: File | null = null;
-  constructor(client: Client, data: APIMember) {
+  avatar: API.File | null = null;
+  constructor(client: Client, data: API.Member) {
     super(client);
     this._patch(data);
   }
 
-  protected _patch(data: APIMember): this {
+  protected _patch(data: API.Member): this {
     super._patch(data);
 
     if ('nickname' in data) {

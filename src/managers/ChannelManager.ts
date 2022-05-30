@@ -1,4 +1,4 @@
-import type { Channel as APIChannel } from 'revolt-api-types';
+import type { API } from '../../deps.ts';
 import { BaseManager } from './BaseManager.ts';
 import { TypeError } from '../errors/mod.ts';
 import {
@@ -10,12 +10,12 @@ import {
   VoiceChannel,
 } from '../structures/mod.ts';
 
-export type ChannelResolvable = Channel | APIChannel | string;
+export type ChannelResolvable = Channel | API.Channel | string;
 
-export class ChannelManager extends BaseManager<Channel, APIChannel> {
+export class ChannelManager extends BaseManager<Channel, API.Channel> {
   holds = null;
 
-  _add(data: APIChannel): Channel {
+  _add(data: API.Channel): Channel {
     let channel: Channel;
 
     switch (data.channel_type) {
