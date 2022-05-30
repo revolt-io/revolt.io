@@ -16,26 +16,27 @@ import type {
 import { DEFAULT_CLIENT_OPTIONS, Events } from '../util/Constants.ts';
 
 export interface ClientEvents {
-  message: [Message];
-  messageDelete: [Message];
-  messageUpdate: [Message, Message];
-  ready: [Client];
-  serverCreate: [Server];
-  serverDelete: [Server];
-  serverUpdate: [Server, Server];
+  channelUpdate: [Channel, Channel];
   debug: [string];
   error: [unknown];
-  raw: [unknown];
-  userUpdate: [User, User];
-  serverMemberJoin: [ServerMember];
-  channelUpdate: [Channel, Channel];
-  serverMemberLeave: [ServerMember];
-  serverMemberUpdate: [ServerMember, ServerMember];
-  roleDelete: [Role];
-  typingStart: [TextChannel | DMChannel | GroupChannel, User];
-  typingStop: [TextChannel | DMChannel | GroupChannel, User];
   groupJoin: [GroupChannel, User];
   groupLeave: [GroupChannel, User];
+  message: [Message];
+  messageDelete: [Message];
+  messageDeleteBulk: [string[]];
+  messageUpdate: [Message, Message];
+  raw: [unknown];
+  ready: [Client];
+  roleDelete: [Role];
+  serverCreate: [Server];
+  serverDelete: [Server];
+  serverMemberJoin: [ServerMember];
+  serverMemberLeave: [ServerMember];
+  serverMemberUpdate: [ServerMember, ServerMember];
+  serverUpdate: [Server, Server];
+  typingStart: [TextChannel | DMChannel | GroupChannel, User];
+  typingStop: [TextChannel | DMChannel | GroupChannel, User];
+  userUpdate: [User, User];
 }
 
 export declare interface BaseClient {

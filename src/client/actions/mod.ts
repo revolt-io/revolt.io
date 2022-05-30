@@ -1,3 +1,4 @@
+export * from './BulkMessageDelete.ts';
 export * from './ChannelCreate.ts';
 export * from './ChannelDelete.ts';
 export * from './ChannelGroupJoin.ts';
