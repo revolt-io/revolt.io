@@ -1,3 +1,10 @@
+## [1.0.11](https://github.com/revolt-io/revolt.io/compare/v1.0.10...v1.0.11) (2022-05-31)
+
+
+### Bug Fixes
+
+* change node types version ([a2c076a](https://github.com/revolt-io/revolt.io/commit/a2c076a3d371bb5786aa9af2e2bb91fac9d2f84a))
+
 ## [1.0.10](https://github.com/revolt-io/revolt.io/compare/v1.0.9...v1.0.10) (2022-05-31)
 
 
