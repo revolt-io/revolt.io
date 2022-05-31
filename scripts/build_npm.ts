@@ -31,7 +31,7 @@ await build({
     description: 'A NodeJS & Deno Revolt library"',
     license: 'Apache-2',
     devDependencies: {
-      '@types/node': '^16',
+      '@types/node': '16.x.x',
       '@types/ws': '^8.5.3',
     },
     repository: {
