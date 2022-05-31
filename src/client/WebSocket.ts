@@ -114,7 +114,6 @@ export class WebSocketShard {
 
     switch (packet.type) {
       case WSEvents.BULK:
-        console.log(packet);
         for (const p of packet.v) this.onPacket(p);
         break;
       case WSEvents.AUTHENTICATED:
