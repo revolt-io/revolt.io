@@ -1,5 +1,5 @@
 import { UUID } from './UUID.ts';
-import { BaseClientOptions } from '../client/BaseClient.ts';
+import { ClientOptions } from '../client/BaseClient.ts';
 
 export enum Events {
   CHANNEL_CREATE = 'channelCreate',
@@ -70,7 +70,7 @@ export enum ChannelTypes {
   NOTES = 'NOTES',
 }
 
-export const DEFAULT_CLIENT_OPTIONS: BaseClientOptions = {
+export const DEFAULT_CLIENT_OPTIONS: ClientOptions = {
   fetchMembers: false,
   rest: {
     api: 'https://api.revolt.chat',

@@ -3,7 +3,8 @@ import { BaseClient, WebSocketShard } from './mod.ts';
 import { ActionManager } from './actions/ActionManager.ts';
 import { Error } from '../errors/mod.ts';
 import { ChannelManager, ServerManager, UserManager } from '../managers/mod.ts';
-import { ClientUser } from '../structures/mod.ts';
+import type { ClientUser } from '../structures/mod.ts';
+
 
 export class Client extends BaseClient {
   protected readonly ws = new WebSocketShard(this);
@@ -55,3 +56,6 @@ export class Client extends BaseClient {
     return this.readyAt != null;
   }
 }
+
+
+export type { ClientOptions } from './BaseClient.ts'
