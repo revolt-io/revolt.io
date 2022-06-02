@@ -1,9 +1,10 @@
 import { Client } from 'revolt.io';
 
-const client = new Client();
-const prefix = '!';
+const client = new Client({
+  fetchMembers: true,
+});
 
-client.login('BOT_TOKEN_HERE');
+const prefix = '!';
 
 client.on('ready', () => {
   console.log('Ready!');
@@ -15,14 +16,8 @@ client.on('message', async (msg) => {
 
   const [command, ...args] = msg.content.slice(prefix.length).trim().split(/ /);
 
-  const getMember = () => {
-    const user = msg.mentions.users.first();
-    // Server members are not cached by default
-    return msg.server.members.fetch(user).catch(() => null);
-  };
-
   if (command === 'kick') {
-    const member = await getMember();
+    const member = msg.mentions.members.first();
 
     if (!member) return msg.reply('Please mention someone first.');
 
@@ -32,7 +27,7 @@ client.on('message', async (msg) => {
   }
 
   if (command === 'ban') {
-    const member = await getMember();
+    const member = msg.mentions.members.first();
 
     if (!member) return msg.reply('Please mention someone first.');
 
@@ -42,7 +37,7 @@ client.on('message', async (msg) => {
   }
 
   if (command === 'warn') {
-    const member = await getMember();
+    const member = msg.mentions.members.first();
 
     if (!member) return msg.reply('Please mention someone first.');
 
@@ -51,3 +46,5 @@ client.on('message', async (msg) => {
     msg.channel.send(`${member}, You have been warned for **${reason}**`);
   }
 });
+
+client.login('revolt-token-here');

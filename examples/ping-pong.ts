@@ -2,8 +2,6 @@ import { Client } from 'revolt.io';
 
 const client = new Client();
 
-client.login('BOT_TOKEN_HERE');
-
 client.on('ready', () => {
   console.log('Ready!');
 });
@@ -13,3 +11,5 @@ client.on('message', (msg) => {
     msg.reply('Pong!');
   }
 });
+
+client.login('revolt-token-here');
