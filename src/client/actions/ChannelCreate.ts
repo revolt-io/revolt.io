@@ -1,6 +1,4 @@
-import type { API } from '../../../deps.ts';
-import { Action } from './Action.ts';
-import { Events } from '../../util/Constants.ts';
+import { Action, Events, API } from './Action.ts';
 
 export class ChannelCreateAction extends Action {
   async handle(data: API.Channel): Promise<unknown> {

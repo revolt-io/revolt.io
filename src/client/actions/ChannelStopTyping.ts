@@ -1,5 +1,4 @@
-import { Action } from './Action.ts';
-import { Events } from '../../util/mod.ts';
+import { Action, Events } from './Action.ts';
 
 export class ChannelStopTypingAction extends Action {
   handle(data: { id: string; user: string }): unknown {

@@ -1,6 +1,5 @@
-import type { API } from '../../../deps.ts';
-import { Action } from './Action.ts';
-import { Events, SYSTEM_USER_ID } from '../../util/Constants.ts';
+import { Action, Events, API } from './Action.ts';
+import { SYSTEM_USER_ID } from '../../util/Constants.ts';
 
 export class MessageAction extends Action {
   async handle(data: API.Message): Promise<unknown> {

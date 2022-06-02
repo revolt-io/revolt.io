@@ -1,6 +1,4 @@
-import type { API } from '../../../deps.ts';
-import { Action } from './Action.ts';
-import { Events } from '../../util/Constants.ts';
+import { Action, Events, API } from './Action.ts';
 
 export class UserUpdateAction extends Action {
   handle(data: { id: string; data: API.User; clear: API.FieldsUser[] }): void {

@@ -1,13 +1,11 @@
-import { API } from '../../../deps.ts';
-import { Action } from './Action.ts';
-import { Events } from '../../util/Constants.ts';
+import { Action, Events, API } from './Action.ts';
 
 export class ServerRoleUpdateAction extends Action {
   handle(
     data: {
       id: string;
       role_id: string;
-      data: API.Role;
+      data: API.Role & { _id: string };
       clear: API.FieldsRole[];
     },
   ): void {
