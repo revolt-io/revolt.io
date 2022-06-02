@@ -19,8 +19,8 @@ export abstract class Channel extends Base {
     return UUID.timestampOf(this.id);
   }
 
-  async delete(): Promise<void> {
-    await this.client.channels.delete(this);
+  delete(): Promise<void> {
+    return this.client.channels.delete(this);
   }
 
   isText(): this is TextChannel | GroupChannel | DMChannel {

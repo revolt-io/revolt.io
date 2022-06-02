@@ -3,18 +3,28 @@ Revolt.io [![NPM version](https://img.shields.io/npm/v/revolt.io.svg?style=flat-
 
 
 ### Overview
-A JS/TS library to interact with Revolt API
+A JS/TS library to interacting with Revolt API
 
 ### Features
-- Built with TypeScript
-- Object-oriented
+- Follow discord.js philosophy
+- Works on both nodejs and deno
 - Lightweight
 - Voice Support (*work in progress..*)
-- Deno Support
 
-### Installation (NodeJS Only)
+### Revolt.io vs Revolt.js
+
+| Type              |   Revolt.io  |  Revolt.js   |   winner    |
+| :---              | :---         |   :----:     |   ---:    |
+|   Performance     |     unknown  |     unknown  | missing benchmark |
+|   Size            |     `286KB`  |    `470KB`   | Revolt.io |
+|   Packages        |      `3`     |     `12`     | Revolt.io |
+|   Deno Support    |      Yes     |     No       | Revolt.io     |
+|   Browser Support |      No      |      Yes     | Revolt.js
+|   JS Guidelines   |      Follow  | doesn't care | Revolt.io    |
+
+#### Installation (NodeJS Only)
 ***Node.js v16.x or newer is required.***
-```bash
+```powershell
 $ npm i revolt.io
 ```
 
