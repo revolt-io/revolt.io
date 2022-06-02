@@ -58,7 +58,7 @@ export class ChannelPermissions extends BitField {
   constructor(bits?: ChannelPermissionsResolvable) {
     super(bits);
   }
-  
+
   static resolve(bit: ChannelPermissionsResolvable): number {
     return super.resolve(bit);
   }
