@@ -71,6 +71,7 @@ export enum ChannelTypes {
 }
 
 export const DEFAULT_CLIENT_OPTIONS: BaseClientOptions = {
+  fetchMembers: false,
   rest: {
     api: 'https://api.revolt.chat',
     app: 'https://app.revolt.chat',
@@ -80,6 +81,7 @@ export const DEFAULT_CLIENT_OPTIONS: BaseClientOptions = {
   },
   ws: {
     heartbeat: 30_000,
+    reconnect: true
   },
 } as const;
 
