@@ -70,10 +70,12 @@ export class WebSocketShard {
 
     if (!this.lastPongAcked) {
       this.debug('Did not receive a pong ack last time.');
-      this.debug('Reconnecting...');
-      this.reconnecting = this.destroy().then(() => this.connect()).then(() =>
-        this.reconnecting = null
-      );
+      if (this.client.options.ws.reconnect) {
+        this.debug('Reconnecting...');
+        this.reconnecting = this.destroy().then(() => this.connect()).then(() =>
+          this.reconnecting = null
+        );
+      }
     }
 
     const now = Date.now();
@@ -98,7 +100,7 @@ export class WebSocketShard {
 
     this.client.emit(Events.RAW, packet);
 
-    this.onPacket(packet);
+    this.onPacket(packet).catch((e) => this.client.emit(Events.ERROR, e));
   }
 
   private onClose(event: { code: number; reason: string }): void {
@@ -106,7 +108,7 @@ export class WebSocketShard {
     this.destroy();
   }
 
-  private onPacket(packet: any) {
+  private async onPacket(packet: any) {
     if (!packet) {
       this.debug(`Received broken packet: '${packet}'.`);
       return;
@@ -114,7 +116,7 @@ export class WebSocketShard {
 
     switch (packet.type) {
       case WSEvents.BULK:
-        for (const p of packet.v) this.onPacket(p);
+        await Promise.all(packet.v.map((p: unknown) => this.onPacket(p)));
         break;
       case WSEvents.AUTHENTICATED:
         this.connected = true;
@@ -126,20 +128,24 @@ export class WebSocketShard {
       case WSEvents.ERROR:
         this.client.emit(Events.ERROR, packet.error);
         break;
-      case WSEvents.READY:
+      case WSEvents.READY: {
         this.lastPongAcked = true;
 
+        const promises: Promise<unknown>[] = [];
+
         for (const user of packet.users) {
-          this.client.users._add(user);
           if (user.relationship === 'User' && !this.client.user) {
-            const clientUser =
-              (this.client.user = new ClientUser(this.client, user));
-            this.client.users.cache.set(clientUser.id, clientUser);
+            this.client.user = new ClientUser(this.client, user);
+          } else {
+            this.client.users._add(user);
           }
         }
 
         for (const server of packet.servers) {
-          this.client.servers._add(server);
+          const s = this.client.servers._add(server);
+          if (this.client.options.fetchMembers) {
+            promises.push(s.members.fetch());
+          }
         }
 
         for (const channel of packet.channels) {
@@ -154,16 +160,19 @@ export class WebSocketShard {
 
         this.setHeartbeatTimer(this.client.options.ws.heartbeat);
 
+        await Promise.all(promises);
+
         this.ready = true;
 
         this.client.emit(Events.READY, this.client);
 
         break;
+      }
       default: {
         const action = this.client.actions.get(packet.type);
 
         if (action) {
-          action.handle(packet);
+          await action.handle(packet);
         } else {
           this.debug(`Received unknown packet "${packet.type}"`);
         }
