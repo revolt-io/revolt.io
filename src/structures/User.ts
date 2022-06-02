@@ -3,7 +3,7 @@ import { Attachment, Base, DMChannel, Presence, Status } from './mod.ts';
 import { Client } from '../client/Client.ts';
 import { Badges, UUID } from '../util/mod.ts';
 
-export class User extends Base<API.User> {
+export class User extends Base {
   username!: string;
   avatar: Attachment | null = null;
   presence = new Presence(this.client);
@@ -34,17 +34,17 @@ export class User extends Base<API.User> {
       this.avatar = new Attachment(this.client, data.avatar);
     }
 
-    if ('status' in data) {
-      const status = data.status?.presence &&
-        Status[data.status.presence.toUpperCase() as Uppercase<API.Presence>];
-      this.presence.status = status ?? Status.INVISIBLE;
-      this.presence.text = data.status?.text ?? null;
+    if (data.status) {
+      this.presence.status = data.status.presence
+        ? Status[data.status.presence]
+        : Status.Invisible;
+      this.presence.text = data.status.text ?? null;
     }
 
     for (const field of clear) {
       if (field === 'Avatar') this.avatar = null;
       if (field === 'StatusText') this.presence.text = null;
-      if (field === 'StatusPresence') this.presence.status = Status.INVISIBLE;
+      if (field === 'StatusPresence') this.presence.status = Status.Invisible;
     }
 
     return this;

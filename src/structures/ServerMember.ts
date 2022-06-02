@@ -3,7 +3,7 @@ import { Base } from './Base.ts';
 import { Attachment, Server, User } from './mod.ts';
 import { Client } from '../client/Client.ts';
 
-export class ServerMember extends Base<API.Member> {
+export class ServerMember extends Base {
   serverId!: string;
   nickname: string | null = null;
   avatar: Attachment | null = null;

@@ -1,9 +1,11 @@
 import type { Client } from '../client/Client.ts';
 import { BitField } from '../util/mod.ts';
 
-type ID = { _id: string } | { id: string } | { _id: { user: string } };
+type PartialObject = Partial<
+  { _id: string } | { id: string } | { _id: { user: string } }
+>;
 
-export abstract class Base<APIBase extends Partial<ID> = Partial<ID>> {
+export abstract class Base {
   id!: string;
   constructor(public readonly client: Client) {}
 
@@ -28,13 +30,13 @@ export abstract class Base<APIBase extends Partial<ID> = Partial<ID>> {
     return true;
   }
 
-  _update(data: APIBase, clear?: string[]): this {
+  _update(data: PartialObject, clear?: string[]): this {
     const clone = this._clone();
     this._patch(data, clear);
     return clone;
   }
 
-  protected _patch(data: APIBase, _clear?: string[]): this {
+  protected _patch(data: PartialObject, _clear?: string[]): this {
     if ('id' in data) this.id = data.id!;
     if ('_id' in data) {
       if (typeof data._id === 'string') this.id = data._id;

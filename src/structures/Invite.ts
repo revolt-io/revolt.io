@@ -3,7 +3,7 @@ import type { API } from '../../deps.ts';
 import type { Server, User } from './mod.ts';
 import type { Client } from '../client/Client.ts';
 
-export class Invite extends Base<API.Invite> {
+export class Invite extends Base {
   serverId: string | null = null;
   inviterId!: string;
   channelId!: string;

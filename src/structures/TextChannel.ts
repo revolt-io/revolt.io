@@ -11,8 +11,7 @@ import { ChannelTypes, Collection } from '../util/mod.ts';
 
 type APITextChannel = Extract<API.Channel, { channel_type: 'TextChannel' }>;
 
-export class TextChannel extends ServerChannel<APITextChannel>
-  implements TextBasedChannel {
+export class TextChannel extends ServerChannel implements TextBasedChannel {
   lastMessageId: string | null = null;
   messages = new MessageManager(this);
   readonly type = ChannelTypes.TEXT;
@@ -29,6 +28,11 @@ export class TextChannel extends ServerChannel<APITextChannel>
     return this;
   }
 
+  get lastMessage(): Message | null {
+    if (!this.lastMessageId) return null;
+    return this.messages.cache.get(this.lastMessageId) ?? null;
+  }
+
   send(options: MessageOptions | string): Promise<Message> {
     return this.messages.send(options);
   }
@@ -37,10 +41,5 @@ export class TextChannel extends ServerChannel<APITextChannel>
     messages: MessageResolvable[] | Collection<string, Message> | number,
   ): Promise<void> {
     return this.messages.bulkDelete(messages);
-  }
-
-  get lastMessage(): Message | null {
-    if (!this.lastMessageId) return null;
-    return this.messages.cache.get(this.lastMessageId) ?? null;
   }
 }
