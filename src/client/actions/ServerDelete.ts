@@ -1,4 +1,4 @@
-import { Action, Events, API } from './Action.ts';
+import { Action, API, Events } from './Action.ts';
 
 export class ServerDeleteAction extends Action {
   handle(data: API.Server): unknown {

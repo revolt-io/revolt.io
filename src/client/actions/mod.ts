@@ -8,7 +8,7 @@ export * from './ChannelStopTyping.ts';
 export * from './Message.ts';
 export * from './MessageDelete.ts';
 export * from './MessageUpdate.ts';
-export * from './ServerCreate.ts'
+export * from './ServerCreate.ts';
 export * from './ServerDelete.ts';
 export * from './ServerMemberJoin.ts';
 export * from './ServerMemberLeave.ts';

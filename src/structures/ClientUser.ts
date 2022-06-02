@@ -1,4 +1,4 @@
-import { User } from './User.ts'
+import { User } from './User.ts';
 import { NotesChannel, Status } from './mod.ts';
 
 export class ClientUser extends User {
