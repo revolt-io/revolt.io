@@ -5,5 +5,5 @@ export abstract class Action {
   abstract handle(data: unknown): Awaited<unknown | void>;
 }
 
-export { Events } from '../../util/Constants.ts'
-export type { API } from '../../../deps.ts'
+export { Events } from '../../util/Constants.ts';
+export type { API } from '../../../deps.ts';

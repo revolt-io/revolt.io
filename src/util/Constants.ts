@@ -81,7 +81,7 @@ export const DEFAULT_CLIENT_OPTIONS: BaseClientOptions = {
   },
   ws: {
     heartbeat: 30_000,
-    reconnect: true
+    reconnect: true,
   },
 } as const;
 

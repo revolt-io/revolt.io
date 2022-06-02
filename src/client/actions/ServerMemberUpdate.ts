@@ -1,4 +1,4 @@
-import { Action, Events, API } from './Action.ts';
+import { Action, API, Events } from './Action.ts';
 
 export class ServerMemberUpdateAction extends Action {
   handle(data: { id: string; data: API.Member }): void {
