@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/revolt-io/revolt.io/compare/v1.1.0...v1.1.1) (2022-06-02)
+
+
+### Bug Fixes
+
+* Expose bitfields flags ([b4399a3](https://github.com/revolt-io/revolt.io/commit/b4399a3ad19835a28b91396ac97f7da5336d5b0d))
+
 # [1.1.0](https://github.com/revolt-io/revolt.io/compare/v1.0.11...v1.1.0) (2022-06-02)
 
 
