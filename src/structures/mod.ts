@@ -8,6 +8,7 @@ export * from './GroupChannel.ts';
 export * from './Invite.ts';
 export * from './Mentions.ts';
 export * from './Message.ts';
+export * from './MessageEmbed.ts';
 export * from './NotesChannel.ts';
 export * from './Presence.ts';
 export * from './Role.ts';
