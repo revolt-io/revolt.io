@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { EventEmitter, REST, RESTOptions } from '../../deps.ts';
+import { EventEmitter, REST, RESTOptions, deepMerge } from '../../deps.ts';
 import { Client } from './mod.ts';
 import type {
   Channel,
@@ -79,38 +79,25 @@ export declare interface BaseClient {
 }
 
 export interface BaseClientOptions {
+  fetchMembers: boolean;
   rest: RESTOptions;
   ws: {
     heartbeat: number;
+    reconnect: boolean;
   };
 }
 
 // deno-lint-ignore ban-types
-type DeepPartial<T> = T extends object ? {
-  [P in keyof T]?: DeepPartial<T[P]>;
-}
-  : T;
-
-export function isObject(item: unknown) {
-  return item && typeof item === 'object' && !Array.isArray(item);
-}
+type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]>; } : T;
 
 export abstract class BaseClient extends EventEmitter {
   readonly api: REST;
   #token: string | null = null;
+  options: BaseClientOptions
   bot = true;
-  options = { ...DEFAULT_CLIENT_OPTIONS };
-
   constructor(opts: DeepPartial<BaseClientOptions> = {}) {
     super();
-
-    for (const key in opts) {
-      Object.assign(
-        this.options[key as keyof BaseClientOptions],
-        opts[key as keyof BaseClientOptions],
-      );
-    }
-
+    this.options = deepMerge(DEFAULT_CLIENT_OPTIONS, opts) as BaseClientOptions
     this.api = new REST(this.options.rest);
     this.api.debug = (msg: string) => this.emit(Events.DEBUG, `[HTTP]: ${msg}`);
   }
