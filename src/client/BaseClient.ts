@@ -78,7 +78,7 @@ export declare interface BaseClient {
   ): this;
 }
 
-export interface BaseClientOptions {
+export interface ClientOptions {
   fetchMembers: boolean;
   rest: RESTOptions;
   ws: {
@@ -94,11 +94,11 @@ type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]> }
 export abstract class BaseClient extends EventEmitter {
   readonly api: REST;
   #token: string | null = null;
-  options: BaseClientOptions;
+  options: ClientOptions;
   bot = true;
-  constructor(opts: DeepPartial<BaseClientOptions> = {}) {
+  constructor(opts: DeepPartial<ClientOptions> = {}) {
     super();
-    this.options = deepMerge(DEFAULT_CLIENT_OPTIONS, opts) as BaseClientOptions;
+    this.options = deepMerge(DEFAULT_CLIENT_OPTIONS, opts) as ClientOptions;
     this.api = new REST(this.options.rest);
     this.api.debug = (msg: string) => this.emit(Events.DEBUG, `[HTTP]: ${msg}`);
   }
@@ -112,7 +112,7 @@ export abstract class BaseClient extends EventEmitter {
     this.api.setToken(token, this.bot);
   }
 
-  get token() {
+  get token(): string | null {
     return this.#token;
   }
 }
