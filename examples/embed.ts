@@ -8,10 +8,12 @@ client.on('ready', () => {
 
 client.on('message', (msg) => {
   if (msg.content === '!embed') {
+
     const embed = new MessageEmbed()
       .setTitle('Revolt.io')
-      .setDescription('description...');
-
+      .setColor('#ff4654')
+      .setDescription('Embed sent by revolt.io');
+      
     msg.channel.send({ embeds: [embed] });
   }
 });
