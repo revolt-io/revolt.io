@@ -1,7 +1,11 @@
 import { BitField } from './BitField.ts';
 
 export type BadgeString = keyof typeof Badges.FLAGS;
-export type BadgesResolvable = number | BadgeString | Badges | BadgesResolvable[];
+export type BadgesResolvable =
+  | number
+  | BadgeString
+  | Badges
+  | BadgesResolvable[];
 
 export declare interface Badges {
   serialize(): Record<BadgeString, boolean>;

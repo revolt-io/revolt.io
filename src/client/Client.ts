@@ -5,7 +5,6 @@ import { Error } from '../errors/mod.ts';
 import { ChannelManager, ServerManager, UserManager } from '../managers/mod.ts';
 import type { ClientUser } from '../structures/mod.ts';
 
-
 export class Client extends BaseClient {
   protected readonly ws = new WebSocketShard(this);
   readonly actions = new ActionManager(this);
@@ -57,5 +56,4 @@ export class Client extends BaseClient {
   }
 }
 
-
-export type { ClientOptions } from './BaseClient.ts'
+export type { ClientOptions } from './BaseClient.ts';
