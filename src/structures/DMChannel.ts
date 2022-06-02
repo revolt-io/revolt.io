@@ -15,8 +15,7 @@ import {
 
 type APIDirectChannel = Extract<API.Channel, { channel_type: 'DirectMessage' }>;
 
-export class DMChannel extends Channel<APIDirectChannel>
-  implements TextBasedChannel {
+export class DMChannel extends Channel implements TextBasedChannel {
   readonly type = ChannelTypes.DM;
   active!: boolean;
   permissions = DEFAULT_PERMISSION_DM;
@@ -37,6 +36,11 @@ export class DMChannel extends Channel<APIDirectChannel>
     return this;
   }
 
+  get lastMessage(): Message | null {
+    if (!this.lastMessageId) return null;
+    return this.messages.cache.get(this.lastMessageId) ?? null;
+  }
+
   bulkDelete(
     messages: MessageResolvable[] | Collection<string, Message> | number,
   ): Promise<void> {
@@ -45,10 +49,5 @@ export class DMChannel extends Channel<APIDirectChannel>
 
   send(options: MessageOptions | string): Promise<Message> {
     return this.messages.send(options);
-  }
-
-  get lastMessage(): Message | null {
-    if (!this.lastMessageId) return null;
-    return this.messages.cache.get(this.lastMessageId) ?? null;
   }
 }

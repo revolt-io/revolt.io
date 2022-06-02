@@ -11,8 +11,7 @@ import { ChannelTypes, Collection } from '../util/mod.ts';
 
 type APINotesChannel = Extract<API.Channel, { channel_type: 'SavedMessages' }>;
 
-export class NotesChannel extends Channel<APINotesChannel>
-  implements TextBasedChannel {
+export class NotesChannel extends Channel implements TextBasedChannel {
   readonly type = ChannelTypes.NOTES;
   userId!: string;
   lastMessageId: string | null = null;

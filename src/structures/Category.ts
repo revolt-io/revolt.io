@@ -2,10 +2,10 @@ import type { API } from '../../deps.ts';
 import { Base, Server, ServerChannel } from './mod.ts';
 import { Collection } from '../util/mod.ts';
 
-export class Category extends Base<API.Category> {
+export class Category extends Base {
   name!: string;
   protected _children: string[] = [];
-  constructor(public server: Server, data: API.Category) {
+  constructor(public readonly server: Server, data: API.Category) {
     super(server.client);
     this._patch(data);
   }

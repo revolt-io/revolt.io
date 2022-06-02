@@ -1,6 +1,5 @@
-import type { API } from '../../deps.ts';
-import {
-  Base,
+import { Base } from './Base.ts';
+import type {
   DMChannel,
   GroupChannel,
   ServerChannel,
@@ -9,8 +8,7 @@ import {
 } from './mod.ts';
 import { ChannelTypes, UUID } from '../util/mod.ts';
 
-export abstract class Channel<T extends API.Channel = API.Channel>
-  extends Base<T> {
+export abstract class Channel extends Base {
   type: ChannelTypes | 'UNKNOWN' = 'UNKNOWN';
 
   get createdTimestamp(): number {

@@ -8,7 +8,7 @@ import {
 } from '../managers/mod.ts';
 import { Collection, ServerPermissions, UUID } from '../util/mod.ts';
 
-export class Server extends Base<API.Server> {
+export class Server extends Base {
   name!: string;
   description: string | null = null;
   ownerId!: string;
@@ -92,26 +92,6 @@ export class Server extends Base<API.Server> {
     return this;
   }
 
-  async ack(): Promise<void> {
-    await this.client.servers.ack(this);
-  }
-
-  async delete(): Promise<void> {
-    await this.client.servers.delete(this);
-  }
-
-  iconURL(options?: { size: number }): string | null {
-    return this.icon
-      ? this.client.api.cdn.icon(this.icon.id, options?.size)
-      : null;
-  }
-
-  bannerURL(options?: { size: number }): string | null {
-    return this.banner
-      ? this.client.api.cdn.banner(this.banner.id, options?.size)
-      : null;
-  }
-
   get me(): ServerMember | null {
     return this.members.cache.get(this.client.user?.id as string) ?? null;
   }
@@ -126,6 +106,26 @@ export class Server extends Base<API.Server> {
 
   get owner(): User | null {
     return this.client.users.cache.get(this.ownerId) ?? null;
+  }
+
+  ack(): Promise<void> {
+    return this.client.servers.ack(this);
+  }
+
+  delete(): Promise<void> {
+    return this.client.servers.delete(this);
+  }
+
+  iconURL(options?: { size: number }): string | null {
+    return this.icon
+      ? this.client.api.cdn.icon(this.icon.id, options?.size)
+      : null;
+  }
+
+  bannerURL(options?: { size: number }): string | null {
+    return this.banner
+      ? this.client.api.cdn.banner(this.banner.id, options?.size)
+      : null;
   }
 
   toString(): string {

@@ -2,7 +2,7 @@ import type { API } from '../../deps.ts';
 import { Base, Overwrite, Server } from './mod.ts';
 import { ChannelPermissions, UUID } from '../util/mod.ts';
 
-export class Role extends Base<API.Role & { _id?: string }> {
+export class Role extends Base {
   name!: string;
   color: string | null = null;
   hoist = false;
@@ -54,8 +54,8 @@ export class Role extends Base<API.Role & { _id?: string }> {
     return this.overwrite;
   }
 
-  async delete(): Promise<void> {
-    await this.server.roles.delete(this);
+  delete(): Promise<void> {
+    return this.server.roles.delete(this);
   }
 
   toString(): string {

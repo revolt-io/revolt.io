@@ -1,7 +1,10 @@
 import type { API } from '../../deps.ts';
+import type { Client } from '../client/Client.ts';
+import type { MessageEditOptions } from '../managers/mod.ts';
 import {
   Base,
   DMChannel,
+  Embed,
   GroupChannel,
   Mentions,
   Server,
@@ -9,18 +12,17 @@ import {
   TextChannel,
   User,
 } from './mod.ts';
-import { Client } from '../client/Client.ts';
 import { UUID } from '../util/mod.ts';
 
-export class Message extends Base<API.Message> {
+export class Message extends Base {
+  type: Uppercase<API.SystemMessage['type']> = 'TEXT';
   content = '';
   channelId!: string;
   authorId!: string;
-  embeds: API.Embed[] = [];
+  embeds: Embed[] = [];
   attachments: API.File[] = [];
   mentions = new Mentions(this, []);
-  type: Uppercase<API.SystemMessage['type']> = 'TEXT';
-  editedAt: Date | null = null;
+  editedTimestamp: number | null = null;
   constructor(client: Client, data: API.Message) {
     super(client);
     this._patch(data);
@@ -60,7 +62,7 @@ export class Message extends Base<API.Message> {
     }
 
     if (data.edited) {
-      this.editedAt = new Date(data.edited);
+      this.editedTimestamp = Date.parse(data.edited);
     }
 
     return this;
@@ -74,43 +76,12 @@ export class Message extends Base<API.Message> {
     return this.createdAt.getTime();
   }
 
-  get editedTimestamp(): number | null {
-    return this.editedAt?.getTime() ?? null;
-  }
-
-  async ack(): Promise<void> {
-    await this.channel.messages.ack(this);
-  }
-
-  async delete(): Promise<void> {
-    await this.channel.messages.delete(this);
-  }
-
-  reply(content: string, mention = true): Promise<Message> {
-    return this.channel.messages.send({
-      content,
-      replies: [{ id: this.id, mention }],
-    });
-  }
-
-  async edit(content: string): Promise<void> {
-    await this.channel.messages.edit(this, { content });
-  }
-
-  fetch(): Promise<Message> {
-    return this.channel.messages.fetch(this.id);
+  get editedAt(): Date | null {
+    return this.editedTimestamp ? new Date(this.editedTimestamp) : null;
   }
 
   get system(): boolean {
     return this.type !== 'TEXT';
-  }
-
-  inServer(): this is this & {
-    serverId: string;
-    server: Server;
-    channel: TextChannel;
-  } {
-    return this.channel.inServer();
   }
 
   get author(): User | null {
@@ -138,5 +109,40 @@ export class Message extends Base<API.Message> {
     return `https://app.revolt.chat/${
       this.serverId ? `server/${this.serverId}` : ''
     }/channel/${this.channelId}/${this.id}`;
+  }
+
+  ack(): Promise<void> {
+    return this.channel.messages.ack(this);
+  }
+
+  delete(): Promise<void> {
+    return this.channel.messages.delete(this);
+  }
+
+  reply(content: string, mention = true): Promise<Message> {
+    return this.channel.messages.send({
+      content,
+      replies: [{ id: this.id, mention }],
+    });
+  }
+
+  edit(options: MessageEditOptions | string): Promise<void> {
+    return this.channel.messages.edit(this, options);
+  }
+
+  fetch(): Promise<Message> {
+    return this.channel.messages.fetch(this.id);
+  }
+
+  inServer(): this is this & {
+    serverId: string;
+    server: Server;
+    channel: TextChannel;
+  } {
+    return this.channel.inServer();
+  }
+
+  toString(): string {
+    return this.content;
   }
 }

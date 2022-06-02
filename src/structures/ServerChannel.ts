@@ -13,20 +13,22 @@ export interface Overwrite {
   deny: ChannelPermissions;
 }
 
-export class ServerChannel<T extends APIServerChannel = APIServerChannel>
-  extends Channel<T> {
+export class ServerChannel extends Channel {
   name!: string;
   serverId!: string;
   description: string | null = null;
   icon: Attachment | null = null;
   overwrites = new Collection<string, Overwrite>();
   nsfw = false;
-  constructor(client: Client, data: T) {
+  constructor(client: Client, data: APIServerChannel) {
     super(client);
     this._patch(data);
   }
 
-  protected _patch(data: T, clear: API.FieldsChannel[] = []): this {
+  protected _patch(
+    data: APIServerChannel,
+    clear: API.FieldsChannel[] = [],
+  ): this {
     super._patch(data);
 
     if (data.name) this.name = data.name;

@@ -13,8 +13,7 @@ import { ChannelPermissions, ChannelTypes, Collection } from '../util/mod.ts';
 
 type APIGroupChannel = Extract<API.Channel, { channel_type: 'Group' }>;
 
-export class GroupChannel extends Channel<APIGroupChannel>
-  implements TextBasedChannel {
+export class GroupChannel extends Channel implements TextBasedChannel {
   readonly type = ChannelTypes.GROUP;
   name!: string;
   description: string | null = null;
@@ -74,6 +73,10 @@ export class GroupChannel extends Channel<APIGroupChannel>
     return this.messages.cache.get(this.lastMessageId) ?? null;
   }
 
+  get owner(): User | null {
+    return this.client.users.cache.get(this.ownerId) ?? null;
+  }
+
   bulkDelete(
     messages: MessageResolvable[] | Collection<string, Message> | number,
   ): Promise<void> {
@@ -97,8 +100,8 @@ export class GroupChannel extends Channel<APIGroupChannel>
     await this.client.api.delete(`/channels/${this.id}/recipients/${id}`);
   }
 
-  async leave(): Promise<void> {
-    await super.delete();
+  leave(): Promise<void> {
+    return super.delete();
   }
 
   send(options: MessageOptions | string): Promise<Message> {
@@ -108,9 +111,5 @@ export class GroupChannel extends Channel<APIGroupChannel>
   iconURL(options?: { size: number }): string | null {
     if (!this.icon) return null;
     return this.client.api.cdn.icon(this.icon.id, options?.size);
-  }
-
-  get owner(): User | null {
-    return this.client.users.cache.get(this.ownerId) ?? null;
   }
 }

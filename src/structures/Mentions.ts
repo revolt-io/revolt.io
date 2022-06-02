@@ -7,7 +7,7 @@ import { Collection } from '../util/mod.ts';
 export class Mentions {
   public readonly client: Client;
 
-  constructor(public message: Message, protected _users: string[]) {
+  constructor(public readonly message: Message, protected _users: string[]) {
     this.client = message.client;
   }
 
