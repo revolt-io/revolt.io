@@ -1,9 +1,7 @@
-import type { API } from '../../../deps.ts';
-import { Action } from './Action.ts';
-import { Events } from '../../util/Constants.ts';
+import { Action, Events, API} from './Action.ts';
 
 export class MessageUpdateAction extends Action {
-  handle(data: { id: string; channel: string; data: API.Message }): unknown {
+  handle(data: { id: string; channel: string; data: API.Message }): void {
     const channel = this.client.channels.cache.get(data.channel);
 
     if (!channel?.isText()) return;

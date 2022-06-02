@@ -1,5 +1,4 @@
-import { Action } from './Action.ts';
-import { Events } from '../../util/Constants.ts';
+import { Action, Events } from './Action.ts';
 
 export class BulkMessageDeleteAction extends Action {
   handle(data: { ids: string[] }) {
